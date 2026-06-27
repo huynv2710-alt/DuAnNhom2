@@ -11,10 +11,12 @@ public class quanlinhanvienservlet {
             connectService service = new connectService();
         ArrayList<NhanVien> list = new ArrayList<>();
 
-        String sql =" SELECT nv.*, tt.TenTrangThai\n" +
-                "        FROM NhanVien nv\n" +
-                "        JOIN TrangThaiNhanVien tt\n" +
-                "        ON nv.MaTrangThai = tt.MaTrangThai";
+        String sql =" SELECT NhanVien.MaNV, NhanVien.HoTen, NhanVien.NgaySinh, NhanVien.GioiTinh, NhanVien.SDT, NhanVien.Email, NhanVien.DiaChi, NhanVien.CCCD, NhanVien.DacDiemNhanDang, NhanVien.NgayCapCCCD, \n" +
+                "                  TrangThaiNhanVien.TenTrangThai\n" +
+                "FROM     NhanVien INNER JOIN\n" +
+                "                  TrangThaiNhanVien ON NhanVien.MaTrangThai = TrangThaiNhanVien.MaTrangThai INNER JOIN\n" +
+                "                  NhanVien AS NhanVien_1 ON TrangThaiNhanVien.MaTrangThai = NhanVien_1.MaTrangThai INNER JOIN\n" +
+                "                  TrangThaiNhanVien AS TrangThaiNhanVien_1 ON NhanVien.MaTrangThai = TrangThaiNhanVien_1.MaTrangThai AND NhanVien_1.MaTrangThai = TrangThaiNhanVien_1.MaTrangThai";
 
         try (Connection conn = service.myConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
