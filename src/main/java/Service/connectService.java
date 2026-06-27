@@ -32,4 +32,12 @@ public class connectService {
             System.out.println("Driver not found!");
             e.printStackTrace();
 
+        } catch (SQLException e) {
+
+            System.out.println("Connect failed!");
+            e.printStackTrace();
+        }
+
+        return conn;
+    }
 }
