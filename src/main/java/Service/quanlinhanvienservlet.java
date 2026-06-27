@@ -3,20 +3,25 @@ package Service;
 import Models.NhanVien;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.sql.*;
 
 public class quanlinhanvienservlet {
+
     public ArrayList<NhanVien> getAllNhanVien() {
-            connectService service = new connectService();
+
+        connectService service = new connectService();
         ArrayList<NhanVien> list = new ArrayList<>();
 
-        String sql =" SELECT NhanVien.MaNV, NhanVien.HoTen, NhanVien.NgaySinh, NhanVien.GioiTinh, NhanVien.SDT, NhanVien.Email, NhanVien.DiaChi, NhanVien.CCCD, NhanVien.DacDiemNhanDang, NhanVien.NgayCapCCCD, \n" +
-                "                  TrangThaiNhanVien.TenTrangThai\n" +
-                "FROM     NhanVien INNER JOIN\n" +
-                "                  TrangThaiNhanVien ON NhanVien.MaTrangThai = TrangThaiNhanVien.MaTrangThai INNER JOIN\n" +
-                "                  NhanVien AS NhanVien_1 ON TrangThaiNhanVien.MaTrangThai = NhanVien_1.MaTrangThai INNER JOIN\n" +
-                "                  TrangThaiNhanVien AS TrangThaiNhanVien_1 ON NhanVien.MaTrangThai = TrangThaiNhanVien_1.MaTrangThai AND NhanVien_1.MaTrangThai = TrangThaiNhanVien_1.MaTrangThai";
+        String sql =
+                "SELECT nv.MaNV, nv.HoTen, nv.NgaySinh, nv.GioiTinh, " +
+                        "nv.SDT, nv.Email, nv.DiaChi, nv.MaTrangThai, " +
+                        "nv.CCCD, nv.NgayCapCCCD, nv.DacDiemNhanDang, " +
+                        "tt.TenTrangThai " +
+                        "FROM NhanVien nv " +
+                        "INNER JOIN TrangThaiNhanVien tt " +
+                        "ON nv.MaTrangThai = tt.MaTrangThai";
 
         try (Connection conn = service.myConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -24,7 +29,7 @@ public class quanlinhanvienservlet {
 
             while (rs.next()) {
 
-                list.add(new NhanVien(
+                NhanVien nv = new NhanVien(
                         rs.getInt("MaNV"),
                         rs.getString("HoTen"),
                         rs.getDate("NgaySinh"),
@@ -37,8 +42,9 @@ public class quanlinhanvienservlet {
                         rs.getString("CCCD"),
                         rs.getDate("NgayCapCCCD"),
                         rs.getString("DacDiemNhanDang")
-                ));
+                );
 
+                list.add(nv);
             }
 
         } catch (Exception e) {

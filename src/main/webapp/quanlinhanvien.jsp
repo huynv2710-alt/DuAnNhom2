@@ -1,8 +1,8 @@
-<%@page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-<html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <title>Quản lý nhân viên</title>
@@ -74,7 +74,7 @@
 
 <body>
 
-<jsp:include page="index.jsp"/>
+<jsp:include page="menu.jsp"/>
 
 <main class="content">
 

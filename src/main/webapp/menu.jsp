@@ -1,97 +1,139 @@
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Quản lý bán hàng</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 
-        .sidebar {
-            width: 260px;
-            background-color: #002d28;
-            color: white;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial,sans-serif;
+    }
 
-        .sidebar-header {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-        }
+    .sidebar{
+        width:260px;
+        min-width:260px;
+        flex-shrink:0;
+        background:#002d28;
+        color:white;
+        height:100vh;
+        display:flex;
+        flex-direction:column;
+    }
 
-        .logo-box { background: #00897b; padding: 10px; border-radius: 6px; }
+    .sidebar-header{
+        padding:20px;
+        display:flex;
+        align-items:center;
+        gap:12px;
+    }
 
-        .nav-links { list-style: none; flex-grow: 1; margin: 0; padding: 0; }
-        .nav-links li a {
-            display: block;
-            padding: 15px 25px;
-            color: #b0bec5;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .nav-links li.active { background-color: #004d40; border-left: 4px solid #00c853; }
-        .nav-links li.active a { color: white; }
-        .nav-links li a:hover { color: white; background: #004d40; }
+    .logo-box{
+        width:52px;
+        height:52px;
+        background:#009688;
+        border-radius:8px;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        font-size:22px;
+    }
 
-        .sidebar-footer {
-            padding: 20px;
-            background-color: #00201d;
-        }
+    .brand-name{
+        font-size:18px;
+        font-weight:bold;
+        white-space:nowrap;
+    }
 
-        .user-info { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .avatar {
-            width: 35px; height: 35px; background: #009688;
-            border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; font-weight: bold;
-        }
+    .nav-links{
+        list-style:none;
+        flex:1;
+    }
 
-        .logout-btn {
-            width: 100%;
-            padding: 8px;
-            background: transparent;
-            border: 1px solid #d32f2f;
-            color: #ff5252;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: 0.3s;
-        }
-        .logout-btn:hover { background: #d32f2f; color: white; }
-    </style>
-</head>
-<body>
+    .nav-links li a{
+        display:block;
+        padding:16px 25px;
+        text-decoration:none;
+        color:#b0bec5;
+        transition:.3s;
+    }
 
-    <nav class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo-box">🛒</div>
-            <span class="brand-name">Quản Lý Bán Hàng</span>
-        </div>
+    .nav-links li.active{
+        background:#004d40;
+        border-left:5px solid #00e676;
+    }
 
-        <ul class="nav-links">
-            <li><a href="nhanvien">Quản lí nhân viên/a></li>
-            <li class="active"><a href="#">Đơn hàng</a></li>
-            <li><a href="">Khách hàng</a></li>
+    .nav-links li.active a{
+        color:#fff;
+    }
 
-            <li><a href="#">Nhập kho</a></li>
-            <li><a href="#">Báo cáo</a></li>
-        </ul>
+    .nav-links li a:hover{
+        background:#004d40;
+        color:#fff;
+    }
 
-        <div class="sidebar-footer">
-            <div class="user-info">
-                <div class="avatar">A</div>
-                <div>
-                    <div class="name">Admin</div>
-                    <div class="role">Quản trị viên</div>
-                </div>
+    .sidebar-footer{
+        padding:20px;
+        background:#001c18;
+    }
+
+    .user-info{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        margin-bottom:15px;
+    }
+
+    .avatar{
+        width:40px;
+        height:40px;
+        border-radius:50%;
+        background:#009688;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        font-weight:bold;
+    }
+
+    .logout-btn{
+        width:100%;
+        padding:10px;
+        border:1px solid #f44336;
+        background:transparent;
+        color:#ff5252;
+        border-radius:5px;
+        cursor:pointer;
+    }
+
+    .logout-btn:hover{
+        background:#f44336;
+        color:white;
+    }
+</style>
+
+<nav class="sidebar">
+
+    <div class="sidebar-header">
+        <div class="logo-box">🛒</div>
+        <div class="brand-name">Quản Lý Bán Hàng</div>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="nhanvien">Quản lý nhân viên</a></li>
+        <li class="active"><a href="#">Đơn hàng</a></li>
+        <li><a href="#">Khách hàng</a></li>
+        <li><a href="#">Nhập kho</a></li>
+        <li><a href="#">Báo cáo</a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+        <div class="user-info">
+            <div class="avatar">A</div>
+            <div>
+                <div><b>Admin</b></div>
+                <div>Quản trị viên</div>
             </div>
-            <button class="logout-btn" onclick="alert('Đang đăng xuất...')">Đăng xuất</button>
         </div>
-    </nav>
 
-</body>
-</html>
+        <button class="logout-btn">Đăng xuất</button>
+    </div>
+
+</nav>

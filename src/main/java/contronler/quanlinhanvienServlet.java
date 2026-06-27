@@ -1,7 +1,6 @@
 package contronler;
 
 import Models.NhanVien;
-import Service.quanlinhanvienservlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,17 +11,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 @WebServlet("/nhanvien")
-public class quanlinhanvienServlet extends HttpServlet {
+public class quanlinhanvienservlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        quanlinhanvienservlet dao = new quanlinhanvienservlet();
+        Service.quanlinhanvienservlet dao = new Service.quanlinhanvienservlet();
 
         ArrayList<NhanVien> list = dao.getAllNhanVien();
 
-       req.setAttribute("lst", list);
+        req.setAttribute("lst", list);
 
         req.getRequestDispatcher("quanlinhanvien.jsp").forward(req, resp);
-
-
     }
 }
