@@ -21,7 +21,7 @@ public class quanlinhanvienServlet extends HttpServlet {
 
        req.setAttribute("lst", list);
 
-        req.getRequestDispatcher("QuanLyNhanVien.jsp").forward(req, resp);
+        req.getRequestDispatcher("quanlinhanvien.jsp").forward(req, resp);
 
 
     }
