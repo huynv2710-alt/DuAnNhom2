@@ -73,9 +73,10 @@
         </div>
 
         <ul class="nav-links">
+            <li><a href="quanlinhanvien.jsp">Quản lí nhân viên/a></li>
             <li class="active"><a href="#">Đơn hàng</a></li>
             <li><a href="">Khách hàng</a></li>
-            <li><a href="quanlinhanvien.jsp">Sản phẩm</a></li>
+
             <li><a href="#">Nhập kho</a></li>
             <li><a href="#">Báo cáo</a></li>
         </ul>
