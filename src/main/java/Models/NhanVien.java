@@ -1,5 +1,7 @@
 package Models;
 
+import java.sql.Date;
+
 public class NhanVien {
     private int maNV;
     private String hoTen;
