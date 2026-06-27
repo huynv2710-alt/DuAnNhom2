@@ -1,6 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 
 <style>
+h1 {
+    text-align: center;        /* Canh giữa */
+    color: #00796b;            /* Màu xanh đậm (tông màu giống bảng của bạn) */
+    font-family: Arial, sans-serif; /* Font chữ sạch sẽ */
+    margin-top: 20px;          /* Tạo khoảng cách phía trên */
+    text-transform: uppercase; /* Viết hoa để nhìn mạnh mẽ hơn */
+    letter-spacing: 2px;       /* Tăng khoảng cách chữ cho thoáng */
+}
     *{
         margin:0;
         padding:0;
