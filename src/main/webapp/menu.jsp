@@ -50,3 +50,47 @@
             border-radius: 50%; display: flex;
             align-items: center; justify-content: center; font-weight: bold;
         }
+
+        .logout-btn {
+            width: 100%;
+            padding: 8px;
+            background: transparent;
+            border: 1px solid #d32f2f;
+            color: #ff5252;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .logout-btn:hover { background: #d32f2f; color: white; }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-box">🛒</div>
+            <span class="brand-name">Quản Lý Bán Hàng</span>
+        </div>
+
+        <ul class="nav-links">
+            <li class="active"><a href="#">Đơn hàng</a></li>
+            <li><a href="">Khách hàng</a></li>
+            <li><a href="quanlinhanvien.jsp">Sản phẩm</a></li>
+            <li><a href="#">Nhập kho</a></li>
+            <li><a href="#">Báo cáo</a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="avatar">A</div>
+                <div>
+                    <div class="name">Admin</div>
+                    <div class="role">Quản trị viên</div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="alert('Đang đăng xuất...')">Đăng xuất</button>
+        </div>
+    </nav>
+
+</body>
+</html>
