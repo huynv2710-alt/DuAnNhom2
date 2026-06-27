@@ -73,7 +73,7 @@
         </div>
 
         <ul class="nav-links">
-            <li><a href="quanlinhanvien.jsp">Quản lí nhân viên/a></li>
+            <li><a href="nhanvien">Quản lí nhân viên/a></li>
             <li class="active"><a href="#">Đơn hàng</a></li>
             <li><a href="">Khách hàng</a></li>
 
