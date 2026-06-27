@@ -19,9 +19,10 @@ public class quanlinhanvienServlet extends HttpServlet {
 
         ArrayList<NhanVien> list = dao.getAllNhanVien();
 
-        req.setAttribute("listNV", list);
+       req.setAttribute("lst", list);
 
         req.getRequestDispatcher("QuanLyNhanVien.jsp").forward(req, resp);
+
 
     }
 }

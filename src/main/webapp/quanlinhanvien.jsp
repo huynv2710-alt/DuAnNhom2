@@ -1,6 +1,5 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="model.NhanVien"%>
+<%@page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -9,6 +8,7 @@
     <title>Quản lý nhân viên</title>
 
     <style>
+
         *{
             margin:0;
             padding:0;
@@ -18,7 +18,7 @@
 
         body{
             display:flex;
-            background:#f5f5f5;
+            background:#f4f4f4;
         }
 
         .content{
@@ -31,16 +31,16 @@
         }
 
         .table-container{
-            background:#fff;
+            background:white;
             padding:20px;
             border-radius:8px;
-            box-shadow:0 2px 5px rgba(0,0,0,.2);
+            box-shadow:0 2px 5px rgba(0,0,0,0.2);
             overflow-x:auto;
         }
 
         table{
             width:100%;
-            min-width:1500px;
+            min-width:1600px;
             border-collapse:collapse;
         }
 
@@ -67,6 +67,7 @@
             color:green;
             font-weight:bold;
         }
+
     </style>
 
 </head>
@@ -85,76 +86,53 @@
 
             <thead>
 
-                <tr>
-                    <th>Mã NV</th>
-                    <th>Họ tên</th>
-                    <th>Ngày sinh</th>
-                    <th>Giới tính</th>
-                    <th>SĐT</th>
-                    <th>Email</th>
-                    <th>Địa chỉ</th>
-                    <th>CCCD</th>
-                    <th>Ngày cấp CCCD</th>
-                    <th>Đặc điểm nhận dạng</th>
-                    <th>Trạng thái</th>
-                </tr>
+            <tr>
+                <th>Mã NV</th>
+                <th>Họ tên</th>
+                <th>Ngày sinh</th>
+                <th>Giới tính</th>
+                <th>SĐT</th>
+                <th>Email</th>
+                <th>Địa chỉ</th>
+                <th>CCCD</th>
+                <th>Ngày cấp CCCD</th>
+                <th>Đặc điểm nhận dạng</th>
+                <th>Trạng thái</th>
+            </tr>
 
             </thead>
 
             <tbody>
 
-            <%
-                ArrayList<NhanVien> list =
-                        (ArrayList<NhanVien>)request.getAttribute("listNV");
-
-                if(list != null && !list.isEmpty()){
-
-                    for(NhanVien nv : list){
-            %>
+            <c:forEach var="nv" items="${lst}">
 
                 <tr>
 
-                    <td><%= nv.getMaNV() %></td>
+                    <td>${nv.maNV}</td>
 
-                    <td><%= nv.getHoTen() %></td>
+                    <td>${nv.hoTen}</td>
 
-                    <td><%= nv.getNgaySinh() %></td>
+                    <td>${nv.ngaySinh}</td>
 
-                    <td><%= nv.getGioiTinh() %></td>
+                    <td>${nv.gioiTinh}</td>
 
-                    <td><%= nv.getSdt() %></td>
+                    <td>${nv.sdt}</td>
 
-                    <td><%= nv.getEmail() %></td>
+                    <td>${nv.email}</td>
 
-                    <td><%= nv.getDiaChi() %></td>
+                    <td>${nv.diaChi}</td>
 
-                    <td><%= nv.getCccd() %></td>
+                    <td>${nv.cccd}</td>
 
-                    <td><%= nv.getNgayCapCCCD() %></td>
+                    <td>${nv.ngayCapCCCD}</td>
 
-                    <td><%= nv.getDacDiemNhanDang() %></td>
+                    <td>${nv.dacDiemNhanDang}</td>
 
-                    <td class="status-active">
-                        <%= nv.getTenTrangThai() %>
-                    </td>
+                    <td class="status-active">${nv.tenTrangThai}</td>
 
                 </tr>
 
-            <%
-                    }
-
-                }else{
-            %>
-
-                <tr>
-                    <td colspan="11">
-                        Không có dữ liệu nhân viên.
-                    </td>
-                </tr>
-
-            <%
-                }
-            %>
+            </c:forEach>
 
             </tbody>
 
