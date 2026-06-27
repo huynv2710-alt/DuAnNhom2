@@ -2,7 +2,7 @@
 
 <style>
 h1 {
-    text-align: center;        /* Canh giữa */
+
     color: #00796b;            /* Màu xanh đậm (tông màu giống bảng của bạn) */
     font-family: Arial, sans-serif; /* Font chữ sạch sẽ */
     margin-top: 20px;          /* Tạo khoảng cách phía trên */
