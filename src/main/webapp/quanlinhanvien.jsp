@@ -28,8 +28,6 @@ body{
     overflow:hidden;
 }
 
-
-
 .table-container{
     background:#fff;
     padding:20px;
@@ -74,7 +72,6 @@ tr:hover{
     font-weight:bold;
 }
 
-/* Thanh cuộn đẹp hơn */
 .table-container::-webkit-scrollbar{
     height:8px;
 }

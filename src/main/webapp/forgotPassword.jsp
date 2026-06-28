@@ -98,17 +98,12 @@
         color: #1e3a2f;
     }
 </style>
-
 </head>
 
 <body>
-
 <div class="box">
-
 <h2>QUÊN MẬT KHẨU</h2>
-
 <form action="ForgotPasswordServlet" method="post">
-
     <input type="text" name="username" placeholder="Tên đăng nhập">
     <input type="email" name="email" placeholder="Email">
 
@@ -122,6 +117,5 @@
 <a href="index.jsp">← Quay lại đăng nhập</a>
 
 </div>
-
 </body>
 </html>
