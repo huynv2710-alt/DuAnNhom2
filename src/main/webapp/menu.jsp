@@ -141,7 +141,9 @@ h1 {
             </div>
         </div>
 
-        <button class="logout-btn">Đăng xuất</button>
+   <button class="logout-btn" onclick="window.location.href='index.jsp'">
+       Đăng xuất
+   </button>
     </div>
 
 </nav>

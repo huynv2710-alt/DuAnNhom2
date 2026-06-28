@@ -6,50 +6,64 @@
 <head>
 <meta charset="UTF-8">
 <title>Kết quả tài khoản</title>
-
 <style>
-body {
-    margin: 0;
-    font-family: Arial;
-    background: #052e16;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-.box {
-    width: 420px;
-    background: #0f3d1f;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    text-align: center;
-    color: white;
-}
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1e3a2f 0%, #2e5c4a 100%);
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
 
-h2 {
-    color: #22c55e;
-}
+    .box {
+        width: 100%;
+        max-width: 460px;
+        background: white;
+        padding: 45px 40px;
+        border-radius: 16px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        text-align: center;
+        color: #1e3a2f;
+    }
 
-.msg {
-    margin-top: 15px;
-    padding: 12px;
-    background: #14532d;
-    border-radius: 8px;
-    color: #bbf7d0;
-}
+    h2 {
+        color: #1e3a2f;
+        font-size: 2.3rem;
+        margin-bottom: 30px;
+        font-weight: 700;
+    }
 
-a {
-    display: inline-block;
-    margin-top: 20px;
-    color: #86efac;
-    text-decoration: none;
-}
+    .msg {
+        margin: 20px 0;
+        padding: 20px;
+        background: #f0f9f4;
+        border: 2px solid #1e3a2f;
+        border-radius: 10px;
+        color: #1e3a2f;
+        font-size: 1.08rem;
+        line-height: 1.6;
+    }
 
-a:hover {
-    text-decoration: underline;
-}
+    a {
+        color: #2e5c4a;
+        text-decoration: none;
+        font-size: 1rem;
+        display: inline-block;
+        margin-top: 20px;
+    }
+
+    a:hover {
+        color: #1e3a2f;
+        text-decoration: underline;
+    }
 </style>
 
 </head>
