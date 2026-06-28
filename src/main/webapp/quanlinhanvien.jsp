@@ -145,6 +145,7 @@ tr:hover{
     <a href="themNhanVien.jsp" class="btn-add">
         + Thêm nhân viên
     </a>
+    <br>
 
 </div>
     <div class="table-container">
