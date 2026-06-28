@@ -105,7 +105,7 @@ tr:hover{
 .header h1{
     margin:0;
     color:#00897b;
-    font-size:55px;
+    font-size:38px;
     font-weight:bold;
     letter-spacing:2px;
 }
