@@ -3,37 +3,103 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Thêm nhân viên</title>
+<meta charset="UTF-8">
+<title>Thêm nhân viên</title>
 
-    <style>
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    display:flex;
+    min-height:100vh;
+    background:#f4f4f4;
+}
+
+.content{
+    flex:1;
+    padding:25px;
+}
+
+.title{
+    color:#00897b;
+    font-size:38px;
+    margin-bottom:20px;
+    font-weight:bold;
+}
+
+.form-container{
+    width:850px;
+    margin:auto;
+    background:#fff;
+    border-radius:12px;
+    padding:20px 25px;
+    box-shadow:0 2px 10px rgba(0,0,0,.12);
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px 25px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group label{
+    font-size:15px;
+    font-weight:bold;
+    margin-bottom:5px;
+    color:#333;
+}
+
+.form-group input,
+.form-group select{
+    height:36px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    padding:0 10px;
+    font-size:14px;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    outline:none;
+    border-color:#009688;
+}
 
 .button-group{
-    margin-top:35px;
+    margin-top:20px;
     display:flex;
     justify-content:space-between;
-    align-items:center;
 }
 
 .btn-save,
 .btn-back{
-    width:180px;
-    height:45px;
+    width:150px;
+    height:40px;
+    border:none;
+    border-radius:6px;
+    color:#fff;
+    text-decoration:none;
     display:flex;
     justify-content:center;
     align-items:center;
-    border:none;
-    border-radius:8px;
-    font-size:16px;
+    font-size:15px;
     font-weight:bold;
-    text-decoration:none;
     cursor:pointer;
     transition:.3s;
 }
 
 .btn-save{
     background:#009688;
-    color:white;
 }
 
 .btn-save:hover{
@@ -42,13 +108,13 @@
 
 .btn-back{
     background:#f44336;
-    color:white;
 }
 
 .btn-back:hover{
     background:#d32f2f;
 }
-    </style>
+
+</style>
 
 </head>
 
@@ -62,7 +128,7 @@
 
 <div class="form-container">
 
-<form action="themNhanVien" method="post">
+<form action="themnhanvien" method="post">
 
 <div class="form-grid">
 
@@ -83,12 +149,10 @@
 
 <div class="form-group">
 <label>Giới tính</label>
-
 <select name="gioiTinh">
 <option value="Nam">Nam</option>
 <option value="Nữ">Nữ</option>
 </select>
-
 </div>
 
 <div class="form-group">
@@ -122,30 +186,23 @@
 </div>
 
 <div class="form-group">
-
 <label>Trạng thái</label>
-
 <select name="maTrangThai">
 <option value="1">Đang làm</option>
 <option value="2">Đã nghỉ</option>
 </select>
-
 </div>
 
 </div>
 
 <div class="button-group">
 
-<button class="btn-save" type="submit">
-
+<button type="submit" class="btn-save">
 Thêm nhân viên
-
 </button>
 
 <a href="quanlinhanvien" class="btn-back">
-
 Quay lại
-
 </a>
 
 </div>
@@ -157,5 +214,4 @@ Quay lại
 </main>
 
 </body>
-
 </html>

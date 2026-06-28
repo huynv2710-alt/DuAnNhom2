@@ -13,7 +13,7 @@ public class ThemnhanvienServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 
-            req.getRequestDispatcher("themNhanVien.jsp")
+            req.getRequestDispatcher("themnhanvien.jsp")
                     .forward(req, resp);
     }
 }
