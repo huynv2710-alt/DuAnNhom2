@@ -8,7 +8,8 @@
     <title>Quản lý nhân viên</title>
 
     <style>
-*{
+
+{
     margin:0;
     padding:0;
     box-sizing:border-box;
@@ -18,21 +19,21 @@
 body{
     display:flex;
     min-height:100vh;
-    background:#f4f6f9;
+    background:#f4f4f4;
 }
 
 .content{
     flex:1;
-    padding:30px;
+    padding:25px;
     overflow:hidden;
 }
 
 h1{
     margin-bottom:25px;
     color:#00897b;
-    font-size:48px;
+    font-size:55px;
     font-weight:bold;
-    letter-spacing:3px;
+    letter-spacing:2px;
 }
 
 .table-container{
@@ -41,6 +42,42 @@ h1{
     border-radius:12px;
     box-shadow:0 2px 10px rgba(0,0,0,0.1);
     overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:1200px;
+    border-collapse:collapse;
+}
+
+th{
+    background:#00897b;
+    color:white;
+    padding:15px 12px;
+    border:1px solid #ddd;
+    white-space:nowrap;
+    font-size:18px;
+}
+
+td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:center;
+    white-space:nowrap;
+    font-size:16px;
+}
+
+tr:nth-child(even){
+    background:#fafafa;
+}
+
+tr:hover{
+    background:#f2f2f2;
+}
+
+.status-active{
+    color:#2e7d32;
+    font-weight:bold;
 }
 
 /* Thanh cuộn đẹp hơn */
@@ -55,89 +92,6 @@ h1{
 
 .table-container::-webkit-scrollbar-track{
     background:#f1f1f1;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    table-layout:fixed;
-}
-
-th{
-    background:#00897b;
-    color:white;
-    padding:14px 10px;
-    font-size:16px;
-    font-weight:600;
-    border:1px solid #ddd;
-}
-
-td{
-    padding:12px 10px;
-    border:1px solid #ddd;
-    font-size:15px;
-    text-align:center;
-    word-break:break-word;
-}
-
-tr:nth-child(even){
-    background:#fafafa;
-}
-
-tr:hover{
-    background:#f0f8f8;
-    transition:0.2s;
-}
-
-.status-active{
-    color:#2e7d32;
-    font-weight:bold;
-}
-
-/* Độ rộng từng cột */
-th:nth-child(1),
-td:nth-child(1){
-    width:80px;
-}
-
-th:nth-child(2),
-td:nth-child(2){
-    width:180px;
-}
-
-th:nth-child(5),
-td:nth-child(5){
-    width:130px;
-}
-
-th:nth-child(6),
-td:nth-child(6){
-    width:220px;
-}
-
-th:nth-child(7),
-td:nth-child(7){
-    width:180px;
-}
-
-th:nth-child(8),
-td:nth-child(8){
-    width:170px;
-}
-
-th:nth-child(9),
-td:nth-child(9){
-    width:150px;
-}
-
-th:nth-child(10),
-td:nth-child(10){
-    width:220px;
-}
-
-th:nth-child(11),
-td:nth-child(11){
-    width:120px;
 }
     </style>
 
