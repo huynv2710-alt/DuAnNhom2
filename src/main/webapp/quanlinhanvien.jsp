@@ -140,7 +140,7 @@ tr:hover{
 
     <h1>QUẢN LÝ NHÂN VIÊN</h1>
 
-    <a href="themnhanvien.jsp" class="btn-add">
+    <a href="themnhanvien" class="btn-add">
         + Thêm nhân viên
     </a>
 
