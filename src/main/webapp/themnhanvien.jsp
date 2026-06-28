@@ -189,7 +189,7 @@ body{
 <label>Trạng thái</label>
 <select name="maTrangThai">
 <option value="1">Đang làm</option>
-<option value="2">Đã nghỉ</option>
+<option value="2">Thử việc</option>
 </select>
 </div>
 
