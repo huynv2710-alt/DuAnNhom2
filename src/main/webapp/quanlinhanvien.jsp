@@ -93,6 +93,42 @@ tr:hover{
 .table-container::-webkit-scrollbar-track{
     background:#f1f1f1;
 }
+//nút thêm nv
+.top-action{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    margin-bottom:20px;
+
+}
+
+.btn-add{
+
+    background:#00897B;
+
+    color:white;
+
+    text-decoration:none;
+
+    padding:12px 22px;
+
+    border-radius:8px;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    transition:.3s;
+
+}
+
+.btn-add:hover{
+
+    background:#00695C;
+
+}
     </style>
 
 </head>
