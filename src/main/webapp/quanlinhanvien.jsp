@@ -9,7 +9,7 @@
 
     <style>
 
-{
+*{
     margin:0;
     padding:0;
     box-sizing:border-box;
@@ -93,41 +93,38 @@ tr:hover{
 .table-container::-webkit-scrollbar-track{
     background:#f1f1f1;
 }
-//nút thêm nv
-.top-action{
 
+.header{
+    width:100%;
     display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
 
-    justify-content:flex-end;
-
-    margin-bottom:20px;
-
+.header h1{
+    margin:0;
+    color:#00897b;
+    font-size:55px;
+    font-weight:bold;
+    letter-spacing:2px;
 }
 
 .btn-add{
-
-    background:#00897B;
-
-    color:white;
-
+    display:inline-block;
+    margin-left:auto;
+    background:#00897b;
+    color:#fff;
     text-decoration:none;
-
-    padding:12px 22px;
-
-    border-radius:8px;
-
-    font-size:16px;
-
+    padding:8px 16px;
+    border-radius:6px;
+    font-size:14px;
     font-weight:bold;
-
-    transition:.3s;
-
+    transition:0.3s;
 }
 
 .btn-add:hover{
-
-    background:#00695C;
-
+    background:#00695c;
 }
     </style>
 
@@ -139,13 +136,13 @@ tr:hover{
 
 <main class="content">
 
-    <h1>Quản lý nhân viên</h1>
-<div class="top-action">
+<div class="header">
+
+    <h1>QUẢN LÝ NHÂN VIÊN</h1>
 
     <a href="themNhanVien.jsp" class="btn-add">
         + Thêm nhân viên
     </a>
-    <br>
 
 </div>
     <div class="table-container">
