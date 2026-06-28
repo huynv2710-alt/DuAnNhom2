@@ -31,7 +31,7 @@ body{
 h1{
     margin-bottom:25px;
     color:#00897b;
-    font-size:55px;
+    font-size:38px;
     font-weight:bold;
     letter-spacing:2px;
 }
