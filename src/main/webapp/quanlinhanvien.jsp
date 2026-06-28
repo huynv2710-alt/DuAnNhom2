@@ -8,65 +8,91 @@
     <title>Quản lý nhân viên</title>
 
     <style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial,sans-serif;
-        }
+body{
+    display:flex;
+    min-height:100vh;
+    background:#f4f6f9;
+}
 
-        body{
-            display:flex;
-            background:#f4f4f4;
-        }
+.content{
+    flex:1;
+    padding:30px;
+    overflow:hidden;
+}
 
-        .content{
-            flex:1;
-            padding:25px;
-        }
+h1{
+    margin-bottom:25px;
+    color:#00897b;
+    font-size:48px;
+    font-weight:bold;
+    letter-spacing:3px;
+}
 
-        h1{
-            margin-bottom:20px;
-        }
+.table-container{
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+    overflow-x:auto;
+}
 
-        .table-container{
-            background:white;
-            padding:20px;
-            border-radius:8px;
-            box-shadow:0 2px 5px rgba(0,0,0,0.2);
-            overflow-x:auto;
-        }
+/* Thanh cuộn đẹp hơn */
+.table-container::-webkit-scrollbar{
+    height:8px;
+}
 
-        table{
-            width:100%;
-            min-width:1600px;
-            border-collapse:collapse;
-        }
+.table-container::-webkit-scrollbar-thumb{
+    background:#bdbdbd;
+    border-radius:10px;
+}
 
-        th,td{
-            border:1px solid #ddd;
-            padding:10px;
-            text-align:center;
-        }
+.table-container::-webkit-scrollbar-track{
+    background:#f1f1f1;
+}
 
-        th{
-            background:#00897b;
-            color:white;
-        }
+table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+}
 
-        tr:nth-child(even){
-            background:#f8f8f8;
-        }
+th{
+    background:#00897b;
+    color:white;
+    padding:14px 10px;
+    font-size:16px;
+    font-weight:600;
+    border:1px solid #ddd;
+}
 
-        tr:hover{
-            background:#eeeeee;
-        }
+td{
+    padding:12px 10px;
+    border:1px solid #ddd;
+    font-size:15px;
+    text-align:center;
+    word-break:break-word;
+}
 
-        .status-active{
-            color:green;
-            font-weight:bold;
-        }
+tr:nth-child(even){
+    background:#fafafa;
+}
+
+tr:hover{
+    background:#f0f8f8;
+    transition:0.2s;
+}
+
+.status-active{
+    color:#2e7d32;
+    font-weight:bold;
+}
 
 /* Độ rộng từng cột */
 th:nth-child(1),
