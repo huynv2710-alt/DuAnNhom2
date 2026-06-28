@@ -68,6 +68,51 @@
             font-weight:bold;
         }
 
+/* Độ rộng từng cột */
+th:nth-child(1),
+td:nth-child(1){
+    width:80px;
+}
+
+th:nth-child(2),
+td:nth-child(2){
+    width:180px;
+}
+
+th:nth-child(5),
+td:nth-child(5){
+    width:130px;
+}
+
+th:nth-child(6),
+td:nth-child(6){
+    width:220px;
+}
+
+th:nth-child(7),
+td:nth-child(7){
+    width:180px;
+}
+
+th:nth-child(8),
+td:nth-child(8){
+    width:170px;
+}
+
+th:nth-child(9),
+td:nth-child(9){
+    width:150px;
+}
+
+th:nth-child(10),
+td:nth-child(10){
+    width:220px;
+}
+
+th:nth-child(11),
+td:nth-child(11){
+    width:120px;
+}
     </style>
 
 </head>
