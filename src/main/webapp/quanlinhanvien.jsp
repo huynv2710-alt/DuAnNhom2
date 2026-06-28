@@ -98,6 +98,17 @@ tr:hover{
 </head>
 
 <body>
+<%
+    String successMsg = (String) session.getAttribute("successMsg");
+    if (successMsg != null) {
+%>
+    <script>
+        alert("<%= successMsg %>");
+    </script>
+<%
+        session.removeAttribute("successMsg");
+    }
+%>
 
 <jsp:include page="menu.jsp"/>
 

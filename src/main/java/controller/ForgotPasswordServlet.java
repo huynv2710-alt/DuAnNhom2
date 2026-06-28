@@ -25,7 +25,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         TaiKhoan tk = service.forgotPassword(username, email);
 
         if (tk == null) {
-            request.setAttribute("error", "Sai username hoặc email!");
+            request.setAttribute("error", "Sai username hoac  email!");
             request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
             return;
         }
