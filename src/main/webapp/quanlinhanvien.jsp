@@ -28,13 +28,7 @@ body{
     overflow:hidden;
 }
 
-h1{
-    margin-bottom:25px;
-    color:#00897b;
-    font-size:38px;
-    font-weight:bold;
-    letter-spacing:2px;
-}
+
 
 .table-container{
     background:#fff;
