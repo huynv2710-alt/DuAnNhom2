@@ -140,7 +140,13 @@ tr:hover{
 <main class="content">
 
     <h1>Quản lý nhân viên</h1>
+<div class="top-action">
 
+    <a href="themNhanVien.jsp" class="btn-add">
+        + Thêm nhân viên
+    </a>
+
+</div>
     <div class="table-container">
 
         <table>
