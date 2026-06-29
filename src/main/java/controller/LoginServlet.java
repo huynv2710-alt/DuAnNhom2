@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
         if (tk.getTenQuyen() != null &&
                 tk.getTenQuyen().equalsIgnoreCase("admin")) {
 
-            response.sendRedirect("quanlinhanvien.jsp");
+            response.sendRedirect("quanlinhanvien");
 
         } else {
             response.sendRedirect("NhanVien2.jsp");
