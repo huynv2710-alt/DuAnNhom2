@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page isELIgnored="false" %>
 
 <!DOCTYPE html>
@@ -11,11 +12,10 @@
 </head>
 <body>
 
-<jsp:include page="menu.jsp"/>
+<jsp:include page="menu2.jsp"/>
 
 <main class="content">
 
-    <%-- Page Header --%>
     <div class="page-header">
         <h1>Trang Nhân Viên</h1>
         <p>Chào mừng bạn trở lại hệ thống quản lý Book Store</p>
@@ -33,21 +33,21 @@
     </div>
 
     <div class="stats-row">
-        <div class="stat-card">
+        <div class="stat-card green">
             <div class="stat-icon green">📦</div>
             <div class="stat-info">
                 <p>Đơn hàng hôm nay</p>
                 <h3>--</h3>
             </div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card teal">
             <div class="stat-icon teal">✅</div>
             <div class="stat-info">
                 <p>Đơn hoàn thành</p>
                 <h3>--</h3>
             </div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card orange">
             <div class="stat-icon orange">⏳</div>
             <div class="stat-info">
                 <p>Đơn chờ xử lý</p>
