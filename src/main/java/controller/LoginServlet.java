@@ -44,12 +44,9 @@ public class LoginServlet extends HttpServlet {
         if (tk.getTenQuyen() != null &&
                 tk.getTenQuyen().equalsIgnoreCase("admin")) {
 
-            session.setAttribute("successMsg", " DANH NHAP THANH CONH CHAO ! ChAO MUNG Admin!");
             response.sendRedirect("quanlinhanvien.jsp");
 
         } else {
-
-            session.setAttribute("successMsg", "    DANG NHAP THANH CONG!");
             response.sendRedirect("nhanvien.jsp");
         }
     }
