@@ -28,14 +28,6 @@ body{
     overflow:hidden;
 }
 
-h1{
-    margin-bottom:25px;
-    color:#00897b;
-    font-size:55px;
-    font-weight:bold;
-    letter-spacing:2px;
-}
-
 .table-container{
     background:#fff;
     padding:20px;
@@ -80,7 +72,6 @@ tr:hover{
     font-weight:bold;
 }
 
-/* Thanh cuộn đẹp hơn */
 .table-container::-webkit-scrollbar{
     height:8px;
 }
@@ -105,7 +96,7 @@ tr:hover{
 .header h1{
     margin:0;
     color:#00897b;
-    font-size:55px;
+    font-size:38px;
     font-weight:bold;
     letter-spacing:2px;
 }

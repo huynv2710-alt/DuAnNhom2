@@ -3,11 +3,11 @@
 <style>
 h1 {
 
-    color: #00796b;            /* Màu xanh đậm (tông màu giống bảng của bạn) */
-    font-family: Arial, sans-serif; /* Font chữ sạch sẽ */
-    margin-top: 20px;          /* Tạo khoảng cách phía trên */
-    text-transform: uppercase; /* Viết hoa để nhìn mạnh mẽ hơn */
-    letter-spacing: 2px;       /* Tăng khoảng cách chữ cho thoáng */
+    color: #00796b;
+    font-family: Arial, sans-serif;
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
     *{
         margin:0;
