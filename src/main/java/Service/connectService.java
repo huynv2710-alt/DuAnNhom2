@@ -9,7 +9,7 @@ public class connectService {
 
     private final String USER = "sa";
 
-    private final String PASSWORD = "sa_password_123456";
+    private final String PASSWORD = "123";
 
     public connectService() {
     }

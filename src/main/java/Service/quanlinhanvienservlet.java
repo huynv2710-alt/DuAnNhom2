@@ -85,33 +85,7 @@ public class quanlinhanvienservlet {
 
         return false;
     }
-    public boolean addNhanVien(NhanVien nv) {
-        connectService service = new connectService();
-        String sql = "INSERT INTO NhanVien (HoTen, NgaySinh, GioiTinh, SDT, Email, DiaChi, MaTrangThai, CCCD, NgayCapCCCD, DacDiemNhanDang) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = service.myConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, nv.getHoTen());
-            ps.setDate(2, nv.getNgaySinh());
-            ps.setString(3, nv.getGioiTinh());
-            ps.setString(4, nv.getSdt());
-            ps.setString(5, nv.getEmail());
-            ps.setString(6, nv.getDiaChi());
-            ps.setInt(7, nv.getMaTrangThai());
-            ps.setString(8, nv.getCccd());
-            ps.setDate(9, nv.getNgayCapCCCD());
-            ps.setString(10, nv.getDacDiemNhanDang());
-
-            int rows = ps.executeUpdate();
-            return rows > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
     public boolean editNhanVien(NhanVien nv) {
         connectService service = new connectService();
