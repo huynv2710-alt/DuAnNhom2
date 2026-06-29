@@ -111,21 +111,6 @@ public class quanlinhanvienservlet {
         }
     }
 
-    public boolean deleteNhanVien(int maNV) {
-        connectService service = new connectService();
-        String sql = "DELETE FROM NhanVien WHERE MaNV=?";
 
-        try (Connection conn = service.myConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, maNV);
-
-            int rows = ps.executeUpdate();
-            return rows > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }
