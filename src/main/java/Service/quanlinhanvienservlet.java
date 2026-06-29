@@ -86,5 +86,42 @@ public class quanlinhanvienservlet {
 
         return false;
     }
+    public NhanVien getById(int maNV) {
+
+        connectService service = new connectService();
+
+        String sql = "SELECT * FROM NhanVien WHERE MaNV = ?";
+
+        try (Connection conn = service.myConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, maNV);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                return new NhanVien(
+                        rs.getInt("MaNV"),
+                        rs.getString("HoTen"),
+                        rs.getDate("NgaySinh"),
+                        rs.getString("GioiTinh"),
+                        rs.getString("SDT"),
+                        rs.getString("Email"),
+                        rs.getString("DiaChi"),
+                        rs.getInt("MaTrangThai"),
+                        "",
+                        rs.getString("CCCD"),
+                        rs.getDate("NgayCapCCCD"),
+                        rs.getString("DacDiemNhanDang")
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 
     }
