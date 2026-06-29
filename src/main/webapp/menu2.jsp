@@ -132,7 +132,7 @@ h1 {
             <li><a href="quanlinhanvien">Quản lý nhân viên</a></li>
         </c:if>
 
-        <li><a href="nha">Thông tin cá nhân</a></li>
+        <li><a href="NhanVien2.jsp">Thông tin cá nhân</a></li>
 
     </ul>
 
