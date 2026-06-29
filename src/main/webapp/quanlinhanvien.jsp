@@ -213,7 +213,7 @@ tr:hover{
 
                     <td class="status-active">${nv.tenTrangThai}</td>
                     <td>
-                        <a href="NhanVienServlet?action=edit&id=${nv.maNV}" class="btn-edit">
+                        <a href="suanhanvien?action=edit&id=${nv.maNV}" class="btn-edit">
                             Sửa
                         </a>
                     </td>
