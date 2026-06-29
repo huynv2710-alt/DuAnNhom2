@@ -132,6 +132,17 @@ tr:hover{
 .btn-edit:hover{
     background:#d68910;
 }
+}
+
+.status-trial{
+    color:#f39c12;
+    font-weight:bold;
+}
+
+.status-leave{
+    color:#e53935;
+    font-weight:bold;
+}
     </style>
 
 </head>
@@ -211,7 +222,12 @@ tr:hover{
 
                     <td>${nv.dacDiemNhanDang}</td>
 
-                    <td class="status-active">${nv.tenTrangThai}</td>
+                   <td class="
+                       ${nv.maTrangThai == 1 ? 'status-active' :
+                         nv.maTrangThai == 2 ? 'status-trial' :
+                         'status-leave'}">
+                       ${nv.tenTrangThai}
+                   </td>
                     <td>
                         <a href="suanhanvien?action=edit&id=${nv.maNV}" class="btn-edit">
                             Sửa
