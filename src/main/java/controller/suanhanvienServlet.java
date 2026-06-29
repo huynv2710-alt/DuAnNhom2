@@ -66,7 +66,7 @@ public class suanhanvienServlet extends HttpServlet {
 
         if (check) {
             HttpSession session = req.getSession();
-            session.setAttribute("successMsg", "Cập nhật nhân viên thành công!");
+            session.setAttribute("successMsg", "Cap Nhap Thanh cong!");
             resp.sendRedirect("quanlinhanvien");
         } else {
             req.setAttribute("error", "Cập nhật thất bại!");
