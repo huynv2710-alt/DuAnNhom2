@@ -117,6 +117,21 @@ tr:hover{
 .btn-add:hover{
     background:#00695c;
 }
+.btn-edit{
+    display:inline-block;
+    padding:6px 12px;
+    background:#f39c12;
+    color:#fff;
+    text-decoration:none;
+    border-radius:5px;
+    font-size:13px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.btn-edit:hover{
+    background:#d68910;
+}
     </style>
 
 </head>
