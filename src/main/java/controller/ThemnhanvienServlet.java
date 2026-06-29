@@ -2,6 +2,7 @@ package controller;
 
 import Models.NhanVien;
 import Service.connectService;
+import Service.quanlinhanvienservlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,36 +21,31 @@ public class ThemnhanvienServlet extends HttpServlet {
             req.getRequestDispatcher("themnhanvien.jsp")
                     .forward(req, resp);
     }
-    public boolean addNhanVien(NhanVien nv) {
+    @Override
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
+            throws ServletException, IOException {
 
-        connectService service = new connectService();
+        request.setCharacterEncoding("UTF-8");
 
-        String sql = "INSERT INTO NhanVien "
-                + "(MaNV, HoTen, NgaySinh, GioiTinh, SDT, Email, DiaChi, "
-                + "MaTrangThai, CCCD, NgayCapCCCD, DacDiemNhanDang) "
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        NhanVien nv = new NhanVien();
+        quanlinhanvienservlet s = new quanlinhanvienservlet();
+        nv.setMaNV(Integer.parseInt(request.getParameter("maNV")));
+        nv.setHoTen(request.getParameter("hoTen"));
+        nv.setNgaySinh(Date.valueOf(request.getParameter("ngaySinh")));
+        nv.setGioiTinh(request.getParameter("gioiTinh"));
+        nv.setSdt(request.getParameter("sdt"));
+        nv.setEmail(request.getParameter("email"));
+        nv.setDiaChi(request.getParameter("diaChi"));
+        nv.setCccd(request.getParameter("cccd"));
+        nv.setNgayCapCCCD(Date.valueOf(request.getParameter("ngayCapCCCD")));
+        nv.setDacDiemNhanDang(request.getParameter("dacDiemNhanDang"));
+        nv.setMaTrangThai(Integer.parseInt(request.getParameter("maTrangThai")));
 
-        try (Connection conn = service.myConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, nv.getMaNV());
-            ps.setString(2, nv.getHoTen());
-            ps.setDate(3, nv.getNgaySinh());
-            ps.setString(4, nv.getGioiTinh());
-            ps.setString(5, nv.getSdt());
-            ps.setString(6, nv.getEmail());
-            ps.setString(7, nv.getDiaChi());
-            ps.setInt(8, nv.getMaTrangThai());
-            ps.setString(9, nv.getCccd());
-            ps.setDate(10, nv.getNgayCapCCCD());
-            ps.setString(11, nv.getDacDiemNhanDang());
-
-            return ps.executeUpdate() > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (s.addNhanVien(nv)) {
+            response.sendRedirect("quanlinhanvien");
+        } else {
+            response.getWriter().println("Them that bai!");
         }
-
-        return false;
     }
 }
