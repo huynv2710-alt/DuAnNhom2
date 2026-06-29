@@ -33,7 +33,9 @@ public class suanhanvienServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/html;charset=UTF-8");
         int maNV = Integer.parseInt(req.getParameter("maNV"));
         String hoTen = req.getParameter("hoTen");
         Date ngaySinh = Date.valueOf(req.getParameter("ngaySinh"));
