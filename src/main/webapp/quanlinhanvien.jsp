@@ -154,6 +154,7 @@ tr:hover{
                 <th>Ngày cấp CCCD</th>
                 <th>Đặc điểm nhận dạng</th>
                 <th>Trạng thái</th>
+                 <th>Thao tác</th>
             </tr>
 
             </thead>
@@ -185,6 +186,11 @@ tr:hover{
                     <td>${nv.dacDiemNhanDang}</td>
 
                     <td class="status-active">${nv.tenTrangThai}</td>
+                    <td>
+                        <a href="NhanVienServlet?action=edit&id=${nv.maNV}" class="btn-edit">
+                            Sửa
+                        </a>
+                    </td>
 
                 </tr>
 
