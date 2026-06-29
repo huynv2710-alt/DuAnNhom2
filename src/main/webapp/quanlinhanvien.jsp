@@ -134,6 +134,11 @@ tr:hover{
 }
 }
 
+.status-active{
+    color:#2e7d32;
+    font-weight:bold;
+}
+
 .status-trial{
     color:#f39c12;
     font-weight:bold;
