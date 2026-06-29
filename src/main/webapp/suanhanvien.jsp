@@ -192,6 +192,7 @@ body{
 <select name="maTrangThai">
     <option value="1" ${nv.maTrangThai==1?"selected":""}>Đang làm</option>
     <option value="2" ${nv.maTrangThai==2?"selected":""}>Thử việc</option>
+    <option value="3" ${nv.maTrangThai==3?"selected":""}></option>
 </select>
 </div>
 
