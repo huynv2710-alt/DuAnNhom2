@@ -20,6 +20,6 @@ public class quanlinhanvienServlet extends HttpServlet {
 
         req.setAttribute("lst", list);
 
-        req.getRequestDispatcher("quanlinhanvien").forward(req, resp);
+        req.getRequestDispatcher("quanlinhanvien.jsp").forward(req, resp);
     }
 }
