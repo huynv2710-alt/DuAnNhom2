@@ -78,36 +78,6 @@
         </div>
     </div>
 
-    <div class="actions-card">
-        <h2>⚡ Thao tác nhanh</h2>
-        <div class="actions-grid">
-            <a href="index.jsp" class="action-btn">
-                <div class="action-icon">📋</div>
-                <span>Đơn hàng</span>
-            </a>
-            <a href="#" class="action-btn">
-                <div class="action-icon">👥</div>
-                <span>Khách hàng</span>
-            </a>
-            <a href="#" class="action-btn">
-                <div class="action-icon">📚</div>
-                <span>Nhập kho</span>
-            </a>
-            <a href="#" class="action-btn">
-                <div class="action-icon">📊</div>
-                <span>Báo cáo</span>
-            </a>
-            <a href="#" class="action-btn">
-                <div class="action-icon">🔑</div>
-                <span>Đổi mật khẩu</span>
-            </a>
-            <a href="index.jsp" class="action-btn">
-                <div class="action-icon">🚪</div>
-                <span>Đăng xuất</span>
-            </a>
-        </div>
-    </div>
-
 </main>
 
 </body>
