@@ -55,77 +55,36 @@ public class quanlinhanvienservlet {
     }
 
     public boolean addNhanVien(NhanVien nv) {
+
         connectService service = new connectService();
-        String sql = "INSERT INTO NhanVien (HoTen, NgaySinh, GioiTinh, SDT, Email, DiaChi, MaTrangThai, CCCD, NgayCapCCCD, DacDiemNhanDang) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        String sql = "INSERT INTO NhanVien "
+                + "(MaNV, HoTen, NgaySinh, GioiTinh, SDT, Email, DiaChi, "
+                + "MaTrangThai, CCCD, NgayCapCCCD, DacDiemNhanDang) "
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 
         try (Connection conn = service.myConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, nv.getHoTen());
-            ps.setDate(2, nv.getNgaySinh());
-            ps.setString(3, nv.getGioiTinh());
-            ps.setString(4, nv.getSdt());
-            ps.setString(5, nv.getEmail());
-            ps.setString(6, nv.getDiaChi());
-            ps.setInt(7, nv.getMaTrangThai());
-            ps.setString(8, nv.getCccd());
-            ps.setDate(9, nv.getNgayCapCCCD());
-            ps.setString(10, nv.getDacDiemNhanDang());
+            ps.setInt(1, nv.getMaNV());
+            ps.setString(2, nv.getHoTen());
+            ps.setDate(3, nv.getNgaySinh());
+            ps.setString(4, nv.getGioiTinh());
+            ps.setString(5, nv.getSdt());
+            ps.setString(6, nv.getEmail());
+            ps.setString(7, nv.getDiaChi());
+            ps.setInt(8, nv.getMaTrangThai());
+            ps.setString(9, nv.getCccd());
+            ps.setDate(10, nv.getNgayCapCCCD());
+            ps.setString(11, nv.getDacDiemNhanDang());
 
-            int rows = ps.executeUpdate();
-            return rows > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean editNhanVien(NhanVien nv) {
-        connectService service = new connectService();
-        String sql = "UPDATE NhanVien SET HoTen=?, NgaySinh=?, GioiTinh=?, SDT=?, Email=?, DiaChi=?, MaTrangThai=?, CCCD=?, NgayCapCCCD=?, DacDiemNhanDang=? " +
-                "WHERE MaNV=?";
-
-        try (Connection conn = service.myConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, nv.getHoTen());
-            ps.setDate(2, nv.getNgaySinh());
-            ps.setString(3, nv.getGioiTinh());
-            ps.setString(4, nv.getSdt());
-            ps.setString(5, nv.getEmail());
-            ps.setString(6, nv.getDiaChi());
-            ps.setInt(7, nv.getMaTrangThai());
-            ps.setString(8, nv.getCccd());
-            ps.setDate(9, nv.getNgayCapCCCD());
-            ps.setString(10, nv.getDacDiemNhanDang());
-            ps.setInt(11, nv.getMaNV());
-
-            int rows = ps.executeUpdate();
-            return rows > 0;
+            return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
+
+        return false;
     }
 
-    public boolean deleteNhanVien(int maNV) {
-        connectService service = new connectService();
-        String sql = "DELETE FROM NhanVien WHERE MaNV=?";
-
-        try (Connection conn = service.myConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, maNV);
-
-            int rows = ps.executeUpdate();
-            return rows > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
-}

@@ -134,17 +134,17 @@ body{
 
 <div class="form-group">
 <label>Mã nhân viên</label>
-<input type="text" name="maNV">
+<input type="text" name="maNV" required>
 </div>
 
 <div class="form-group">
 <label>Họ tên</label>
-<input type="text" name="hoTen">
+<input type="text" name="hoTen" required>
 </div>
 
 <div class="form-group">
 <label>Ngày sinh</label>
-<input type="date" name="ngaySinh">
+<input type="date" name="ngaySinh" required>
 </div>
 
 <div class="form-group">
@@ -157,37 +157,37 @@ body{
 
 <div class="form-group">
 <label>Số điện thoại</label>
-<input type="text" name="sdt">
+<input type="text" name="sdt" required>
 </div>
 
 <div class="form-group">
 <label>Email</label>
-<input type="email" name="email">
+<input type="email" name="email" required>
 </div>
 
 <div class="form-group">
 <label>Địa chỉ</label>
-<input type="text" name="diaChi">
+<input type="text" name="diaChi" required>
 </div>
 
 <div class="form-group">
 <label>CCCD</label>
-<input type="text" name="cccd">
+<input type="text" name="cccd" required>
 </div>
 
 <div class="form-group">
 <label>Ngày cấp CCCD</label>
-<input type="date" name="ngayCapCCCD">
+<input type="date" name="ngayCapCCCD" required>
 </div>
 
 <div class="form-group">
 <label>Đặc điểm nhận dạng</label>
-<input type="text" name="dacDiemNhanDang">
+<input type="text" name="dacDiemNhanDang" required>
 </div>
 
 <div class="form-group">
 <label>Trạng thái</label>
-<select name="maTrangThai">
+<select name="maTrangThai" >
 <option value="1">Đang làm</option>
 <option value="2">Thử việc</option>
 </select>
