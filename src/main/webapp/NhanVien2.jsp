@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Trang Nhân Viên - Book Store</title>
-    <link rel="stylesheet" href="nv.css">
+    <link rel="stylesheet" href="css/nv.css">
 </head>
 <body>
 
