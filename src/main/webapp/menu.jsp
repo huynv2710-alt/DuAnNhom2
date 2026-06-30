@@ -126,10 +126,7 @@ h1 {
 
     <ul class="nav-links">
         <li><a href="quanlinhanvien">Quản lý nhân viên</a></li>
-        <li ><a href="index.jsp">Đơn hàng</a></li>
-        <li><a href="#">Khách hàng</a></li>
-        <li><a href="#">Nhập kho</a></li>
-        <li><a href="#">Báo cáo</a></li>
+
     </ul>
 
     <div class="sidebar-footer">
