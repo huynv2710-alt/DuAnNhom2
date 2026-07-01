@@ -31,7 +31,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
 
         request.setAttribute("message",
-                "XIN CHAO " + tk.getTenTK() +
+                "XIN CHAO " + tk.getHoTen() +
                         " - MAT KHAU CUA BAN LA: " + tk.getPass());
 
         request.getRequestDispatcher("showPassword.jsp").forward(request, response);
