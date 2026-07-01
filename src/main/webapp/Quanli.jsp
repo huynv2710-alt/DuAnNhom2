@@ -31,8 +31,7 @@
         <div class="welcome-text">
             <h2>${nv.hoTen}</h2>
             <p>
-                Mã nhân viên:
-                <strong>${nv.maNV}</strong>
+
             </p>
         </div>
 
