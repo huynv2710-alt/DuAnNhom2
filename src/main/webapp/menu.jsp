@@ -19,6 +19,7 @@
 
     <ul class="nav-links">
         <li><a href="quanlinhanvien">Quản lý nhân viên</a></li>
+        <li><a href="thongtinquanli">Thông tin cá nhân</a></li>
 
     </ul>
 
