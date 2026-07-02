@@ -45,7 +45,7 @@ public class AdminFilter implements Filter {
 
         if (!"admin".equalsIgnoreCase(quyen)) {
             resp.sendError(HttpServletResponse.SC_FORBIDDEN,
-                    "Ban ko truy cap dc!");
+                    "Ban Khong Truy Cap Duoc Trang WEB này!");
             return;
         }
 
