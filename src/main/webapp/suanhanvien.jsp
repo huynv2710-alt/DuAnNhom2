@@ -120,7 +120,7 @@ body{
 
 <body>
 
-<jsp:include page="menu.jsp"/>
+<jsp:include page="menu2.jsp"/>
 
 <main class="content">
 
@@ -133,11 +133,6 @@ body{
 <input type="hidden" name="maNV" value="${nv.maNV}">
 
 <div class="form-grid">
-
-<div class="form-group">
-<label>Mã nhân viên</label>
-<input type="text" value="${nv.maNV}" readonly>
-</div>
 
 <div class="form-group">
 <label>Họ tên</label>
@@ -172,15 +167,6 @@ body{
 <input type="text" name="diaChi" value="${nv.diaChi}" required>
 </div>
 
-<div class="form-group">
-<label>CCCD</label>
-<input type="text" name="cccd" value="${nv.cccd}" required>
-</div>
-
-<div class="form-group">
-<label>Ngày cấp CCCD</label>
-<input type="date" name="ngayCapCCCD" value="${nv.ngayCapCCCD}" required>
-</div>
 
 <div class="form-group">
 <label>Đặc điểm nhận dạng</label>

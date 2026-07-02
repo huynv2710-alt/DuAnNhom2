@@ -1,7 +1,7 @@
 package controller;
 
 import Models.NhanVien;
-import Service.quanlinhanvienservlet;
+import Service.NhanVienService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,63 +15,45 @@ import java.sql.Date;
 @WebServlet("/suanhanvien")
 public class suanhanvienServlet extends HttpServlet {
 
-    quanlinhanvienservlet service = new quanlinhanvienservlet();
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        int id = Integer.parseInt(req.getParameter("id"));
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
 
-        NhanVien nv = service.getById(id);
+        HttpSession session = request.getSession();
+        String username = (String) session.getAttribute("username");
 
-        req.setAttribute("nv", nv);
+        if (username != null) {
+            NhanVienService nvService = new NhanVienService();
+            NhanVien nv = nvService.getNhanVienTheoUsername(username);
 
-        req.getRequestDispatcher("suanhanvien.jsp").forward(req, resp);
+            if (nv != null) {
+                session.setAttribute("tenTK", nv.getHoTen());
+                session.setAttribute("sdt", nv.getSdt());
+                session.setAttribute("email", nv.getEmail());
+                session.setAttribute("diaChi", nv.getDiaChi());
+                session.setAttribute("cccd", nv.getCccd());
+                session.setAttribute("ngayCapCCCD", nv.getNgayCapCCCD());
+                session.setAttribute("dacDiemNhanDang", nv.getDacDiemNhanDang());
+                session.setAttribute("tenTrangThai", nv.getTenTrangThai());
+            }
+
+            request.getRequestDispatcher("NhanVien2.jsp").forward(request, response);
+        } else {
+            response.sendRedirect("login.jsp");
+        }
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setCharacterEncoding("UTF-8");
-        resp.setContentType("text/html;charset=UTF-8");
-        int maNV = Integer.parseInt(req.getParameter("maNV"));
-        String hoTen = req.getParameter("hoTen");
-        Date ngaySinh = Date.valueOf(req.getParameter("ngaySinh"));
-        String gioiTinh = req.getParameter("gioiTinh");
-        String sdt = req.getParameter("sdt");
-        String email = req.getParameter("email");
-        String diaChi = req.getParameter("diaChi");
-        String cccd = req.getParameter("cccd");
-        Date ngayCapCCCD = Date.valueOf(req.getParameter("ngayCapCCCD"));
-        String dacDiemNhanDang = req.getParameter("dacDiemNhanDang");
-        int maTrangThai = Integer.parseInt(req.getParameter("maTrangThai"));
+        processRequest(request, response);
+    }
 
-        NhanVien nv = new NhanVien();
-
-        nv.setMaNV(maNV);
-        nv.setHoTen(hoTen);
-        nv.setNgaySinh(ngaySinh);
-        nv.setGioiTinh(gioiTinh);
-        nv.setSdt(sdt);
-        nv.setEmail(email);
-        nv.setDiaChi(diaChi);
-        nv.setCccd(cccd);
-        nv.setNgayCapCCCD(ngayCapCCCD);
-        nv.setDacDiemNhanDang(dacDiemNhanDang);
-        nv.setMaTrangThai(maTrangThai);
-
-        boolean check = service.update(nv);
-
-        if (check) {
-            HttpSession session = req.getSession();
-            session.setAttribute("successMsg", "Cap Nhap Thanh cong!");
-            resp.sendRedirect("quanlinhanvien");
-        } else {
-            req.setAttribute("error", "Cập nhật thất bại!");
-            req.setAttribute("nv", nv);
-            req.getRequestDispatcher("suanhanvien.jsp").forward(req, resp);
-        }
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
     }
 }

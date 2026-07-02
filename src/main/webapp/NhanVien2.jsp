@@ -9,6 +9,35 @@
     <meta charset="UTF-8">
     <title>Trang Nhân Viên - Book Store</title>
     <link rel="stylesheet" href="css/nv.css">
+    <style>
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: flex-start !important;
+            min-height: 100vh !important;
+            background-color: #f4f6f9 !important;
+        }
+
+        .sidebar {
+            position: sticky !important;
+            top: 0 !important;
+            height: 100vh !important;
+            width: 260px !important;
+            min-width: 260px !important;
+            overflow-y: auto !important;
+            z-index: 1000 !important;
+        }
+
+        .content {
+            flex: 1 !important;
+            width: calc(100% - 260px) !important;
+            padding: 30px !important;
+            box-sizing: border-box !important;
+            min-height: 100vh !important;
+            margin: 0 !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -72,8 +101,32 @@
                 <span>${sessionScope.quyen}</span>
             </div>
             <div class="info-item">
+                <label>Số điện thoại</label>
+                <span>${sessionScope.sdt}</span>
+            </div>
+            <div class="info-item">
+                <label>Email</label>
+                <span>${sessionScope.email}</span>
+            </div>
+            <div class="info-item">
+                <label>Địa chỉ</label>
+                <span>${sessionScope.diaChi}</span>
+            </div>
+            <div class="info-item">
+                <label>CCCD</label>
+                <span>${sessionScope.cccd}</span>
+            </div>
+            <div class="info-item">
+                <label>Ngày cấp CCCD</label>
+                <span>${sessionScope.ngayCapCCCD}</span>
+            </div>
+            <div class="info-item">
+                <label>Đặc điểm nhận dạng</label>
+                <span>${sessionScope.dacDiemNhanDang}</span>
+            </div>
+            <div class="info-item">
                 <label>Trạng thái</label>
-                <span style="color:#2e7d32; font-weight:bold;">🟢 Đang hoạt động</span>
+                <span style="color:#2e7d32; font-weight:bold;">${sessionScope.tenTrangThai}</span>
             </div>
         </div>
     </div>
