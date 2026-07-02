@@ -32,6 +32,9 @@
         <li>
             <a href="suanhanvien.jsp">Sửa thông tin</a>
         </li>
+        <li>
+            <a href="sanpham.jsp">Danh sách sản phẩm</a>
+        </li>
     </ul>
 
     <div class="sidebar-footer">
