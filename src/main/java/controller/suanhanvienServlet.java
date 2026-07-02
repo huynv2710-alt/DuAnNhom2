@@ -52,12 +52,14 @@ public class suanhanvienServlet extends HttpServlet {
 
         TaiKhoan tk = tkService.getUser(username);
         HttpSession session = request.getSession();
+
         session.setAttribute("username", tk.getUsername());
-        session.setAttribute("tenTK", tk.getHoTen());
         session.setAttribute("quyen", tk.getTenQuyen());
 
         NhanVien nv = nvService.getNhanVienTheoUsername(username);
+
         if (nv != null) {
+            session.setAttribute("tenTK", nv.getHoTen());
             session.setAttribute("sdt", nv.getSdt());
             session.setAttribute("email", nv.getEmail());
             session.setAttribute("diaChi", nv.getDiaChi());
@@ -66,6 +68,13 @@ public class suanhanvienServlet extends HttpServlet {
             session.setAttribute("dacDiemNhanDang", nv.getDacDiemNhanDang());
             session.setAttribute("tenTrangThai", nv.getTenTrangThai());
             session.setAttribute("maNV", nv.getMaNV());
+        } else {
+            session.setAttribute("tenTK", "Chưa có dữ liệu");
+            session.setAttribute("sdt", "Chưa cập nhật");
+            session.setAttribute("email", "Chưa cập nhật");
+            session.setAttribute("diaChi", "Chưa cập nhật");
+            session.setAttribute("cccd", "Chưa cập nhật");
+            session.setAttribute("tenTrangThai", "Chưa có");
         }
 
         if (tk.getTenQuyen() != null && tk.getTenQuyen().equalsIgnoreCase("admin")) {

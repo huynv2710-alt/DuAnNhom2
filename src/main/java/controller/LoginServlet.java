@@ -1,6 +1,8 @@
 package controller;
 
+import Models.NhanVien;
 import Models.TaiKhoan;
+import Service.NhanVienService;
 import Service.TaiKhoanService;
 
 import javax.servlet.ServletException;
@@ -12,6 +14,7 @@ import java.io.IOException;
 public class LoginServlet extends HttpServlet {
 
     private TaiKhoanService service = new TaiKhoanService();
+    private NhanVienService nvService = new NhanVienService();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -31,11 +34,31 @@ public class LoginServlet extends HttpServlet {
         }
 
         TaiKhoan tk = service.getUser(username);
-
         HttpSession session = request.getSession();
+
         session.setAttribute("username", tk.getUsername());
-        session.setAttribute("hoTen", tk.getHoTen());
         session.setAttribute("quyen", tk.getTenQuyen());
+
+        NhanVien nv = nvService.getNhanVienTheoUsername(username);
+
+        if (nv != null) {
+            session.setAttribute("tenTK", nv.getHoTen());
+            session.setAttribute("sdt", nv.getSdt());
+            session.setAttribute("email", nv.getEmail());
+            session.setAttribute("diaChi", nv.getDiaChi());
+            session.setAttribute("cccd", nv.getCccd());
+            session.setAttribute("ngayCapCCCD", nv.getNgayCapCCCD());
+            session.setAttribute("dacDiemNhanDang", nv.getDacDiemNhanDang());
+            session.setAttribute("tenTrangThai", nv.getTenTrangThai());
+            session.setAttribute("maNV", nv.getMaNV());
+        } else {
+            session.setAttribute("tenTK", tk.getHoTen() != null ? tk.getHoTen() : "Chưa có tên");
+            session.setAttribute("sdt", "Chưa cập nhật");
+            session.setAttribute("email", "Chưa cập nhật");
+            session.setAttribute("diaChi", "Chưa cập nhật");
+            session.setAttribute("cccd", "Chưa cập nhật");
+            session.setAttribute("tenTrangThai", "Chưa xác định");
+        }
 
         if ("admin".equalsIgnoreCase(tk.getTenQuyen())) {
             response.sendRedirect("quanlinhanvien");
@@ -47,7 +70,6 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-
         response.sendRedirect("index.jsp");
     }
 }
