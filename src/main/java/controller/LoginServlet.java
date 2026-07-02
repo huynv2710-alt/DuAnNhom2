@@ -22,30 +22,23 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-
         boolean ok = service.loginCheck(username, password);
 
         if (!ok) {
-            request.setAttribute("error", "Sai Mat Khau Moi Ban Nhap Lai!");
+            request.setAttribute("error", "Sai mật khẩu hoặc tên đăng nhập!");
             request.getRequestDispatcher("index.jsp").forward(request, response);
             return;
         }
 
-
         TaiKhoan tk = service.getUser(username);
 
-        // 3. tạo session
         HttpSession session = request.getSession();
         session.setAttribute("username", tk.getUsername());
-        session.setAttribute("tenTK", tk.getTenTK());
+        session.setAttribute("hoTen", tk.getHoTen());
         session.setAttribute("quyen", tk.getTenQuyen());
 
-
-        if (tk.getTenQuyen() != null &&
-                tk.getTenQuyen().equalsIgnoreCase("admin")) {
-
+        if ("admin".equalsIgnoreCase(tk.getTenQuyen())) {
             response.sendRedirect("quanlinhanvien");
-
         } else {
             response.sendRedirect("NhanVien2.jsp");
         }

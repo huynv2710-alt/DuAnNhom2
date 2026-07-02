@@ -7,9 +7,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Đăng nhập - Book Store</title>
+    <title>Menu - Book Store</title>
     <link rel="stylesheet" href="css/menu2.css">
 </head>
+
+<body>
 
 <nav class="sidebar">
 
@@ -19,28 +21,42 @@
     </div>
 
     <ul class="nav-links">
-        <c:if test="${sessionScope.quyen == 'Admin' || sessionScope.quyen == 'Quản trị viên'}">
-            <li><a href="quanlinhanvien">Quản lý nhân viên</a></li>
+
+        <c:if test="${sessionScope.quyen == 'Quản lý'}">
+            <li>
+                <a href="quanlinhanvien">Quản lý nhân viên</a>
+            </li>
         </c:if>
 
-        <li><a href="NhanVien2.jsp">Thông tin cá nhân</a></li>
+        <li>
+            <a href="NhanVien2.jsp">Thông tin cá nhân</a>
+        </li>
 
     </ul>
 
     <div class="sidebar-footer">
+
         <div class="user-info">
-            <div class="avatar">${fn:substring(sessionScope.tenTK, 0, 1)}</div>
+
+            <div class="avatar">
+                ${fn:substring(sessionScope.hoTen,0,1)}
+            </div>
+
             <div>
-                <div><b>${sessionScope.tenTK}</b></div>
+                <div><b>${sessionScope.hoTen}</b></div>
                 <div>${sessionScope.quyen}</div>
             </div>
+
         </div>
 
-        <button class="logout-btn" onclick="window.location.href='index.jsp'">
+        <button class="logout-btn"
+                onclick="window.location.href='index.jsp'">
             Đăng xuất
         </button>
+
     </div>
 
 </nav>
 
+</body>
 </html>

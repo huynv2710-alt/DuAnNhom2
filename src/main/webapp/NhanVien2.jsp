@@ -52,10 +52,10 @@
 
     <div class="welcome-card">
         <div class="welcome-avatar">
-            ${fn:substring(sessionScope.tenTK, 0, 1)}
+            ${fn:substring(sessionScope.hoTen, 0, 1)}
         </div>
         <div class="welcome-text">
-            <h2>Xin chào, ${sessionScope.tenTK}!</h2>
+            <h2>Xin chào, ${sessionScope.hoTen}!</h2>
             <p>Tài khoản: <strong>${sessionScope.username}</strong> &nbsp;|&nbsp; Hôm nay chúc bạn làm việc vui vẻ 🎉</p>
         </div>
         <div class="welcome-badge">📋 ${sessionScope.quyen}</div>

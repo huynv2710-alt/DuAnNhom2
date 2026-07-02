@@ -1,30 +1,52 @@
 package Models;
 
 public class TaiKhoan {
+
     private String username;
     private String pass;
-    private String tenTK;
+    private String hoTen;
     private String tenQuyen;
 
-    public TaiKhoan() {}
+    public TaiKhoan() {
+    }
 
-    public TaiKhoan(String username, String pass, String tenTK, String tenQuyen) {
+    public TaiKhoan(String username, String pass, String hoTen, String tenQuyen) {
         this.username = username;
         this.pass = pass;
-        this.tenTK = tenTK;
+        this.hoTen = hoTen;
         this.tenQuyen = tenQuyen;
     }
 
     // Getter & Setter
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getUsername() {
+        return username;
+    }
 
-    public String getPass() { return pass; }
-    public void setPass(String pass) { this.pass = pass; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public String getTenTK() { return tenTK; }
-    public void setTenTK(String tenTK) { this.tenTK = tenTK; }
+    public String getPass() {
+        return pass;
+    }
 
-    public String getTenQuyen() { return tenQuyen; }
-    public void setTenQuyen(String tenQuyen) { this.tenQuyen = tenQuyen; }
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public String getHoTen() {
+        return hoTen;
+    }
+
+    public void setHoTen(String hoTen) {
+        this.hoTen = hoTen;
+    }
+
+    public String getTenQuyen() {
+        return tenQuyen;
+    }
+
+    public void setTenQuyen(String tenQuyen) {
+        this.tenQuyen = tenQuyen;
+    }
 }
