@@ -9,6 +9,11 @@
     <meta charset="UTF-8">
     <title>Thông tin cá nhân</title>
     <link rel="stylesheet" href="css/nv.css">
+        <style>
+            body { margin: 0 !important; padding: 0 !important; display: flex !important; align-items: flex-start !important; min-height: 100vh !important; background-color: #f4f6f9 !important; }
+            .sidebar { position: sticky !important; top: 0 !important; height: 100vh !important; width: 260px !important; min-width: 260px !important; overflow-y: auto !important; z-index: 1000 !important; }
+            .content { flex: 1 !important; width: calc(100% - 260px) !important; padding: 30px !important; box-sizing: border-box !important; min-height: 100vh !important; margin: 0 !important; }
+        </style>
 </head>
 
 <body>
