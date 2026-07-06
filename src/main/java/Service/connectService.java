@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class connectService {
-    private final String URL = "jdbc:sqlserver://localhost:1433;databaseName=Book;encrypt=true;trustServerCertificate=true";
+    private final String URL = "jdbc:sqlserver://localhost:1433;databaseName=BookStore;encrypt=true;trustServerCertificate=true";
 
     private final String USER = "sa";
 
