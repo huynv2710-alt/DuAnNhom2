@@ -18,6 +18,35 @@ body {
     width: 100%;
     max-width: 420px;
     padding: 20px;
+    opacity: 0;
+    animation: pageFadeIn 0.6s ease forwards;
+}
+
+/* Hiệu ứng khi rời trang (trước khi chuyển sang menu chính) */
+.container.fade-out {
+    animation: pageFadeOut 0.4s ease forwards;
+}
+
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes pageFadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.97);
+    }
 }
 
 .login-box {
@@ -71,12 +100,26 @@ body {
     font-weight: 600;
     margin-top: 10px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .login-box button:hover {
     background: #2e5c4a;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(30, 58, 47, 0.4);
+}
+
+.login-box button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(30, 58, 47, 0.35);
+}
+
+/* Hiệu ứng loading nhẹ khi nút đang chuyển trang */
+.login-box button.loading {
+    pointer-events: none;
+    opacity: 0.85;
 }
 
 .error {

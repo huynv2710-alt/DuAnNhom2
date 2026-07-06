@@ -7,6 +7,26 @@
     <meta charset="UTF-8">
     <title>Quản lý nhân viên</title>
     <link rel="stylesheet" href="css/qlnv.css">
+    <style>
+        .sidebar {
+            opacity: 0;
+            animation: slideInSidebar 0.5s ease forwards;
+        }
+        .content {
+            opacity: 0;
+            animation: fadeInContent 0.6s ease 0.15s forwards;
+        }
+
+        @keyframes slideInSidebar {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInContent {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 
 <body>
