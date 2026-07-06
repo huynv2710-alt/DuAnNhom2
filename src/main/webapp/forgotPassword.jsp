@@ -8,6 +8,7 @@
 <meta charset="UTF-8">
 <title>Quên mật khẩu</title>
 <link rel="stylesheet" href="css/forgotpass.css">
+<script src="js/error.js"></script>
 </head>
 
 <body>
@@ -18,7 +19,7 @@
     <input type="email" name="email" placeholder="Email">
 
     <c:if test="${not empty error}">
-        <div class="error">${error}</div>
+        <div class="error" id="error-msg">${error}</div>
     </c:if>
 
     <button type="submit">Lấy mật khẩu</button>

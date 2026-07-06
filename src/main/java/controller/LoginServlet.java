@@ -21,6 +21,8 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -28,7 +30,7 @@ public class LoginServlet extends HttpServlet {
         boolean ok = service.loginCheck(username, password);
 
         if (!ok) {
-            request.setAttribute("error", "Sai mật khẩu hoặc tên đăng nhập!");
+            request.setAttribute("error", "Sai mật khẩu hoặc tên đăng nhập! <br> Hãy liên hệ đến quản lí");
             request.getRequestDispatcher("index.jsp").forward(request, response);
             return;
         }

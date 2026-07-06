@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page isELIgnored="false" %>
 
@@ -8,6 +8,7 @@
     <meta charset="UTF-8">
     <title>Đăng nhập - Book Store</title>
     <link rel="stylesheet" href="css/tk.css">
+    <script src="${pageContext.request.contextPath}/js/error.js?v=2"></script>
 </head>
 <body>
     <div class="container">
@@ -20,7 +21,7 @@
                 <input type="password" name="password" placeholder="Mật khẩu" required>
 
                 <c:if test="${not empty error}">
-                    <div class="error-box">
+                    <div class="error-box" id="error-msg">
                     ⚠️ ${error}
                     </div>
                 </c:if>
