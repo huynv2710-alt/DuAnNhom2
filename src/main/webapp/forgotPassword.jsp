@@ -5,28 +5,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Quên mật khẩu</title>
-<link rel="stylesheet" href="css/forgotpass.css">
-<script src="js/error.js"></script>
+    <meta charset="UTF-8">
+    <title>Quên mật khẩu - Book Store</title>
+    <link rel="stylesheet" href="css/tk.css">
 </head>
-
 <body>
-<div class="box">
-<h2>QUÊN MẬT KHẨU</h2>
-<form action="ForgotPasswordServlet" method="post">
-    <input type="text" name="username" placeholder="Tên đăng nhập">
-    <input type="email" name="email" placeholder="Email">
+    <div class="container">
+        <div class="login-box">
+            <h1>BOOK STORE</h1>
+            <h3>KHÔI PHỤC MẬT KHẨU</h3>
 
-    <c:if test="${not empty error}">
-        <div class="error" id="error-msg">${error}</div>
-    </c:if>
+            <form action="ForgotPasswordServlet" method="post">
+                <input type="text" name="username" placeholder="Tên đăng nhập" required>
+                <input type="email" name="email" placeholder="Email đăng ký" required>
 
-    <button type="submit">Lấy mật khẩu</button>
-</form>
+                <c:if test="${not empty error}">
+                    <div class="error-box">
+                    ⚠️ ${error}
+                    </div>
+                </c:if>
+                <c:if test="${not empty message}">
+                    <div class="error-box" style="background:#d4edda; color:#155724; border-color:#c3e6cb;">
+                    ✅ ${message}
+                    </div>
+                </c:if>
 
-<a href="index.jsp">← Quay lại đăng nhập</a>
-
-</div>
+                <button type="submit">Lấy lại mật khẩu</button>
+            </form>
+            
+            <a href="index.jsp">← Quay lại đăng nhập</a>
+        </div>
+    </div>
 </body>
 </html>

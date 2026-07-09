@@ -1,6 +1,7 @@
 package controller;
 
 import Models.NhanVien;
+import Service.TaiKhoanService;
 import Service.connectService;
 import Service.quanlinhanvienservlet;
 
@@ -43,6 +44,11 @@ public class ThemnhanvienServlet extends HttpServlet {
         nv.setMaTrangThai(Integer.parseInt(request.getParameter("maTrangThai")));
 
         if (s.addNhanVien(nv)) {
+            TaiKhoanService tkService = new TaiKhoanService();
+            String username = request.getParameter("username");
+            String pass = request.getParameter("password");
+            int maQuyen = Integer.parseInt(request.getParameter("maQuyen"));
+            tkService.addTaiKhoan(username, pass, nv.getMaNV(), maQuyen);
             response.sendRedirect("quanlinhanvien");
         } else {
             response.getWriter().println("Them that bai!");

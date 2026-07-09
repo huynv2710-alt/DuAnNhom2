@@ -83,6 +83,24 @@
 </select>
 </div>
 
+<div class="form-group">
+<label>Tên đăng nhập (Tài khoản)</label>
+<input type="text" name="username" required>
+</div>
+
+<div class="form-group">
+<label>Mật khẩu</label>
+<input type="password" name="password" required>
+</div>
+
+<div class="form-group">
+<label>Vai trò</label>
+<select name="maQuyen">
+<option value="2">Nhân viên</option>
+<option value="1">Admin</option>
+</select>
+</div>
+
 </div>
 
 <div class="button-group">

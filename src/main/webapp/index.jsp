@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Đăng nhập - Book Store</title>
+    <title>Dang nhap - Book Store</title>
     <link rel="stylesheet" href="css/tk.css">
     <script src="${pageContext.request.contextPath}/js/error.js?v=2"></script>
 </head>
@@ -14,11 +14,11 @@
     <div class="container">
         <div class="login-box">
             <h1>BOOK STORE</h1>
-            <h3>ĐĂNG NHẬP HỆ THỐNG</h3>
+            <h3>DANG NHAP HE THONG</h3>
 
             <form action="LoginServlet" method="post">
-                <input type="text" name="username" placeholder="Tên đăng nhập" required>
-                <input type="password" name="password" placeholder="Mật khẩu" required>
+                <input type="text" name="username" placeholder="Ten dang nhap" required>
+                <input type="password" name="password" placeholder="Mat khau" required>
 
                 <c:if test="${not empty error}">
                     <div class="error-box" id="error-msg">
@@ -26,10 +26,8 @@
                     </div>
                 </c:if>
 
-                <button type="submit">Đăng nhập</button>
+                <button type="submit">Dang nhap</button>
             </form>
-
-            <a href="forgotPassword.jsp">Quên mật khẩu?</a>
         </div>
     </div>
 </body>

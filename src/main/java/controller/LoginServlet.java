@@ -27,10 +27,14 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        boolean ok = service.loginCheck(username, password);
+        int status = service.loginStatus(username, password);
 
-        if (!ok) {
+        if (status == 0) {
             request.setAttribute("error", "Sai mật khẩu hoặc tên đăng nhập! <br> Hãy liên hệ đến quản lí");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+            return;
+        } else if (status == -1) {
+            request.setAttribute("error", "Tài khoản hiện không đăng nhập được!");
             request.getRequestDispatcher("index.jsp").forward(request, response);
             return;
         }
@@ -54,19 +58,15 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("tenTrangThai", nv.getTenTrangThai());
             session.setAttribute("maNV", nv.getMaNV());
         } else {
-            session.setAttribute("tenTK", tk.getHoTen() != null ? tk.getHoTen() : "Chưa có tên");
-            session.setAttribute("sdt", "Chưa cập nhật");
-            session.setAttribute("email", "Chưa cập nhật");
-            session.setAttribute("diaChi", "Chưa cập nhật");
-            session.setAttribute("cccd", "Chưa cập nhật");
-            session.setAttribute("tenTrangThai", "Chưa xác định");
+            session.setAttribute("tenTK", tk.getHoTen() != null ? tk.getHoTen() : "Chua co ten");
+            session.setAttribute("sdt", "Chua cap nhat");
+            session.setAttribute("email", "Chua cap nhat");
+            session.setAttribute("diaChi", "Chua cap nhat");
+            session.setAttribute("cccd", "Chua cap nhat");
+            session.setAttribute("tenTrangThai", "Chua xac dinh");
         }
 
-        if ("admin".equalsIgnoreCase(tk.getTenQuyen())) {
-            response.sendRedirect("quanlinhanvien");
-        } else {
-            response.sendRedirect("NhanVien2.jsp");
-        }
+        response.sendRedirect("dashboard");
     }
 
     @Override
