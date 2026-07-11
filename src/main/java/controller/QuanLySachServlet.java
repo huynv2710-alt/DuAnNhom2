@@ -64,7 +64,7 @@ public class QuanLySachServlet extends HttpServlet {
             req.getSession().setAttribute("successMsg", "Cập nhật sách thành công!");
         }
 
-        resp.sendRedirect("quanlysach");
+        resp.sendRedirect("quanlysach.jsp");
     }
 }
  
