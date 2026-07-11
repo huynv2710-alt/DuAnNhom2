@@ -131,7 +131,8 @@ public class TaiKhoanService {
     public boolean addTaiKhoan(String username, String password, int maNV, int maPhanQuyen) {
         try (Connection con = connect.myConnection();
              PreparedStatement ps = con.prepareStatement(
-                     "INSERT INTO TaiKhoan (Username, PASS, MaNV, MaPhanQuyen) VALUES (?, ?, ?, ?)")) {
+                     "INSERT INTO TaiKhoan (MaTK, Username, PASS, MaNV, MaPhanQuyen) " +
+                     "SELECT (SELECT ISNULL(MAX(MaTK),0)+1 FROM TaiKhoan), ?, ?, ?, ?")) {
             ps.setString(1, username);
             ps.setString(2, password);
             ps.setInt(3, maNV);
@@ -139,24 +140,25 @@ public class TaiKhoanService {
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
-        return false;
     }
 
-    public boolean updateTaiKhoan(String username, String password, int maPhanQuyen) {
-        String sql = "UPDATE TaiKhoan SET MaPhanQuyen = ?";
+    public boolean updateTaiKhoanFull(String oldUsername, String newUsername, String password, int maPhanQuyen) {
+        String sql = "UPDATE TaiKhoan SET Username = ?, MaPhanQuyen = ?";
         if (password != null && !password.isEmpty()) {
             sql += ", PASS = ?";
         }
         sql += " WHERE Username = ?";
         try (Connection con = connect.myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, maPhanQuyen);
+            ps.setString(1, newUsername);
+            ps.setInt(2, maPhanQuyen);
             if (password != null && !password.isEmpty()) {
-                ps.setString(2, password);
-                ps.setString(3, username);
+                ps.setString(3, password);
+                ps.setString(4, oldUsername);
             } else {
-                ps.setString(2, username);
+                ps.setString(3, oldUsername);
             }
             return ps.executeUpdate() > 0;
         } catch (Exception e) {

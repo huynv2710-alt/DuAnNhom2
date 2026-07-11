@@ -4,6 +4,7 @@ import Models.NhanVien;
 import Models.TaiKhoan;
 import Service.NhanVienService;
 import Service.TaiKhoanService;
+import Service.quanlinhanvienservlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,6 +32,23 @@ public class suanhanvienServlet extends HttpServlet {
             handleLogin(request, response);
         } else if ("update".equals(action)) {
             handleUpdate(request, response);
+        } else if ("adminUpdate".equals(action)) {
+            quanlinhanvienservlet qlService = new quanlinhanvienservlet();
+            NhanVien nv = new NhanVien();
+            nv.setMaNV(Integer.parseInt(request.getParameter("maNV")));
+            nv.setHoTen(request.getParameter("hoTen"));
+            nv.setNgaySinh(java.sql.Date.valueOf(request.getParameter("ngaySinh")));
+            nv.setGioiTinh(request.getParameter("gioiTinh"));
+            nv.setSdt(request.getParameter("sdt"));
+            nv.setEmail(request.getParameter("email"));
+            nv.setDiaChi(request.getParameter("diaChi"));
+            nv.setCccd(request.getParameter("cccd"));
+            nv.setNgayCapCCCD(java.sql.Date.valueOf(request.getParameter("ngayCapCCCD")));
+            nv.setDacDiemNhanDang(request.getParameter("dacDiemNhanDang"));
+            nv.setMaTrangThai(Integer.parseInt(request.getParameter("maTrangThai")));
+            
+            qlService.update(nv);
+            response.sendRedirect("quanlinhanvien");
         } else {
             response.sendRedirect("index.jsp");
         }
@@ -108,7 +126,19 @@ public class suanhanvienServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if ("edit".equals(action)) {
+            String idStr = request.getParameter("id");
+            if (idStr != null) {
+                int maNV = Integer.parseInt(idStr);
+                quanlinhanvienservlet qlService = new quanlinhanvienservlet();
+                NhanVien nv = qlService.getById(maNV);
+                request.setAttribute("nv", nv);
+                request.getRequestDispatcher("editnhanvien.jsp").forward(request, response);
+                return;
+            }
+        }
         response.sendRedirect("index.jsp");
     }
 }

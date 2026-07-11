@@ -58,6 +58,10 @@
                     <label>CCCD (Không được sửa)</label>
                     <input type="text" class="form-input" value="${sessionScope.cccd}" readonly style="background: #e9ecef;">
                 </div>
+                <div class="info-item">
+                    <label>Trạng thái (Không được sửa)</label>
+                    <input type="text" class="form-input" value="${sessionScope.tenTrangThai}" readonly style="background: #e9ecef; font-weight: bold; color: #2e7d32;">
+                </div>
             </div>
 
             <button type="submit" class="btn-submit">Lưu Thay Đổi</button>

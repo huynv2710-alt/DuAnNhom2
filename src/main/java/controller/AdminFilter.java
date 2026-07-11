@@ -16,7 +16,10 @@ import javax.servlet.http.HttpSession;
 @WebFilter(urlPatterns = {
         "/quanlinhanvien",
         "/themnhanvien",
-        "/suanhanhanvien"
+        "/suanhanhanvien",
+        "/quanlytaikhoan",
+        "/quanlytheloai",
+        "/quanlynxb"
 })
 public class AdminFilter implements Filter {
 

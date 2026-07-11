@@ -87,9 +87,10 @@
         <div class="modal-header">Sửa Tài Khoản</div>
         <form action="quanlytaikhoan" method="post">
             <input type="hidden" name="action" value="edit">
+            <input type="hidden" name="oldUsername" id="oldUsername">
             <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="editUsername" name="username" readonly style="background: #e9ecef;">
+                <label>Tên đăng nhập mới</label>
+                <input type="text" id="editUsername" name="newUsername" required>
             </div>
             <div class="form-group">
                 <label>Mật Khẩu Mới (Bỏ trống = không đổi)</label>
@@ -118,6 +119,7 @@
         document.getElementById(id).style.display = 'none';
     }
     function openEditModal(username, maQuyen) {
+        document.getElementById('oldUsername').value = username;
         document.getElementById('editUsername').value = username;
         document.getElementById('editMaQuyen').value = maQuyen;
         openModal('editModal');

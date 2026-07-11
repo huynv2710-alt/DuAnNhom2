@@ -1,139 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
 }
 
-body{
-    display:flex;
-    min-height:100vh;
-    background:#f4f4f4;
+body {
+    display: flex;
+    min-height: 100vh;
+    background: #f8fafc;
+    color: #1e293b;
 }
 
-.content{
-    flex:1;
-    padding:25px;
-    overflow:hidden;
+.content {
+    flex: 1;
+    padding: 30px 40px;
+    overflow-y: auto;
+    height: 100vh;
 }
 
-.table-container{
-    background:#fff;
-    padding:20px;
-    border-radius:12px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.1);
-    overflow-x:auto;
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #2d6652;
+    padding-bottom: 10px;
 }
 
-table{
-    width:100%;
-    min-width:1200px;
-    border-collapse:collapse;
+.header h1 {
+    margin: 0;
+    color: #0f2820;
+    font-size: 24px;
+    font-weight: 700;
 }
 
-th{
-    background:#00897b;
-    color:white;
-    padding:15px 12px;
-    border:1px solid #ddd;
-    white-space:nowrap;
-    font-size:18px;
+/* Filter Card */
+.filter-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 25px;
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    flex-wrap: wrap;
 }
 
-td{
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:center;
-    white-space:nowrap;
-    font-size:16px;
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-tr:nth-child(even){
-    background:#fafafa;
+.filter-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-tr:hover{
-    background:#f2f2f2;
+.filter-group input, .filter-group select {
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    color: #334155;
+    min-width: 200px;
 }
 
-.status-active{
-    color:#2e7d32;
-    font-weight:bold;
+.filter-group input:focus, .filter-group select:focus {
+    border-color: #2d6652;
+    box-shadow: 0 0 0 2px rgba(45, 102, 82, 0.2);
 }
 
-.table-container::-webkit-scrollbar{
-    height:8px;
+.btn-filter {
+    background: #2d6652;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
 }
 
-.table-container::-webkit-scrollbar-thumb{
-    background:#bdbdbd;
-    border-radius:10px;
+.btn-filter:hover { background: #1e4537; }
+
+.btn-reset {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 10px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
 }
 
-.table-container::-webkit-scrollbar-track{
-    background:#f1f1f1;
+.btn-reset:hover { background: #e2e8f0; }
+
+
+/* Table Container */
+.table-container {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+    overflow-x: auto;
 }
 
-.header{
-    width:100%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:18px;
+table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.header h1{
-    margin:0;
-    color:#00897b;
-    font-size:38px;
-    font-weight:bold;
-    letter-spacing:2px;
+th {
+    background: #00897b;
+    color: #ffffff;
+    padding: 15px 20px;
+    border-bottom: 1px solid #00796b;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
 }
 
-.btn-add{
-    display:inline-block;
-    margin-left:auto;
-    background:#00897b;
-    color:#fff;
-    text-decoration:none;
-    padding:8px 16px;
-    border-radius:6px;
-    font-size:14px;
-    font-weight:bold;
-    transition:0.3s;
+td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    color: #334155;
+    vertical-align: middle;
 }
 
-.btn-add:hover{
-    background:#00695c;
-}
-.btn-edit{
-    display:inline-block;
-    padding:6px 12px;
-    background:#f39c12;
-    color:#fff;
-    text-decoration:none;
-    border-radius:5px;
-    font-size:13px;
-    font-weight:bold;
-    transition:0.3s;
+tr:last-child td { border-bottom: none; }
+tr:hover { background: #f8fafc; }
+
+/* Buttons */
+.btn-add {
+    background: #2d6652;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s;
+    cursor: pointer;
+    border: none;
 }
 
-.btn-edit:hover{
-    background:#d68910;
-}
+.btn-add:hover { background: #1e4537; }
 
-.status-active{
-    color:#2e7d32;
-    font-weight:bold;
+.btn-edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    background: transparent;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    transition: 0.2s;
+    cursor: pointer;
+    margin-right: 5px;
 }
+.btn-edit:hover { background: #f8fafc; color: #2d6652; border-color: #2d6652; }
 
-.status-trial{
-    color:#f39c12;
-    font-weight:bold;
+.btn-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    background: transparent;
+    color: #ef4444;
+    border: 1px solid #fca5a5;
+    border-radius: 6px;
+    transition: 0.2s;
+    cursor: pointer;
+    text-decoration: none;
 }
+.btn-delete:hover { background: #fef2f2; color: #dc2626; border-color: #ef4444; }
 
-.status-leave{
-    color:#e53935;
-    font-weight:bold;
+/* Status Labels */
+.status-active {
+    color: #059669;
+    font-weight: 600;
+    font-size: 13px;
+}
+.status-leave {
+    color: #ef4444;
+    font-weight: 600;
+    font-size: 13px;
 }
