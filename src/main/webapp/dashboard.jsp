@@ -24,8 +24,8 @@
             <p>Báo cáo thống kê hoạt động kinh doanh Book Store</p>
         </div>
 
-        <div class="welcome-card" style="background: linear-gradient(135deg, #0277bd 0%, #01579b 100%); margin-bottom: 30px;">
-            <div class="welcome-avatar" style="color: #0277bd; font-size: 36px; border-color: rgba(255,255,255,0.7);">
+        <div class="welcome-card" style="background: linear-gradient(135deg, #00897b 0%, #00695c 100%); margin-bottom: 30px;">
+            <div class="welcome-avatar" style="color: #00897b; font-size: 36px; border-color: rgba(255,255,255,0.7);">
                 $
             </div>
             <div class="welcome-text">

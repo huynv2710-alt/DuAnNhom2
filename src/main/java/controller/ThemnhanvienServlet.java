@@ -31,7 +31,23 @@ public class ThemnhanvienServlet extends HttpServlet {
 
         NhanVien nv = new NhanVien();
         quanlinhanvienservlet s = new quanlinhanvienservlet();
-        nv.setMaNV(Integer.parseInt(request.getParameter("maNV")));
+        int maNV = Integer.parseInt(request.getParameter("maNV"));
+        String username = request.getParameter("username");
+
+        if (s.getById(maNV) != null) {
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println("<script>alert('Lỗi: Mã Nhân Viên [" + maNV + "] đã tồn tại! Vui lòng chọn mã khác.'); window.history.back();</script>");
+            return;
+        }
+
+        TaiKhoanService tkService = new TaiKhoanService();
+        if (tkService.getUser(username) != null) {
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println("<script>alert('Lỗi: Tên đăng nhập [" + username + "] đã có người sử dụng! Vui lòng chọn tên khác.'); window.history.back();</script>");
+            return;
+        }
+
+        nv.setMaNV(maNV);
         nv.setHoTen(request.getParameter("hoTen"));
         nv.setNgaySinh(Date.valueOf(request.getParameter("ngaySinh")));
         nv.setGioiTinh(request.getParameter("gioiTinh"));
@@ -44,14 +60,23 @@ public class ThemnhanvienServlet extends HttpServlet {
         nv.setMaTrangThai(Integer.parseInt(request.getParameter("maTrangThai")));
 
         if (s.addNhanVien(nv)) {
-            TaiKhoanService tkService = new TaiKhoanService();
-            String username = request.getParameter("username");
             String pass = request.getParameter("password");
             int maQuyen = Integer.parseInt(request.getParameter("maQuyen"));
-            tkService.addTaiKhoan(username, pass, nv.getMaNV(), maQuyen);
-            response.sendRedirect("quanlinhanvien");
+            try {
+                tkService.addTaiKhoan(username, pass, maNV, maQuyen);
+                response.sendRedirect("quanlinhanvien");
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.setContentType("text/html;charset=UTF-8");
+                response.getWriter().println("<html><body>");
+                response.getWriter().println("<h3 style='color:red;'>Thêm nhân viên thành công nhưng tạo Tài Khoản thất bại!</h3>");
+                response.getWriter().println("<p><b>Chi tiết lỗi từ Database:</b> " + e.getMessage() + "</p>");
+                response.getWriter().println("<button onclick='window.history.back()'>Quay lại</button>");
+                response.getWriter().println("</body></html>");
+            }
         } else {
-            response.getWriter().println("Them that bai!");
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println("<script>alert('Lỗi hệ thống: Không thể thêm nhân viên vào Database!'); window.history.back();</script>");
         }
     }
 }

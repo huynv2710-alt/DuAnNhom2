@@ -55,11 +55,12 @@ public class QuanLyTaiKhoanServlet extends HttpServlet {
             
             tkService.addTaiKhoan(username, pass, maNV, maQuyen);
         } else if ("edit".equals(action)) {
-            String username = request.getParameter("username");
+            String oldUsername = request.getParameter("oldUsername");
+            String newUsername = request.getParameter("newUsername");
             String pass = request.getParameter("password"); 
             int maQuyen = Integer.parseInt(request.getParameter("maQuyen"));
             
-            tkService.updateTaiKhoan(username, pass, maQuyen);
+            tkService.updateTaiKhoanFull(oldUsername, newUsername, pass, maQuyen);
         }
         response.sendRedirect("quanlytaikhoan");
     }
