@@ -20,11 +20,7 @@
     </div>
 
     <ul class="nav-links">
-        <c:if test="${sessionScope.quyen == 'Quản lý' || sessionScope.quyen == 'admin'}">
-            <li>
-                <a href="quanlinhanvien">Quản lý nhân viên</a>
-            </li>
-        </c:if>
+  >
 
         <li>
             <a href="NhanVien2.jsp">Thông tin cá nhân</a>
