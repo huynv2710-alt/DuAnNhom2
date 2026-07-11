@@ -26,7 +26,7 @@ public class SachService {
                         rs.getInt("MaSach"),
                         rs.getString("TenSach"),
                         rs.getString("TacGia"),
-                        rs.getString("ISBN"),
+                        rs.getString("MaISBN"),
                         rs.getInt("MaTheLoai"),
                         rs.getInt("MaNXB"),
                         rs.getDouble("GiaBan"),
@@ -58,7 +58,7 @@ public class SachService {
                         rs.getInt("MaSach"),
                         rs.getString("TenSach"),
                         rs.getString("TacGia"),
-                        rs.getString("ISBN"),
+                        rs.getString("MaISBN"),
                         rs.getInt("MaTheLoai"),
                         rs.getInt("MaNXB"),
                         rs.getDouble("GiaBan"),
@@ -77,7 +77,7 @@ public class SachService {
     }
 
     public boolean addSach(Sach s) {
-        String sql = "INSERT INTO Sach (TenSach, TacGia, ISBN, MaTheLoai, MaNXB, GiaBan, SoLuongTon, HinhAnh, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Sach (TenSach, TacGia, MaISBN, MaTheLoai, MaNXB, GiaBan, SoLuongTon, HinhAnh, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection con = new connectService().myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, s.getTenSach());
@@ -97,7 +97,7 @@ public class SachService {
     }
 
     public boolean updateSach(Sach s) {
-        String sql = "UPDATE Sach SET TenSach=?, TacGia=?, ISBN=?, MaTheLoai=?, MaNXB=?, GiaBan=?, SoLuongTon=?, HinhAnh=?, TrangThai=? WHERE MaSach=?";
+        String sql = "UPDATE Sach SET TenSach=?, TacGia=?, MaISBN=?, MaTheLoai=?, MaNXB=?, GiaBan=?, SoLuongTon=?, HinhAnh=?, TrangThai=? WHERE MaSach=?";
         try (Connection con = new connectService().myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, s.getTenSach());
