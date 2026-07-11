@@ -22,6 +22,7 @@
             <li><a href="quanlytaikhoan">Quản lý tài khoản</a></li>
             <li><a href="quanlinhanvien">Quản lý nhân viên</a></li>
         </c:if>
+        <li><a href="quanlysach">Quản lí sách</a></li>
         <li><a href="thongtinquanli">Thông tin cá nhân</a></li>
         <li><a href="doimatkhau">Đổi mật khẩu</a></li>
     </ul>

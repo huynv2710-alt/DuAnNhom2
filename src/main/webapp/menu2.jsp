@@ -33,7 +33,7 @@
             <a href="suanhanvien.jsp">Sửa thông tin</a>
         </li>
         <li>
-            <a href="sanpham.jsp">Danh sách sản phẩm</a>
+            <a href="Quanlysach.jsp">Danh sách sản phẩm</a>
         </li>
     </ul>
 
