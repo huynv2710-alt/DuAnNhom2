@@ -29,6 +29,7 @@ public class SachService {
                         rs.getString("MaISBN"),
                         rs.getInt("MaTheLoai"),
                         rs.getInt("MaNXB"),
+                        rs.getDouble("GiaNhap"),
                         rs.getDouble("GiaBan"),
                         rs.getInt("SoLuongTon"),
                         rs.getString("HinhAnh"),
@@ -61,6 +62,7 @@ public class SachService {
                         rs.getString("MaISBN"),
                         rs.getInt("MaTheLoai"),
                         rs.getInt("MaNXB"),
+                        rs.getDouble("GiaNhap"),
                         rs.getDouble("GiaBan"),
                         rs.getInt("SoLuongTon"),
                         rs.getString("HinhAnh"),
@@ -77,7 +79,7 @@ public class SachService {
     }
 
     public boolean addSach(Sach s) {
-        String sql = "INSERT INTO Sach (TenSach, TacGia, MaISBN, MaTheLoai, MaNXB, GiaBan, SoLuongTon, HinhAnh, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Sach (TenSach, TacGia, MaISBN, MaTheLoai, MaNXB, GiaNhap, GiaBan, SoLuongTon, HinhAnh, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection con = new connectService().myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, s.getTenSach());
@@ -85,10 +87,11 @@ public class SachService {
             ps.setString(3, s.getIsbn());
             ps.setInt(4, s.getMaTheLoai());
             ps.setInt(5, s.getMaNXB());
-            ps.setDouble(6, s.getGiaBan());
-            ps.setInt(7, s.getSoLuongTon());
-            ps.setString(8, s.getHinhAnh());
-            ps.setInt(9, s.getTrangThai());
+            ps.setDouble(6, s.getGiaNhap());
+            ps.setDouble(7, s.getGiaBan());
+            ps.setInt(8, s.getSoLuongTon());
+            ps.setString(9, s.getHinhAnh());
+            ps.setInt(10, s.getTrangThai());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,7 +100,7 @@ public class SachService {
     }
 
     public boolean updateSach(Sach s) {
-        String sql = "UPDATE Sach SET TenSach=?, TacGia=?, MaISBN=?, MaTheLoai=?, MaNXB=?, GiaBan=?, SoLuongTon=?, HinhAnh=?, TrangThai=? WHERE MaSach=?";
+        String sql = "UPDATE Sach SET TenSach=?, TacGia=?, MaISBN=?, MaTheLoai=?, MaNXB=?, GiaNhap=?, GiaBan=?, SoLuongTon=?, HinhAnh=?, TrangThai=? WHERE MaSach=?";
         try (Connection con = new connectService().myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, s.getTenSach());
@@ -105,11 +108,12 @@ public class SachService {
             ps.setString(3, s.getIsbn());
             ps.setInt(4, s.getMaTheLoai());
             ps.setInt(5, s.getMaNXB());
-            ps.setDouble(6, s.getGiaBan());
-            ps.setInt(7, s.getSoLuongTon());
-            ps.setString(8, s.getHinhAnh());
-            ps.setInt(9, s.getTrangThai());
-            ps.setInt(10, s.getMaSach());
+            ps.setDouble(6, s.getGiaNhap());
+            ps.setDouble(7, s.getGiaBan());
+            ps.setInt(8, s.getSoLuongTon());
+            ps.setString(9, s.getHinhAnh());
+            ps.setInt(10, s.getTrangThai());
+            ps.setInt(11, s.getMaSach());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();

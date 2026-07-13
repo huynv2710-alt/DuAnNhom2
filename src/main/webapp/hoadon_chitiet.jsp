@@ -49,6 +49,13 @@
         .receipt-summary { margin-top: 30px; width: 300px; margin-left: auto; }
         .summary-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 14px; color: #64748b; }
         .summary-row.total { font-size: 18px; font-weight: 800; color: #2d6652; border-top: 2px solid #2d6652; padding-top: 15px; margin-top: 5px; }
+        
+        @media print {
+            body * { visibility: hidden; }
+            .receipt-card, .receipt-card * { visibility: visible; }
+            .receipt-card { position: absolute; left: 0; top: 0; margin: 0; padding: 20px; box-shadow: none; width: 100%; max-width: 100%; }
+            .print-hide { display: none !important; }
+        }
     </style>
 </head>
 
@@ -58,7 +65,7 @@
 
 <main class="content">
 
-    <a href="quanlyhoadon" style="display:inline-block; margin-bottom:20px; color:#64748b; text-decoration:none; font-weight:600;"><i class="fas fa-arrow-left"></i> Quay lại</a>
+    <a href="quanlyhoadon" class="print-hide" style="display:inline-block; margin-bottom:20px; color:#64748b; text-decoration:none; font-weight:600;"><i class="fas fa-arrow-left"></i> Quay lại</a>
 
     <div class="receipt-card">
         <div class="receipt-header">
@@ -84,7 +91,7 @@
                     <div style="font-weight: 700; font-size: 16px; margin-bottom: 4px;">${not empty hd.tenKH ? hd.tenKH : 'Khách lẻ'}</div>
                     <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">Số điện thoại: ${not empty hd.sdtKH ? hd.sdtKH : '0000000000'}</div>
                     <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">Địa chỉ: Tại cửa hàng</div>
-                    <div style="font-size: 13px; color: #64748b;">Hình thức TT: <span style="font-weight: bold; color: #1e293b;">Tiền mặt</span></div>
+                    <div style="font-size: 13px; color: #64748b;">Hình thức TT: <span style="font-weight: bold; color: #1e293b;">${sessionScope.lastPhuongThucTT eq 'ChuyenKhoan' ? 'Chuyển khoản' : 'Tiền mặt'}</span></div>
                 </div>
             <div class="party-box">
                 <div class="party-heading">ĐƠN VỊ BÁN HÀNG</div>
@@ -124,15 +131,37 @@
             </div>
             <div class="summary-row">
                 <span>Giảm giá:</span>
-                <span>0 đ</span>
+                <span><fmt:formatNumber value="${not empty sessionScope.lastGiamGia ? sessionScope.lastGiamGia : 0}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
             </div>
             <div class="summary-row total">
                 <span>Tổng cộng:</span>
-                <span><fmt:formatNumber value="${total}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                <span><fmt:formatNumber value="${total - (not empty sessionScope.lastGiamGia ? sessionScope.lastGiamGia : 0)}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
             </div>
+            <c:if test="${not empty sessionScope.lastTienKhachDua && sessionScope.lastPhuongThucTT eq 'TienMat'}">
+            <div class="summary-row" style="margin-top: 15px;">
+                <span>Khách đưa:</span>
+                <span><fmt:formatNumber value="${sessionScope.lastTienKhachDua}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+            </div>
+            <div class="summary-row">
+                <span>Tiền thừa:</span>
+                <span><fmt:formatNumber value="${sessionScope.lastTienKhachDua - (total - (not empty sessionScope.lastGiamGia ? sessionScope.lastGiamGia : 0))}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+            </div>
+            </c:if>
+        </div>
+        
+        <div class="print-hide" style="text-align: center; margin-top: 40px;">
+            <button onclick="window.print()" style="background: #2d6652; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 4px 10px rgba(45,102,82,0.2);"><i class="fas fa-print"></i> IN HÓA ĐƠN NÀY</button>
+            <a href="banhang" style="display:inline-block; margin-left: 15px; background: #e2e8f0; color: #1e293b; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;"><i class="fas fa-shopping-cart"></i> BÁN ĐƠN MỚI</a>
         </div>
     </div>
 
+    <c:if test="${param.print == 'true'}">
+        <script>
+            window.onload = function() {
+                setTimeout(function() { window.print(); }, 500);
+            };
+        </script>
+    </c:if>
 </main>
 
 </body>

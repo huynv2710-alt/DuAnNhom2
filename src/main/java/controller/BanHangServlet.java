@@ -134,7 +134,19 @@ public class BanHangServlet extends HttpServlet {
                 }
                 // Clear cart
                 session.setAttribute("cart", new ArrayList<HoaDonChiTiet>());
-                response.sendRedirect("quanlyhoadon?action=viewDetail&id=" + newMaHD);
+                
+                // Save payment details to session just for printing
+                try {
+                    session.setAttribute("lastGiamGia", Double.parseDouble(request.getParameter("giamGia")));
+                } catch (Exception e) { session.setAttribute("lastGiamGia", 0.0); }
+                
+                session.setAttribute("lastPhuongThucTT", request.getParameter("phuongThucTT"));
+                
+                try {
+                    session.setAttribute("lastTienKhachDua", Double.parseDouble(request.getParameter("tienKhachDua")));
+                } catch (Exception e) { session.setAttribute("lastTienKhachDua", null); }
+                
+                response.sendRedirect("quanlyhoadon?action=viewDetail&id=" + newMaHD + "&print=true");
             } else {
                 response.sendRedirect("banhang?error=db_error");
             }

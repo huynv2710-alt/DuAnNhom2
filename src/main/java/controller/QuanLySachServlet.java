@@ -58,17 +58,18 @@ public class QuanLySachServlet extends HttpServlet {
         String isbn = request.getParameter("isbn");
         int maTheLoai = Integer.parseInt(request.getParameter("maTheLoai"));
         int maNXB = Integer.parseInt(request.getParameter("maNXB"));
+        double giaNhap = Double.parseDouble(request.getParameter("giaNhap") != null ? request.getParameter("giaNhap") : "0");
         double giaBan = Double.parseDouble(request.getParameter("giaBan"));
         int soLuongTon = Integer.parseInt(request.getParameter("soLuongTon"));
         String hinhAnh = request.getParameter("hinhAnh");
         int trangThai = Integer.parseInt(request.getParameter("trangThai"));
 
         if ("add".equals(action)) {
-            Sach s = new Sach(0, tenSach, tacGia, isbn, maTheLoai, maNXB, giaBan, soLuongTon, hinhAnh, trangThai);
+            Sach s = new Sach(0, tenSach, tacGia, isbn, maTheLoai, maNXB, giaNhap, giaBan, soLuongTon, hinhAnh, trangThai);
             sachService.addSach(s);
         } else if ("edit".equals(action)) {
             int maSach = Integer.parseInt(request.getParameter("maSach"));
-            Sach s = new Sach(maSach, tenSach, tacGia, isbn, maTheLoai, maNXB, giaBan, soLuongTon, hinhAnh, trangThai);
+            Sach s = new Sach(maSach, tenSach, tacGia, isbn, maTheLoai, maNXB, giaNhap, giaBan, soLuongTon, hinhAnh, trangThai);
             sachService.updateSach(s);
         }
         
