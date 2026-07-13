@@ -6,6 +6,7 @@ public class Sach {
     private String tacGia;
     private int maTheLoai;
     private int maNXB;
+    private double giaNhap;
     private double giaBan;
     private int soLuongTon;
     private String hinhAnh;
@@ -18,13 +19,14 @@ public class Sach {
 
     public Sach() {}
 
-    public Sach(int maSach, String tenSach, String tacGia, String isbn, int maTheLoai, int maNXB, double giaBan, int soLuongTon, String hinhAnh, int trangThai) {
+    public Sach(int maSach, String tenSach, String tacGia, String isbn, int maTheLoai, int maNXB, double giaNhap, double giaBan, int soLuongTon, String hinhAnh, int trangThai) {
         this.maSach = maSach;
         this.tenSach = tenSach;
         this.tacGia = tacGia;
         this.isbn = isbn;
         this.maTheLoai = maTheLoai;
         this.maNXB = maNXB;
+        this.giaNhap = giaNhap;
         this.giaBan = giaBan;
         this.soLuongTon = soLuongTon;
         this.hinhAnh = hinhAnh;
@@ -41,6 +43,8 @@ public class Sach {
     public void setMaTheLoai(int maTheLoai) { this.maTheLoai = maTheLoai; }
     public int getMaNXB() { return maNXB; }
     public void setMaNXB(int maNXB) { this.maNXB = maNXB; }
+    public double getGiaNhap() { return giaNhap; }
+    public void setGiaNhap(double giaNhap) { this.giaNhap = giaNhap; }
     public double getGiaBan() { return giaBan; }
     public void setGiaBan(double giaBan) { this.giaBan = giaBan; }
     public int getSoLuongTon() { return soLuongTon; }

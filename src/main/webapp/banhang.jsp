@@ -44,21 +44,21 @@
         .btn-remove-item { background: transparent; color: #ef4444; border: none; cursor: pointer; font-size: 16px; padding: 5px; }
         .btn-remove-item:hover { color: #dc2626; }
         
-        .checkout-section { background: white; border-top: 1px solid #e2e8f0; padding: 20px; }
-        .checkout-group { margin-bottom: 15px; }
-        .checkout-group label { display: block; font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 8px; letter-spacing: 0.5px; }
-        .checkout-group select, .checkout-group textarea { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; font-family: inherit; }
-        .checkout-group select:focus, .checkout-group textarea:focus { border-color: #2d6652; }
-        .checkout-total { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #64748b; font-weight: 600; }
-        .checkout-total.final { font-size: 18px; color: #2d6652; font-weight: 800; border-top: 1px dashed #cbd5e1; padding-top: 15px; margin-top: 5px; margin-bottom: 20px; }
+        .checkout-section { background: white; border-top: 1px solid #e2e8f0; padding: 15px 20px; overflow-y: auto; max-height: 55vh; flex-shrink: 0; }
+        .checkout-group { margin-bottom: 10px; }
+        .checkout-group label { display: block; font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 5px; letter-spacing: 0.5px; }
+        .checkout-group select, .checkout-group textarea, .checkout-group input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; font-family: inherit; box-sizing: border-box; }
+        .checkout-group select:focus, .checkout-group textarea:focus, .checkout-group input:focus { border-color: #2d6652; }
+        .checkout-total { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: #64748b; font-weight: 600; }
+        .checkout-total.final { font-size: 18px; color: #2d6652; font-weight: 800; border-top: 1px dashed #cbd5e1; padding-top: 12px; margin-top: 5px; margin-bottom: 15px; }
         
-        .btn-checkout { background: #2d6652; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; font-size: 16px; display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.2s; }
+        .btn-checkout { background: #2d6652; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700; font-size: 16px; display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.2s; margin-top: 10px; }
         .btn-checkout:hover { background: #1e4537; box-shadow: 0 4px 12px rgba(45, 102, 82, 0.2); }
         .btn-checkout:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; color: #94a3b8; }
         
         /* Custom scrollbar for cart and products */
-        .cart-list::-webkit-scrollbar, .product-grid::-webkit-scrollbar { width: 6px; }
-        .cart-list::-webkit-scrollbar-thumb, .product-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .cart-list::-webkit-scrollbar, .product-grid::-webkit-scrollbar, .checkout-section::-webkit-scrollbar { width: 6px; }
+        .cart-list::-webkit-scrollbar-thumb, .product-grid::-webkit-scrollbar-thumb, .checkout-section::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
 
@@ -182,17 +182,91 @@
                     
                     <div class="checkout-total">
                         <span>Tạm tính:</span>
-                        <span><fmt:formatNumber value="${tongTien}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                        <span id="tamTinh"><fmt:formatNumber value="${tongTien}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                    </div>
+                    <div class="checkout-total" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span>Giảm giá:</span>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <input type="number" id="giamGia" name="giamGia" value="0" min="0" style="width: 80px; padding: 5px; border-radius: 4px; border: 1px solid #cbd5e1; text-align: right;" oninput="calculateTotal()">
+                            <span>đ</span>
+                        </div>
                     </div>
                     <div class="checkout-total final">
-                        <span>Tổng thanh toán:</span>
-                        <span><fmt:formatNumber value="${tongTien}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                        <span>Tổng cộng:</span>
+                        <span id="tongCong"><fmt:formatNumber value="${tongTien}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                    </div>
+                    
+                    <div class="checkout-group">
+                        <label>Phương thức thanh toán</label>
+                        <select name="phuongThucTT" id="phuongThucTT" onchange="togglePaymentFields()">
+                            <option value="TienMat">Tiền mặt</option>
+                            <option value="ChuyenKhoan">Chuyển khoản</option>
+                        </select>
+                    </div>
+                    
+                    <div id="cash-fields">
+                        <div class="checkout-group">
+                            <label>Tiền khách đưa (đ)</label>
+                            <input type="number" id="tienKhachDua" name="tienKhachDua" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 14px;" placeholder="Nhập số tiền..." oninput="calculateTotal()">
+                        </div>
+                        
+                        <div class="checkout-group">
+                            <label>Tiền thừa trả khách</label>
+                            <input type="text" id="tienThua" readonly style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f1f5f9; font-size: 14px; font-weight: bold; color: #ef4444;" value="0 đ">
+                        </div>
                     </div>
                     
                     <button type="submit" class="btn-checkout" ${empty sessionScope.cart ? 'disabled' : ''}>
                         <i class="fas fa-check-circle"></i> THANH TOÁN & IN HĐ
                     </button>
                 </form>
+                
+                <script>
+                    const baseTotal = ${tongTien != null ? tongTien : 0};
+                    
+                    function togglePaymentFields() {
+                        let method = document.getElementById('phuongThucTT').value;
+                        let cashFields = document.getElementById('cash-fields');
+                        if(method === 'TienMat') {
+                            cashFields.style.display = 'block';
+                        } else {
+                            cashFields.style.display = 'none';
+                            document.getElementById('tienKhachDua').value = '';
+                            calculateTotal();
+                        }
+                    }
+                    
+                    function calculateTotal() {
+                        let giamGia = parseFloat(document.getElementById('giamGia').value) || 0;
+                        let finalTotal = baseTotal - giamGia;
+                        if(finalTotal < 0) finalTotal = 0;
+                        
+                        document.getElementById('tongCong').innerText = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(finalTotal);
+                        
+                        let method = document.getElementById('phuongThucTT').value;
+                        if(method === 'TienMat') {
+                            let tienKhachDua = parseFloat(document.getElementById('tienKhachDua').value) || 0;
+                            let tienThua = tienKhachDua - finalTotal;
+                            
+                            if(tienThua >= 0 && tienKhachDua > 0) {
+                                document.getElementById('tienThua').value = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tienThua);
+                                document.getElementById('tienThua').style.color = '#059669'; // Green if enough money
+                            } else {
+                                document.getElementById('tienThua').value = "0 đ";
+                                document.getElementById('tienThua').style.color = '#ef4444';
+                            }
+                        } else {
+                            document.getElementById('tienThua').value = "0 đ";
+                            document.getElementById('tienThua').style.color = '#ef4444';
+                        }
+                    }
+                    
+                    // Khởi tạo ban đầu
+                    window.onload = function() {
+                        togglePaymentFields();
+                        calculateTotal();
+                    };
+                </script>
             </div>
         </div>
     </div>

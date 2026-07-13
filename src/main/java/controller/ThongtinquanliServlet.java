@@ -24,12 +24,12 @@ public class ThongtinquanliServlet extends HttpServlet {
 
         Integer maNV = (Integer) session.getAttribute("maNV");
 
-//        if (maNV == null) {
-//            response.sendRedirect("index.jsp");
-//            return;
-//        }
+        if (maNV == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
 
-        NhanVien nv = service.getNhanVienByMa(1);
+        NhanVien nv = service.getNhanVienByMa(maNV);
 
         request.setAttribute("nv", nv);
 

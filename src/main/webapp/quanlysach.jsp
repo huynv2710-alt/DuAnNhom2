@@ -77,6 +77,7 @@
                     <th>TÁC GIẢ</th>
                     <th>THỂ LOẠI</th>
                     <th>NHÀ XUẤT BẢN</th>
+                    <th>GIÁ NHẬP</th>
                     <th>GIÁ BÁN</th>
                     <th style="text-align: center;">TỒN KHO</th>
                     <th style="text-align: center;">TRẠNG THÁI</th>
@@ -100,6 +101,9 @@
                         <td style="color: #64748b;">${s.tacGia}</td>
                         <td style="font-weight: 500; color: #0f2820;">${s.tenTheLoai}</td>
                         <td style="color: #64748b;">${s.tenNXB}</td>
+                        <td style="font-weight: 600; color: #ca8a04;">
+                            <fmt:formatNumber value="${s.giaNhap}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+                        </td>
                         <td style="font-weight: 700; color: #2d6652;">
                             <fmt:formatNumber value="${s.giaBan}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
                         </td>
@@ -113,7 +117,7 @@
                         </td>
                         <td style="text-align: center;">
                             <button class="btn-edit" title="Sửa"
-                                onclick="openEditModal(${s.maSach}, '${s.tenSach}', '${s.tacGia}', '${s.isbn}', ${s.maTheLoai}, ${s.maNXB}, ${s.giaBan}, ${s.soLuongTon}, '${s.hinhAnh}', ${s.trangThai})">
+                                onclick="openEditModal(${s.maSach}, '${s.tenSach}', '${s.tacGia}', '${s.isbn}', ${s.maTheLoai}, ${s.maNXB}, ${s.giaNhap}, ${s.giaBan}, ${s.soLuongTon}, '${s.hinhAnh}', ${s.trangThai})">
                                 <i class="fas fa-edit"></i>
                             </button>
                         </td>
@@ -170,6 +174,10 @@
             </div>
             <div style="display: flex; gap: 15px;">
                 <div class="form-group" style="flex: 1;">
+                    <label>Giá Nhập (VNĐ) <span style="color:red">*</span></label>
+                    <input type="number" id="giaNhap" name="giaNhap" min="0" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
                     <label>Giá Bán (VNĐ) <span style="color:red">*</span></label>
                     <input type="number" id="giaBan" name="giaBan" min="0" required>
                 </div>
@@ -205,6 +213,7 @@
         document.getElementById('tenSach').value = '';
         document.getElementById('tacGia').value = '';
         document.getElementById('isbn').value = '';
+        document.getElementById('giaNhap').value = '';
         document.getElementById('giaBan').value = '';
         document.getElementById('soLuongTon').value = '';
         document.getElementById('hinhAnh').value = '';
@@ -212,7 +221,7 @@
         document.getElementById('sachModal').style.display = 'block';
     }
 
-    function openEditModal(maSach, tenSach, tacGia, isbn, maTheLoai, maNXB, giaBan, soLuong, hinhAnh, trangThai) {
+    function openEditModal(maSach, tenSach, tacGia, isbn, maTheLoai, maNXB, giaNhap, giaBan, soLuong, hinhAnh, trangThai) {
         document.getElementById('modalTitle').innerText = 'Cập nhật Thông tin Sách';
         document.getElementById('formAction').value = 'edit';
         document.getElementById('maSach').value = maSach;
@@ -221,6 +230,7 @@
         document.getElementById('isbn').value = (isbn !== 'null' && isbn) ? isbn : '';
         document.getElementById('maTheLoai').value = maTheLoai;
         document.getElementById('maNXB').value = maNXB;
+        document.getElementById('giaNhap').value = giaNhap;
         document.getElementById('giaBan').value = giaBan;
         document.getElementById('soLuongTon').value = soLuong;
         document.getElementById('hinhAnh').value = hinhAnh;
