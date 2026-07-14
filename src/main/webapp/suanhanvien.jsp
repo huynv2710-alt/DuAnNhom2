@@ -30,7 +30,7 @@
     <div class="info-card">
         <h2>✏️ Cập nhật thông tin</h2>
 
-        <form action="suanhanvien" method="POST">
+        <form action="suanhanvien" method="POST" onsubmit="return validateNV()">
             <input type="hidden" name="action" value="update">
 
             <div class="info-grid">
@@ -44,11 +44,13 @@
                 </div>
                 <div class="info-item">
                     <label>Số điện thoại</label>
-                    <input type="text" name="sdt" class="form-input" value="${sessionScope.sdt}">
+                    <input type="text" name="sdt" id="sdt" class="form-input" value="${sessionScope.sdt}" oninput="validateNV()">
+                    <span id="errSdt" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
                 </div>
                 <div class="info-item">
                     <label>Email</label>
-                    <input type="email" name="email" class="form-input" value="${sessionScope.email}">
+                    <input type="email" name="email" id="email" class="form-input" value="${sessionScope.email}" oninput="validateNV()">
+                    <span id="errEmail" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
                 </div>
                 <div class="info-item">
                     <label>Địa chỉ</label>
@@ -68,6 +70,34 @@
         </form>
     </div>
 </main>
+
+<script>
+    function validateNV() {
+        let isValid = true;
+        let sdt = document.getElementById('sdt').value.trim();
+        let phoneRegex = /^(0|\+84)[0-9]{9}$/;
+        if(sdt.length > 0 && !phoneRegex.test(sdt)) {
+            document.getElementById('errSdt').innerText = "Số điện thoại phải bắt đầu bằng 0 hoặc +84 và đủ 10 số!";
+            document.getElementById('errSdt').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('errSdt').style.display = 'none';
+        }
+
+        let email = document.getElementById('email').value.trim();
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(email.length > 0 && !emailRegex.test(email)) {
+            document.getElementById('errEmail').innerText = "Email không hợp lệ!";
+            document.getElementById('errEmail').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('errEmail').style.display = 'none';
+        }
+
+        document.querySelector('.btn-submit').disabled = !isValid;
+        return isValid;
+    }
+</script>
 
 </body>
 </html>

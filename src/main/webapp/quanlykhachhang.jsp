@@ -85,7 +85,7 @@
 <div id="khModal" class="modal">
     <div class="modal-content">
         <div class="modal-header" id="modalTitle">Thêm Khách Hàng</div>
-        <form action="quanlykhachhang" method="post">
+        <form action="quanlykhachhang" method="post" onsubmit="return validateKH()">
             <input type="hidden" name="action" id="formAction" value="add">
             <input type="hidden" name="maKH" id="maKH" value="0">
             
@@ -95,7 +95,8 @@
             </div>
             <div class="form-group">
                 <label>Số Điện Thoại <span style="color:red">*</span></label>
-                <input type="text" id="sdt" name="sdt" required>
+                <input type="text" id="sdt" name="sdt" required oninput="validateKH()">
+                <span id="errSdt" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
             </div>
             <div class="form-group">
                 <label>Địa Chỉ</label>
@@ -103,7 +104,8 @@
             </div>
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" id="email" name="email">
+                <input type="email" id="email" name="email" oninput="validateKH()">
+                <span id="errEmail" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
             </div>
             
             <div class="modal-footer">
@@ -139,6 +141,37 @@
 
     function closeModal() {
         document.getElementById('khModal').style.display = 'none';
+        document.getElementById('errSdt').style.display = 'none';
+        document.getElementById('errEmail').style.display = 'none';
+        document.querySelector('#khModal .btn-save').disabled = false;
+    }
+
+    function validateKH() {
+        let isValid = true;
+        let sdt = document.getElementById('sdt').value.trim();
+        let phoneRegex = /^(0|\+84)[0-9]{9}$/;
+        if(sdt.length > 0 && !phoneRegex.test(sdt)) {
+            document.getElementById('errSdt').innerText = "Số điện thoại phải bắt đầu bằng 0 hoặc +84 và đủ 10 số!";
+            document.getElementById('errSdt').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('errSdt').style.display = 'none';
+        }
+
+        let email = document.getElementById('email').value.trim();
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(email.length > 0 && !emailRegex.test(email)) {
+            document.getElementById('errEmail').innerText = "Email không hợp lệ!";
+            document.getElementById('errEmail').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('errEmail').style.display = 'none';
+        }
+
+        const btnSave = document.querySelector('#khModal .btn-save');
+        if (btnSave) btnSave.disabled = !isValid;
+        
+        return isValid;
     }
 </script>
 

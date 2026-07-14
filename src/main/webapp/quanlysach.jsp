@@ -136,7 +136,7 @@
 <div id="sachModal" class="modal">
     <div class="modal-content">
         <div class="modal-header" id="modalTitle">Thêm Sách Mới</div>
-        <form action="quanlysach" method="post">
+        <form action="quanlysach" method="post" onsubmit="return validateSach()">
             <input type="hidden" name="action" id="formAction" value="add">
             <input type="hidden" name="maSach" id="maSach" value="0">
             
@@ -175,15 +175,17 @@
             <div style="display: flex; gap: 15px;">
                 <div class="form-group" style="flex: 1;">
                     <label>Giá Nhập (VNĐ) <span style="color:red">*</span></label>
-                    <input type="number" id="giaNhap" name="giaNhap" min="0" required>
+                    <input type="number" id="giaNhap" name="giaNhap" min="0" required oninput="validateSach()">
+                    <span id="errGiaNhap" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
                 </div>
                 <div class="form-group" style="flex: 1;">
                     <label>Giá Bán (VNĐ) <span style="color:red">*</span></label>
-                    <input type="number" id="giaBan" name="giaBan" min="0" required>
+                    <input type="number" id="giaBan" name="giaBan" min="0" required oninput="validateSach()">
                 </div>
                 <div class="form-group" style="flex: 1;">
                     <label>Tồn Kho <span style="color:red">*</span></label>
-                    <input type="number" id="soLuongTon" name="soLuongTon" min="0" required>
+                    <input type="number" id="soLuongTon" name="soLuongTon" min="0" required oninput="validateSach()">
+                    <span id="errSoLuong" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
                 </div>
             </div>
             <div class="form-group">
@@ -240,6 +242,39 @@
 
     function closeModal() {
         document.getElementById('sachModal').style.display = 'none';
+        document.getElementById('errGiaNhap').style.display = 'none';
+        document.getElementById('errSoLuong').style.display = 'none';
+        document.querySelector('#sachModal .btn-save').disabled = false;
+    }
+
+    function validateSach() {
+        let isValid = true;
+        let giaNhap = parseFloat(document.getElementById('giaNhap').value);
+        let giaBan = parseFloat(document.getElementById('giaBan').value);
+        let soLuongTon = parseInt(document.getElementById('soLuongTon').value);
+
+        if (!isNaN(giaNhap) && !isNaN(giaBan)) {
+            if (giaNhap >= giaBan) {
+                document.getElementById('errGiaNhap').innerText = "Giá nhập phải nhỏ hơn giá bán";
+                document.getElementById('errGiaNhap').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('errGiaNhap').style.display = 'none';
+            }
+        }
+        
+        if (!isNaN(soLuongTon) && soLuongTon < 0) {
+            document.getElementById('errSoLuong').innerText = "Tồn kho không được âm";
+            document.getElementById('errSoLuong').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('errSoLuong').style.display = 'none';
+        }
+
+        const btnSave = document.querySelector('#sachModal .btn-save');
+        if (btnSave) btnSave.disabled = !isValid;
+        
+        return isValid;
     }
 </script>
 

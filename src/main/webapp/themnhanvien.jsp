@@ -18,7 +18,7 @@
 
 <div class="form-container">
 
-<form action="themnhanvien" method="post">
+<form action="themnhanvien" method="post" onsubmit="return validateNV()">
 
 <div class="form-grid">
 
@@ -34,7 +34,8 @@
 
 <div class="form-group">
 <label>Ngày sinh</label>
-<input type="date" name="ngaySinh" required>
+<input type="date" id="ngaySinh" name="ngaySinh" required oninput="validateNV()">
+<span id="errNgaySinh" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
 </div>
 
 <div class="form-group">
@@ -47,12 +48,14 @@
 
 <div class="form-group">
 <label>Số điện thoại</label>
-<input type="text" name="sdt" required>
+<input type="text" id="sdt" name="sdt" required oninput="validateNV()">
+<span id="errSdt" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
 </div>
 
 <div class="form-group">
 <label>Email</label>
-<input type="email" name="email" required>
+<input type="email" id="email" name="email" required oninput="validateNV()">
+<span id="errEmail" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
 </div>
 
 <div class="form-group">
@@ -120,6 +123,53 @@ Quay lại
 </div>
 
 </main>
+
+<script>
+    function validateNV() {
+        let isValid = true;
+        
+        let ngaySinh = document.getElementById('ngaySinh').value;
+        if(ngaySinh) {
+            let birthDate = new Date(ngaySinh);
+            let today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            let m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            if(age < 16) {
+                document.getElementById('errNgaySinh').innerText = "Nhân viên phải từ 16 tuổi trở lên!";
+                document.getElementById('errNgaySinh').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('errNgaySinh').style.display = 'none';
+            }
+        }
+
+        let sdt = document.getElementById('sdt').value.trim();
+        let phoneRegex = /^(0|\+84)[0-9]{9}$/;
+        if(sdt.length > 0 && !phoneRegex.test(sdt)) {
+            document.getElementById('errSdt').innerText = "Số điện thoại phải bắt đầu bằng 0 hoặc +84 và đủ 10 số!";
+            document.getElementById('errSdt').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('errSdt').style.display = 'none';
+        }
+
+        let email = document.getElementById('email').value.trim();
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(email.length > 0 && !emailRegex.test(email)) {
+            document.getElementById('errEmail').innerText = "Email không hợp lệ!";
+            document.getElementById('errEmail').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('errEmail').style.display = 'none';
+        }
+
+        document.querySelector('.btn-save').disabled = !isValid;
+        return isValid;
+    }
+</script>
 
 </body>
 </html>
