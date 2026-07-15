@@ -13,13 +13,19 @@ public class Sach {
     private int trangThai; 
     private String isbn;
     
+    // Thuộc tính mới bổ sung
+    private int soTrang;
+    private String kichThuoc;
+    private int trongLuong;
+    private String ngonNgu;
+    
     // Thuộc tính phụ hiển thị UI
     private String tenTheLoai;
     private String tenNXB;
 
     public Sach() {}
 
-    public Sach(int maSach, String tenSach, String tacGia, String isbn, int maTheLoai, int maNXB, double giaNhap, double giaBan, int soLuongTon, String hinhAnh, int trangThai) {
+    public Sach(int maSach, String tenSach, String tacGia, String isbn, int maTheLoai, int maNXB, double giaNhap, double giaBan, int soLuongTon, String hinhAnh, int trangThai, int soTrang, String kichThuoc, int trongLuong, String ngonNgu) {
         this.maSach = maSach;
         this.tenSach = tenSach;
         this.tacGia = tacGia;
@@ -31,6 +37,10 @@ public class Sach {
         this.soLuongTon = soLuongTon;
         this.hinhAnh = hinhAnh;
         this.trangThai = trangThai;
+        this.soTrang = soTrang;
+        this.kichThuoc = kichThuoc;
+        this.trongLuong = trongLuong;
+        this.ngonNgu = ngonNgu;
     }
 
     public int getMaSach() { return maSach; }
@@ -55,6 +65,15 @@ public class Sach {
     public void setTrangThai(int trangThai) { this.trangThai = trangThai; }
     public String getIsbn() { return isbn; }
     public void setIsbn(String isbn) { this.isbn = isbn; }
+
+    public int getSoTrang() { return soTrang; }
+    public void setSoTrang(int soTrang) { this.soTrang = soTrang; }
+    public String getKichThuoc() { return kichThuoc; }
+    public void setKichThuoc(String kichThuoc) { this.kichThuoc = kichThuoc; }
+    public int getTrongLuong() { return trongLuong; }
+    public void setTrongLuong(int trongLuong) { this.trongLuong = trongLuong; }
+    public String getNgonNgu() { return ngonNgu; }
+    public void setNgonNgu(String ngonNgu) { this.ngonNgu = ngonNgu; }
 
     public String getTenTheLoai() { return tenTheLoai; }
     public void setTenTheLoai(String tenTheLoai) { this.tenTheLoai = tenTheLoai; }

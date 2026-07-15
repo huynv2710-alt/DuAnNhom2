@@ -36,6 +36,7 @@
                 <tr>
                     <th>Mã Thể Loại</th>
                     <th>Tên Thể Loại</th>
+                    <th>Danh Mục Cha</th>
                     <th>Mô Tả</th>
                     <th>Thao tác</th>
                 </tr>
@@ -45,16 +46,24 @@
                     <tr>
                         <td><b>${tl.maTheLoai}</b></td>
                         <td>${tl.tenTheLoai}</td>
+                        <td>
+                            <c:forEach var="parent" items="${listTL}">
+                                <c:if test="${parent.maTheLoai == tl.maTheLoaiCha}">
+                                    ${parent.tenTheLoai}
+                                </c:if>
+                            </c:forEach>
+                            <c:if test="${empty tl.maTheLoaiCha}">-</c:if>
+                        </td>
                         <td>${tl.moTa}</td>
                         <td>
-                            <button class="btn-edit" style="border:none; cursor:pointer;" onclick="openModal(${tl.maTheLoai}, '${tl.tenTheLoai}', '${tl.moTa}')">
+                            <button class="btn-edit" style="border:none; cursor:pointer;" onclick="openModal(${tl.maTheLoai}, '${tl.tenTheLoai}', '${tl.moTa}', ${tl.maTheLoaiCha == null ? 'null' : tl.maTheLoaiCha})">
                                 Sửa
                             </button>
                         </td>
                     </tr>
                 </c:forEach>
                 <c:if test="${empty listTL}">
-                    <tr><td colspan="4" style="text-align:center;">Chưa có dữ liệu</td></tr>
+                    <tr><td colspan="5" style="text-align:center;">Chưa có dữ liệu</td></tr>
                 </c:if>
             </tbody>
         </table>
@@ -72,6 +81,15 @@
                 <input type="text" id="tenTheLoai" name="tenTheLoai" required>
             </div>
             <div class="form-group">
+                <label>Danh Mục Cha</label>
+                <select id="maTheLoaiCha" name="maTheLoaiCha">
+                    <option value="">-- Không có --</option>
+                    <c:forEach var="tl" items="${listTL}">
+                        <option value="${tl.maTheLoai}">${tl.tenTheLoai}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="form-group">
                 <label>Mô Tả</label>
                 <input type="text" id="moTa" name="moTa">
             </div>
@@ -84,12 +102,24 @@
 </div>
 
 <script>
-    function openModal(id, name, desc) {
+    function openModal(id, name, desc, parentId) {
         document.getElementById('modalTitle').innerText = id == 0 ? 'Thêm Thể Loại' : 'Sửa Thể Loại';
         document.getElementById('action').value = id == 0 ? 'add' : 'edit';
         document.getElementById('maTheLoai').value = id;
         document.getElementById('tenTheLoai').value = name;
         document.getElementById('moTa').value = desc;
+        document.getElementById('maTheLoaiCha').value = parentId !== null ? parentId : '';
+        
+        // Ẩn chính nó trong danh sách cha nếu đang sửa
+        let options = document.getElementById('maTheLoaiCha').options;
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].value == id) {
+                options[i].style.display = 'none';
+            } else {
+                options[i].style.display = 'block';
+            }
+        }
+
         document.getElementById('tlModal').style.display = 'block';
     }
     

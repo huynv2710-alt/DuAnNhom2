@@ -115,10 +115,14 @@
                                 ${s.trangThai == 1 ? 'ĐANG BÁN' : 'NGỪNG KD'}
                             </span>
                         </td>
-                        <td style="text-align: center;">
+                        <td style="text-align: center; display: flex; gap: 8px; justify-content: center; align-items: center; border-bottom: none;">
                             <button class="btn-edit" title="Sửa"
-                                onclick="openEditModal(${s.maSach}, '${s.tenSach}', '${s.tacGia}', '${s.isbn}', ${s.maTheLoai}, ${s.maNXB}, ${s.giaNhap}, ${s.giaBan}, ${s.soLuongTon}, '${s.hinhAnh}', ${s.trangThai})">
+                                onclick="openEditModal(${s.maSach}, '${s.tenSach}', '${s.tacGia}', '${s.isbn}', ${s.maTheLoai}, ${s.maNXB}, ${s.giaNhap}, ${s.giaBan}, ${s.soLuongTon}, '${s.hinhAnh}', ${s.trangThai}, ${s.soTrang}, '${s.kichThuoc}', ${s.trongLuong}, '${s.ngonNgu}')">
                                 <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-edit" title="Chi tiết"
+                                onclick="openBookDetails('${s.tenSach}', '${s.tacGia}', '${s.isbn}', ${s.soTrang}, '${s.kichThuoc}', ${s.trongLuong}, '${s.ngonNgu}')" style="background-color: #0ea5e9;">
+                                <i class="fas fa-info-circle"></i>
                             </button>
                         </td>
                     </tr>
@@ -188,6 +192,24 @@
                     <span id="errSoLuong" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
                 </div>
             </div>
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Số Trang</label>
+                    <input type="number" id="soTrang" name="soTrang" min="0">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Kích Thước</label>
+                    <input type="text" id="kichThuoc" name="kichThuoc" placeholder="VD: 14 x 20 cm">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Trọng Lượng (g)</label>
+                    <input type="number" id="trongLuong" name="trongLuong" min="0">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Ngôn Ngữ</label>
+                    <input type="text" id="ngonNgu" name="ngonNgu" placeholder="Tiếng Việt">
+                </div>
+            </div>
             <div class="form-group">
                 <label>Link Ảnh Bìa (URL)</label>
                 <input type="text" id="hinhAnh" name="hinhAnh" placeholder="https://...">
@@ -219,11 +241,15 @@
         document.getElementById('giaBan').value = '';
         document.getElementById('soLuongTon').value = '';
         document.getElementById('hinhAnh').value = '';
+        document.getElementById('soTrang').value = '';
+        document.getElementById('kichThuoc').value = '';
+        document.getElementById('trongLuong').value = '';
+        document.getElementById('ngonNgu').value = '';
         document.getElementById('trangThai').value = '1';
         document.getElementById('sachModal').style.display = 'block';
     }
 
-    function openEditModal(maSach, tenSach, tacGia, isbn, maTheLoai, maNXB, giaNhap, giaBan, soLuong, hinhAnh, trangThai) {
+    function openEditModal(maSach, tenSach, tacGia, isbn, maTheLoai, maNXB, giaNhap, giaBan, soLuong, hinhAnh, trangThai, soTrang, kichThuoc, trongLuong, ngonNgu) {
         document.getElementById('modalTitle').innerText = 'Cập nhật Thông tin Sách';
         document.getElementById('formAction').value = 'edit';
         document.getElementById('maSach').value = maSach;
@@ -235,7 +261,11 @@
         document.getElementById('giaNhap').value = giaNhap;
         document.getElementById('giaBan').value = giaBan;
         document.getElementById('soLuongTon').value = soLuong;
-        document.getElementById('hinhAnh').value = hinhAnh;
+        document.getElementById('hinhAnh').value = (hinhAnh !== 'null' && hinhAnh) ? hinhAnh : '';
+        document.getElementById('soTrang').value = soTrang;
+        document.getElementById('kichThuoc').value = (kichThuoc !== 'null' && kichThuoc) ? kichThuoc : '';
+        document.getElementById('trongLuong').value = trongLuong;
+        document.getElementById('ngonNgu').value = (ngonNgu !== 'null' && ngonNgu) ? ngonNgu : '';
         document.getElementById('trangThai').value = trangThai;
         document.getElementById('sachModal').style.display = 'block';
     }
@@ -276,7 +306,58 @@
         
         return isValid;
     }
+
+    function openBookDetails(ten, tacgia, isbn, sotrang, kichthuoc, trongluong, ngonngu) {
+        document.getElementById('detTenSach').innerText = ten || 'Không rõ';
+        document.getElementById('detTacGia').innerText = tacgia || 'Không rõ';
+        document.getElementById('detIsbn').innerText = (isbn !== 'null' && isbn) ? isbn : 'Chưa cập nhật';
+        document.getElementById('detSoTrang').innerText = sotrang || '0';
+        document.getElementById('detKichThuoc').innerText = (kichthuoc !== 'null' && kichthuoc) ? kichthuoc : 'Chưa cập nhật';
+        document.getElementById('detTrongLuong').innerText = trongluong ? (trongluong + ' g') : '0 g';
+        document.getElementById('detNgonNgu').innerText = (ngonngu !== 'null' && ngonngu) ? ngonngu : 'Chưa cập nhật';
+        document.getElementById('bookDetailsModal').style.display = 'block';
+    }
 </script>
+
+<!-- Modal Chi Tiết Sách -->
+<div id="bookDetailsModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
+    <div style="background:white; width:450px; margin:100px auto; padding:25px; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+        <h2 style="color:#00897b; border-bottom:2px solid #00897b; padding-bottom:10px; margin-bottom:20px;">Thông Số Chi Tiết</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+            <div>
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Tên Sách</label>
+                <div id="detTenSach" style="font-weight: 600; margin-top: 5px;"></div>
+            </div>
+            <div>
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Tác Giả</label>
+                <div id="detTacGia" style="font-weight: 600; margin-top: 5px;"></div>
+            </div>
+            <div>
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Mã ISBN</label>
+                <div id="detIsbn" style="margin-top: 5px;"></div>
+            </div>
+            <div>
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Ngôn Ngữ</label>
+                <div id="detNgonNgu" style="margin-top: 5px;"></div>
+            </div>
+            <div>
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Số Trang</label>
+                <div id="detSoTrang" style="margin-top: 5px;"></div>
+            </div>
+            <div>
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Kích Thước</label>
+                <div id="detKichThuoc" style="margin-top: 5px;"></div>
+            </div>
+            <div>
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Trọng Lượng</label>
+                <div id="detTrongLuong" style="margin-top: 5px;"></div>
+            </div>
+        </div>
+        <div style="text-align: right;">
+            <button onclick="document.getElementById('bookDetailsModal').style.display='none'" style="padding:10px 20px; background:#e2e8f0; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">Đóng</button>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

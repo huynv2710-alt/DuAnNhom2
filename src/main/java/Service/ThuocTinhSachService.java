@@ -18,30 +18,35 @@ public class ThuocTinhSachService {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new TheLoai(rs.getInt("MaTheLoai"), rs.getString("TenTheLoai"), rs.getString("MoTa")));
+                Integer maTheLoaiCha = rs.getObject("MaTheLoaiCha") != null ? rs.getInt("MaTheLoaiCha") : null;
+                list.add(new TheLoai(rs.getInt("MaTheLoai"), rs.getString("TenTheLoai"), rs.getString("MoTa"), maTheLoaiCha));
             }
         } catch (Exception e) { e.printStackTrace(); }
         return list;
     }
 
-    public boolean addTheLoai(String ten, String moTa) {
-        String sql = "INSERT INTO TheLoai (TenTheLoai, MoTa) VALUES (?, ?)";
+    public boolean addTheLoai(String ten, String moTa, Integer maTheLoaiCha) {
+        String sql = "INSERT INTO TheLoai (TenTheLoai, MoTa, MaTheLoaiCha) VALUES (?, ?, ?)";
         try (Connection con = new connectService().myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, ten);
             ps.setString(2, moTa);
+            if (maTheLoaiCha != null) ps.setInt(3, maTheLoaiCha);
+            else ps.setNull(3, java.sql.Types.INTEGER);
             return ps.executeUpdate() > 0;
         } catch (Exception e) { e.printStackTrace(); }
         return false;
     }
 
-    public boolean updateTheLoai(int id, String ten, String moTa) {
-        String sql = "UPDATE TheLoai SET TenTheLoai=?, MoTa=? WHERE MaTheLoai=?";
+    public boolean updateTheLoai(int id, String ten, String moTa, Integer maTheLoaiCha) {
+        String sql = "UPDATE TheLoai SET TenTheLoai=?, MoTa=?, MaTheLoaiCha=? WHERE MaTheLoai=?";
         try (Connection con = new connectService().myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, ten);
             ps.setString(2, moTa);
-            ps.setInt(3, id);
+            if (maTheLoaiCha != null) ps.setInt(3, maTheLoaiCha);
+            else ps.setNull(3, java.sql.Types.INTEGER);
+            ps.setInt(4, id);
             return ps.executeUpdate() > 0;
         } catch (Exception e) { e.printStackTrace(); }
         return false;

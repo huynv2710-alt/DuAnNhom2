@@ -29,10 +29,14 @@ public class TheLoaiServlet extends HttpServlet {
         String moTa = request.getParameter("moTa");
 
         if ("add".equals(action)) {
-            service.addTheLoai(tenTheLoai, moTa);
+            String cha = request.getParameter("maTheLoaiCha");
+            Integer maTheLoaiCha = (cha != null && !cha.trim().isEmpty()) ? Integer.parseInt(cha) : null;
+            service.addTheLoai(tenTheLoai, moTa, maTheLoaiCha);
         } else if ("edit".equals(action)) {
             int id = Integer.parseInt(request.getParameter("maTheLoai"));
-            service.updateTheLoai(id, tenTheLoai, moTa);
+            String cha = request.getParameter("maTheLoaiCha");
+            Integer maTheLoaiCha = (cha != null && !cha.trim().isEmpty()) ? Integer.parseInt(cha) : null;
+            service.updateTheLoai(id, tenTheLoai, moTa, maTheLoaiCha);
         }
 
         response.sendRedirect("quanlytheloai");

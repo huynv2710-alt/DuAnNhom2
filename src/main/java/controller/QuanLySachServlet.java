@@ -64,12 +64,20 @@ public class QuanLySachServlet extends HttpServlet {
         String hinhAnh = request.getParameter("hinhAnh");
         int trangThai = Integer.parseInt(request.getParameter("trangThai"));
 
+        int soTrang = 0;
+        int trongLuong = 0;
+        try { soTrang = Integer.parseInt(request.getParameter("soTrang")); } catch (Exception e) {}
+        try { trongLuong = Integer.parseInt(request.getParameter("trongLuong")); } catch (Exception e) {}
+        
+        String kichThuoc = request.getParameter("kichThuoc");
+        String ngonNgu = request.getParameter("ngonNgu");
+
         if ("add".equals(action)) {
-            Sach s = new Sach(0, tenSach, tacGia, isbn, maTheLoai, maNXB, giaNhap, giaBan, soLuongTon, hinhAnh, trangThai);
+            Sach s = new Sach(0, tenSach, tacGia, isbn, maTheLoai, maNXB, giaNhap, giaBan, soLuongTon, hinhAnh, trangThai, soTrang, kichThuoc, trongLuong, ngonNgu);
             sachService.addSach(s);
         } else if ("edit".equals(action)) {
             int maSach = Integer.parseInt(request.getParameter("maSach"));
-            Sach s = new Sach(maSach, tenSach, tacGia, isbn, maTheLoai, maNXB, giaNhap, giaBan, soLuongTon, hinhAnh, trangThai);
+            Sach s = new Sach(maSach, tenSach, tacGia, isbn, maTheLoai, maNXB, giaNhap, giaBan, soLuongTon, hinhAnh, trangThai, soTrang, kichThuoc, trongLuong, ngonNgu);
             sachService.updateSach(s);
         }
         

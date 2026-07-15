@@ -58,9 +58,21 @@
 <span id="errEmail" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
 </div>
 
-<div class="form-group">
+<div class="form-group" style="grid-column: span 2;">
 <label>Địa chỉ</label>
-<input type="text" name="diaChi" required>
+<div style="display: flex; gap: 10px; margin-bottom: 10px;">
+    <select id="city" required style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <option value="" selected>Chọn Tỉnh Thành</option>
+    </select>
+    <select id="district" required style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <option value="" selected>Chọn Quận Huyện</option>
+    </select>
+    <select id="ward" required style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <option value="" selected>Chọn Phường Xã</option>
+    </select>
+</div>
+<input type="text" id="addressDetail" placeholder="Số nhà, Tên đường..." required style="width: 100%;">
+<input type="hidden" name="diaChi" id="diaChiHidden">
 </div>
 
 <div class="form-group">
@@ -168,6 +180,70 @@ Quay lại
 
         document.querySelector('.btn-save').disabled = !isValid;
         return isValid;
+    }
+
+    // Set max date for ngaySinh (16 years ago)
+    document.addEventListener("DOMContentLoaded", function() {
+        let today = new Date();
+        let maxDate = new Date(today.getFullYear() - 16, today.getMonth(), today.getDate());
+        document.getElementById("ngaySinh").max = maxDate.toISOString().split("T")[0];
+        
+        // Load API Tỉnh/Thành
+        fetch('https://provinces.open-api.vn/api/?depth=3')
+            .then(response => response.json())
+            .then(data => {
+                let citySelect = document.getElementById('city');
+                let districtSelect = document.getElementById('district');
+                let wardSelect = document.getElementById('ward');
+                
+                data.forEach(city => {
+                    citySelect.innerHTML += `<option value="${city.name}" data-code="${city.code}">${city.name}</option>`;
+                });
+
+                citySelect.addEventListener('change', function() {
+                    districtSelect.innerHTML = '<option value="">Chọn Quận Huyện</option>';
+                    wardSelect.innerHTML = '<option value="">Chọn Phường Xã</option>';
+                    let selectedCity = data.find(c => c.code == citySelect.options[citySelect.selectedIndex].getAttribute('data-code'));
+                    if (selectedCity) {
+                        selectedCity.districts.forEach(d => {
+                            districtSelect.innerHTML += `<option value="${d.name}" data-code="${d.code}">${d.name}</option>`;
+                        });
+                    }
+                    updateAddress();
+                });
+
+                districtSelect.addEventListener('change', function() {
+                    wardSelect.innerHTML = '<option value="">Chọn Phường Xã</option>';
+                    let selectedCity = data.find(c => c.code == citySelect.options[citySelect.selectedIndex].getAttribute('data-code'));
+                    if (selectedCity) {
+                        let selectedDistrict = selectedCity.districts.find(d => d.code == districtSelect.options[districtSelect.selectedIndex].getAttribute('data-code'));
+                        if (selectedDistrict) {
+                            selectedDistrict.wards.forEach(w => {
+                                wardSelect.innerHTML += `<option value="${w.name}">${w.name}</option>`;
+                            });
+                        }
+                    }
+                    updateAddress();
+                });
+
+                wardSelect.addEventListener('change', updateAddress);
+                document.getElementById('addressDetail').addEventListener('input', updateAddress);
+            });
+    });
+
+    function updateAddress() {
+        let city = document.getElementById('city').value;
+        let district = document.getElementById('district').value;
+        let ward = document.getElementById('ward').value;
+        let detail = document.getElementById('addressDetail').value;
+        
+        let fullAddress = [];
+        if (detail) fullAddress.push(detail);
+        if (ward) fullAddress.push(ward);
+        if (district) fullAddress.push(district);
+        if (city) fullAddress.push(city);
+        
+        document.getElementById('diaChiHidden').value = fullAddress.join(', ');
     }
 </script>
 

@@ -159,13 +159,13 @@
             </div>
             
             <div class="checkout-section">
-                <form action="banhang" method="post">
+                <form action="banhang" method="post" onsubmit="return validateCheckout()">
                     <input type="hidden" name="action" value="checkout">
                     
                     <div class="checkout-group">
                         <label>KHÁCH HÀNG</label>
-                        <select name="maKH" required>
-                            <option value="">-- Chọn khách hàng --</option>
+                        <select name="maKH">
+                            <option value="0">-- Khách Lẻ --</option>
                             <c:forEach var="kh" items="${dsKhachHang}">
                                 <option value="${kh.maKH}">${kh.hoTen} - ${kh.sdt}</option>
                             </c:forEach>
@@ -216,6 +216,11 @@
                         </div>
                     </div>
                     
+                    <div id="qr-fields" style="display:none; text-align:center; margin-top:15px; margin-bottom:15px;">
+                        <p style="font-size:13px; font-weight:bold; color:#2d6652; margin-bottom: 8px;">Quét mã QR để thanh toán</p>
+                        <img id="vietqr-img" src="" alt="VietQR" style="width: 200px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    </div>
+                    
                     <button type="submit" class="btn-checkout" ${empty sessionScope.cart ? 'disabled' : ''}>
                         <i class="fas fa-check-circle"></i> THANH TOÁN & IN HĐ
                     </button>
@@ -227,13 +232,32 @@
                     function togglePaymentFields() {
                         let method = document.getElementById('phuongThucTT').value;
                         let cashFields = document.getElementById('cash-fields');
+                        let qrFields = document.getElementById('qr-fields');
+                        
                         if(method === 'TienMat') {
                             cashFields.style.display = 'block';
+                            qrFields.style.display = 'none';
                         } else {
                             cashFields.style.display = 'none';
+                            qrFields.style.display = 'block';
                             document.getElementById('tienKhachDua').value = '';
+                            updateQRCode();
                             calculateTotal();
                         }
+                    }
+                    
+                    function updateQRCode() {
+                        let giamGia = parseFloat(document.getElementById('giamGia').value) || 0;
+                        let finalTotal = baseTotal - giamGia;
+                        if(finalTotal <= 0) {
+                            document.getElementById('qr-fields').style.display = 'none';
+                            return;
+                        }
+                        // MBBank BIN: 970422, VCB: 970436. Replace with real ones if needed.
+                        let bankBin = '970422'; 
+                        let accountNo = '0123456789';
+                        let accountName = 'BOOK STORE N2';
+                        document.getElementById('vietqr-img').src = `https://img.vietqr.io/image/${bankBin}-${accountNo}-compact2.jpg?amount=${finalTotal}&addInfo=Thanh toan don hang&accountName=${accountName}`;
                     }
                     
                     function calculateTotal() {
@@ -258,9 +282,26 @@
                         } else {
                             document.getElementById('tienThua').value = "0 đ";
                             document.getElementById('tienThua').style.color = '#ef4444';
+                            updateQRCode();
                         }
                     }
                     
+                    function validateCheckout() {
+                        if(baseTotal <= 0) return true;
+                        const finalTotal = baseTotal - (parseFloat(document.getElementById('giamGia').value) || 0);
+                        const method = document.getElementById('phuongThucTT').value;
+                        
+                        if (method === 'TienMat') {
+                            const tienKhachDua = parseFloat(document.getElementById('tienKhachDua').value) || 0;
+                            if (tienKhachDua < finalTotal) {
+                                alert('Tiền khách đưa (' + new Intl.NumberFormat('vi-VN').format(tienKhachDua) + ' đ) phải lớn hơn hoặc bằng tổng tiền (' + new Intl.NumberFormat('vi-VN').format(finalTotal) + ' đ)!');
+                                document.getElementById('tienKhachDua').focus();
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+
                     // Khởi tạo ban đầu
                     window.onload = function() {
                         togglePaymentFields();
