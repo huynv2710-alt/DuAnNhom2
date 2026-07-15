@@ -26,7 +26,7 @@
                     </div>
                 </c:if>
 
-                <button type="submit">Dang nhap</button>
+                <button type="submit">Đăng Nhập</button>
             </form>
         </div>
     </div>
