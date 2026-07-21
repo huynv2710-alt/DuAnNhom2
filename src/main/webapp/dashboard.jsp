@@ -7,142 +7,623 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Tổng quan - Book Store</title>
+    <title>Tổng quan - Book Store Dashboard</title>
     <link rel="stylesheet" href="css/qlnv.css?v=2.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* Modern Premium Dashboard CSS */
+        :root {
+            --primary: #2d6652;
+            --primary-light: #e6f0ec;
+            --secondary: #0ea5e9;
+            --bg-color: #f0f4f3; 
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: rgba(226, 232, 240, 0.8);
+            --shadow-sm: 0 2px 10px rgba(45, 102, 82, 0.03);
+            --shadow-md: 0 10px 30px -10px rgba(45, 102, 82, 0.1);
+            --shadow-lg: 0 20px 40px -10px rgba(45, 102, 82, 0.15);
+            --radius-md: 16px;
+            --radius-lg: 20px;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body, .content {
+            background-color: var(--bg-color) !important;
+            background-image: 
+                radial-gradient(circle at top right, rgba(45,102,82,0.08) 0%, transparent 40%), 
+                radial-gradient(circle at bottom left, rgba(14,165,233,0.06) 0%, transparent 40%);
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .dashboard-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
         .dashboard-header {
             display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px;
+            animation: fadeInDown 0.5s ease-out;
         }
-        .dashboard-title { font-size: 20px; font-weight: 800; color: #1e293b; margin: 0 0 5px 0; }
-        .dashboard-subtitle { font-size: 13px; color: #64748b; margin: 0; display: flex; align-items: center; gap: 6px; }
-        .dashboard-actions button {
-            background: white; border: 1px solid #cbd5e1; padding: 8px 15px; border-radius: 6px; color: #475569; font-weight: 600; font-size: 13px; cursor: pointer; margin-left: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
+        .dashboard-title { font-size: 24px; font-weight: 800; color: var(--text-main); margin: 0 0 5px 0; }
+        .dashboard-subtitle { font-size: 14px; color: var(--text-muted); margin: 0; display: flex; align-items: center; gap: 8px; }
         
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
-        .kpi-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; position: relative; overflow: hidden; }
-        .kpi-title { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-        .kpi-value { font-size: 24px; font-weight: 800; color: #1e293b; margin-bottom: 10px; }
-        .kpi-desc { font-size: 12px; color: #64748b; }
-        .kpi-trend { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 11px; margin-right: 5px; }
-        .kpi-trend.up { background: #dcfce7; color: #166534; }
-        .kpi-trend.down { background: #fee2e2; color: #991b1b; }
-        .kpi-icon { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-        .icon-revenue { background: #fef3c7; color: #d97706; }
-        .icon-profit { background: #dcfce7; color: #059669; }
-        .icon-orders { background: #ede9fe; color: #6d28d9; }
-        .icon-customers { background: #e0e7ff; color: #4338ca; }
+        .clock-container {
+            background: var(--card-bg); padding: 10px 20px; border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm); font-weight: 700; color: var(--primary);
+            display: flex; align-items: center; gap: 10px; border: 1px solid var(--border-color);
+        }
 
-        .dashboard-row { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-        .panel { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; display: flex; flex-direction: column; }
-        .panel-header { padding: 20px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
-        .panel-title { font-size: 14px; font-weight: 700; color: #1e293b; margin: 0; }
-        .panel-body { padding: 20px; flex: 1; }
+        .kpi-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px; 
+            animation: fadeInUp 0.6s ease-out;
+        }
+        .kpi-card { 
+            background: var(--card-bg); padding: 25px; border-radius: var(--radius-md); 
+            box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); 
+            position: relative; overflow: visible; transition: var(--transition);
+            backdrop-filter: blur(10px);
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .kpi-card:hover { transform: translateY(-5px) scale(1.01); box-shadow: var(--shadow-md); border-color: rgba(45, 102, 82, 0.3); }
+        .kpi-title { font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+        .kpi-value { font-size: 28px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; letter-spacing: -0.5px; }
+        .kpi-icon { position: absolute; top: 25px; right: 25px; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: var(--transition); }
+        .kpi-card:hover .kpi-icon { transform: scale(1.1) rotate(5deg); }
         
-        .stock-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed #e2e8f0; }
-        .stock-item:last-child { border-bottom: none; }
-        .stock-name { font-size: 14px; font-weight: 600; color: #1e293b; }
-        .stock-count { font-size: 13px; font-weight: 700; color: #ef4444; background: #fee2e2; padding: 2px 8px; border-radius: 12px; }
+        /* Grid cho biểu đồ và danh sách */
+        .dashboard-row { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 25px; animation: fadeInUp 0.8s ease-out; }
+        .dashboard-row.equal { grid-template-columns: 1fr 1fr; }
         
-        .chart-placeholder { background: #fdf6e3; border: 1px solid #fde047; border-radius: 8px; height: 250px; display: flex; align-items: center; justify-content: center; position: relative; }
-        .chart-placeholder::after { content: ''; width: 8px; height: 8px; background: #22c55e; border-radius: 50%; position: absolute; }
+        .panel { 
+            background: var(--card-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); 
+            border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden;
+            transition: var(--transition); backdrop-filter: blur(10px);
+        }
+        .panel:hover { box-shadow: var(--shadow-md); border-color: rgba(45, 102, 82, 0.2); }
+        .panel-header { padding: 20px 25px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.5); }
+        .panel-title { font-size: 16px; font-weight: 800; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 10px; }
+        .panel-body { padding: 25px; flex: 1; overflow-y: auto; max-height: 420px; }
+        
+        /* Danh sách Item Premium */
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.6); border: 1px solid transparent; border-radius: 12px; margin-bottom: 12px; transition: var(--transition); }
+        .list-item:hover { background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border-color: rgba(45,102,82,0.1); transform: translateX(4px); }
+        .list-item:last-child { margin-bottom: 0; }
+        .item-info { display: flex; align-items: center; gap: 15px; }
+        .item-img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; background: #f1f5f9; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .item-name { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .item-sub { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .item-badge { font-size: 12px; font-weight: 800; padding: 6px 12px; border-radius: 20px; box-shadow: inset 0 1px 2px rgba(255,255,255,0.5); }
+        .badge-red { background: linear-gradient(135deg, #fee2e2, #fecaca); color: #dc2626; border: 1px solid #fca5a5; }
+        .badge-green { background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #059669; border: 1px solid #86efac; }
+        .badge-blue { background: linear-gradient(135deg, #e0f2fe, #bae6fd); color: #0284c7; border: 1px solid #7dd3fc; }
+        .badge-yellow { background: linear-gradient(135deg, #fef3c7, #fde68a); color: #d97706; border: 1px solid #fcd34d; }
+
+        /* Empty State */
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; color: #94a3b8; }
+        .empty-state i { font-size: 40px; color: #cbd5e1; margin-bottom: 15px; }
+        .empty-state p { font-size: 14px; font-weight: 600; margin: 0; }
+
+        /* Premium Tag */
+        .premium-tag {
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+            padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; color: #334155; 
+            border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: var(--transition); cursor: default;
+        }
+        .premium-tag:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.04); border-color: #cbd5e1; }
+        .premium-tag span.val { font-weight: 800; }
+
+        /* Premium Custom Dropdown */
+        .custom-dropdown { position: relative; width: 100%; margin-top: 15px; }
+        .dropdown-selected {
+            padding: 12px 16px; background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(45, 102, 82, 0.2); border-radius: 10px;
+            color: #2d6652; font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.3s;
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .dropdown-selected:hover { border-color: #2d6652; background: #ffffff; box-shadow: 0 4px 12px rgba(45, 102, 82, 0.1); transform: translateY(-1px); }
+        .dropdown-selected i { transition: transform 0.3s; }
+        .custom-dropdown.active .dropdown-selected i { transform: rotate(180deg); }
+        
+        .dropdown-options {
+            position: absolute; top: calc(100% + 8px); left: 0; right: 0; background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(12px); border: 1px solid var(--border-color);
+            border-radius: 12px; box-shadow: var(--shadow-lg); z-index: 100;
+            display: none; flex-direction: column; overflow: hidden; padding: 8px;
+        }
+        .custom-dropdown.active .dropdown-options { display: flex; animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .dropdown-options div {
+            padding: 10px 14px; font-size: 14px; font-weight: 600; color: #475569; cursor: pointer; transition: 0.2s;
+            border-radius: 8px; display: flex; align-items: center; gap: 10px; margin-bottom: 2px;
+        }
+        .dropdown-options div:last-child { margin-bottom: 0; }
+        .dropdown-options div:hover { background: #e6f0ec; color: #2d6652; transform: translateX(4px); }
+        .dropdown-options div i { width: 16px; text-align: center; opacity: 0.7; }
+
+        /* Animations */
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Loading Overlay */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        .spinner { width: 50px; height: 50px; border: 4px solid var(--border-color); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
+<div id="loader">
+    <div class="spinner"></div>
+    <h3 style="color: #2d6652; margin-top: 20px;">Đang tải dữ liệu...</h3>
+</div>
+
 <jsp:include page="menu.jsp"/>
 
-<main class="content">
+<main class="content" style="opacity: 0; transition: opacity 0.5s ease;" id="mainContent">
 
     <div class="dashboard-header">
         <div>
-            <h1 class="dashboard-title">Tổng quan</h1>
-            <p class="dashboard-subtitle"><i class="far fa-calendar-alt"></i> Hôm nay</p>
+            <h1 class="dashboard-title">Tổng quan Thống kê</h1>
+            <p class="dashboard-subtitle" id="currentDate"><i class="far fa-calendar-alt"></i> Đang cập nhật...</p>
         </div>
-        <div class="dashboard-actions">
-            <button><i class="fas fa-file-alt"></i> Báo cáo đầy đủ</button>
-            <button><i class="fas fa-history"></i> Nhật ký</button>
+        <div class="clock-container">
+            <i class="far fa-clock"></i> <span id="clock">00:00:00</span>
         </div>
     </div>
 
     <c:if test="${sessionScope.quyen == 'admin'}">
-        <!-- ADMIN DASHBOARD -->
+        <!-- TỔNG QUAN HỆ THỐNG -->
+        <h3 style="margin-bottom: 15px; color: #334155; font-size: 16px;"><i class="fas fa-chart-pie" style="color:#2d6652;"></i> Báo cáo tổng quan</h3>
         <div class="kpi-grid">
-            <div class="kpi-card">
-                <div class="kpi-icon icon-revenue"><i class="fas fa-coins"></i></div>
-                <div class="kpi-title">DOANH THU HÔM NAY</div>
-                <div class="kpi-value"><fmt:formatNumber value="${todayRevenue}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></div>
-                <div class="kpi-desc"><span class="kpi-trend up"><i class="fas fa-arrow-up"></i> 100%</span> so với hôm qua</div>
+            <!-- Card Doanh Thu -->
+            <div class="kpi-card" style="border-top: 4px solid #2d6652;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                    <div>
+                        <div class="kpi-title" style="color:#2d6652;">TỔNG DOANH THU</div>
+                        <div class="kpi-value" id="revenue-val"><fmt:formatNumber value="${todayRevenue}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></div>
+                    </div>
+                    <div class="kpi-icon" style="background:#e6f0ec; color:#2d6652; position:relative; top:0; right:0;"><i class="fas fa-coins"></i></div>
+                </div>
+                <div class="custom-dropdown" id="dropdown-revenue">
+                    <div class="dropdown-selected" onclick="toggleDropdown('dropdown-revenue')">
+                        <span id="lbl-revenue"><i class="fas fa-calendar-day" style="margin-right: 8px; opacity: 0.7;"></i>Hôm nay</span> 
+                        <i class="fas fa-chevron-down" style="font-size: 12px; opacity: 0.7;"></i>
+                    </div>
+                    <div class="dropdown-options">
+                        <div onclick="selectOption('dropdown-revenue', 'today', '<i class=\'fas fa-calendar-day\' style=\'margin-right: 8px; opacity: 0.7;\'></i>Hôm nay', updateRevenue)"><i class="fas fa-calendar-day"></i> Hôm nay</div>
+                        <div onclick="selectOption('dropdown-revenue', 'week', '<i class=\'fas fa-calendar-week\' style=\'margin-right: 8px; opacity: 0.7;\'></i>Tuần này', updateRevenue)"><i class="fas fa-calendar-week"></i> Tuần này</div>
+                        <div onclick="selectOption('dropdown-revenue', 'month', '<i class=\'fas fa-calendar-alt\' style=\'margin-right: 8px; opacity: 0.7;\'></i>Tháng này', updateRevenue)"><i class="fas fa-calendar-alt"></i> Tháng này</div>
+                        <div onclick="selectOption('dropdown-revenue', 'year', '<i class=\'fas fa-calendar\' style=\'margin-right: 8px; opacity: 0.7;\'></i>Năm nay', updateRevenue)"><i class="fas fa-calendar"></i> Năm nay</div>
+                        <div onclick="selectOption('dropdown-revenue', 'all', '<i class=\'fas fa-list-ul\' style=\'margin-right: 8px; opacity: 0.7;\'></i>Tất cả', updateRevenue)"><i class="fas fa-list-ul"></i> Tất cả</div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="kpi-card">
-                <div class="kpi-icon icon-profit"><i class="fas fa-chart-line"></i></div>
-                <div class="kpi-title">LỢI NHUẬN HÔM NAY</div>
-                <div class="kpi-value"><fmt:formatNumber value="${todayProfit}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></div>
-                <div class="kpi-desc">Tháng này: <fmt:formatNumber value="${todayProfit * 30}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></div>
+
+            <!-- Card Đơn Hàng -->
+            <div class="kpi-card" style="border-top: 4px solid #0369a1;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                    <div>
+                        <div class="kpi-title" style="color:#0369a1;">ĐƠN HÀNG</div>
+                        <div class="kpi-value" id="orders-val">${todayOrders}</div>
+                        <div class="kpi-title" style="margin-top:5px; font-size:11px; opacity: 0.8;">Tổng hệ thống: ${totalOrders} đơn</div>
+                    </div>
+                    <div class="kpi-icon" style="background:#e0f2fe; color:#0369a1; position:relative; top:0; right:0;"><i class="fas fa-shopping-bag"></i></div>
+                </div>
+                <div class="custom-dropdown" id="dropdown-orders">
+                    <div class="dropdown-selected" onclick="toggleDropdown('dropdown-orders')" style="border-color: rgba(3, 105, 161, 0.2); color: #0369a1;">
+                        <span id="lbl-orders"><i class="fas fa-clock" style="margin-right: 8px; opacity: 0.7;"></i>Hôm nay</span> 
+                        <i class="fas fa-chevron-down" style="font-size: 12px; opacity: 0.7;"></i>
+                    </div>
+                    <div class="dropdown-options">
+                        <div onclick="selectOption('dropdown-orders', 'today', '<i class=\'fas fa-clock\' style=\'margin-right: 8px; opacity: 0.7;\'></i>Hôm nay', updateOrders)"><i class="fas fa-clock"></i> Hôm nay</div>
+                        <div onclick="selectOption('dropdown-orders', 'all', '<i class=\'fas fa-list-ul\' style=\'margin-right: 8px; opacity: 0.7;\'></i>Tất cả', updateOrders)"><i class="fas fa-list-ul"></i> Tất cả</div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="kpi-card">
-                <div class="kpi-icon icon-orders"><i class="fas fa-shopping-bag"></i></div>
-                <div class="kpi-title">ĐƠN HÀNG HÔM NAY</div>
-                <div class="kpi-value">${todayOrders}</div>
-                <div class="kpi-desc"><span class="kpi-trend up"><i class="fas fa-arrow-up"></i> 100%</span> so với hôm qua</div>
+
+            <!-- Card Sách & Tồn Kho -->
+            <div class="kpi-card" style="border-top: 4px solid #b45309;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                    <div>
+                        <div class="kpi-title" style="color:#b45309;">KHO SÁCH</div>
+                        <div class="kpi-value">${totalBooks} <span style="font-size:16px; color:#64748b; font-weight:600;">cuốn</span></div>
+                        <div class="kpi-title" style="margin-top:5px; font-size:11px; color:#ef4444; opacity: 0.9;">Sắp hết hàng: ${lowStock} quyển</div>
+                    </div>
+                    <div class="kpi-icon" style="background:#fef3c7; color:#b45309; position:relative; top:0; right:0;"><i class="fas fa-book"></i></div>
+                </div>
+                <div style="width: 100%; padding: 10px 14px; border: 1px solid rgba(180, 83, 9, 0.2); border-radius: 10px; background: rgba(254, 243, 199, 0.3); color: #b45309; font-size: 13px; font-weight: 600; text-align: center; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 8px;"><i class="fas fa-sync fa-spin" style="animation-duration: 3s;"></i> Tự động cập nhật</div>
             </div>
-            
-            <div class="kpi-card">
-                <div class="kpi-icon icon-customers"><i class="fas fa-users"></i></div>
-                <div class="kpi-title">KHÁCH HÀNG</div>
-                <div class="kpi-value">${totalCustomers}</div>
-                <div class="kpi-desc">Tổng cộng trên hệ thống</div>
+
+            <!-- Card Khách Hàng & Nhân Sự -->
+            <div class="kpi-card" style="border-top: 4px solid #6d28d9;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                    <div>
+                        <div class="kpi-title" style="color:#6d28d9;">TỔNG KHÁCH HÀNG</div>
+                        <div class="kpi-value">${totalCustomers} <span style="font-size:16px; color:#64748b; font-weight:600;">người</span></div>
+                        <div class="kpi-title" style="margin-top:5px; font-size:11px; opacity: 0.8;">Nhân sự: ${totalEmployees} người</div>
+                    </div>
+                    <div class="kpi-icon" style="background:#ede9fe; color:#6d28d9; position:relative; top:0; right:0;"><i class="fas fa-users"></i></div>
+                </div>
+                <div style="width: 100%; padding: 10px 14px; border: 1px solid rgba(109, 40, 217, 0.2); border-radius: 10px; background: rgba(237, 233, 254, 0.3); color: #6d28d9; font-size: 13px; font-weight: 600; text-align: center; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 8px;"><i class="fas fa-database"></i> Dữ liệu hệ thống</div>
+            </div>
+        </div>
+
+        <!-- BIỂU ĐỒ -->
+        <div class="dashboard-row equal">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-chart-area" style="color:#2d6652;"></i> Biểu đồ Doanh Thu 7 Ngày Gần Nhất</h3>
+                </div>
+                <div class="panel-body">
+                    <canvas id="revenueByDayChart"></canvas>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-chart-bar" style="color:#2d6652;"></i> Biểu đồ Doanh Thu Theo Tháng (Năm Nay)</h3>
+                </div>
+                <div class="panel-body">
+                    <canvas id="revenueByMonthChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOP LISTS -->
+        <div class="dashboard-row">
+            <!-- Top Sách Bán Chạy -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-trophy" style="color:#f59e0b;"></i> Top 5 Sách Bán Chạy Nhất</h3>
+                </div>
+                <div class="panel-body">
+                    <c:forEach var="book" items="${topBooks}">
+                        <div class="list-item">
+                            <div class="item-info">
+                                <c:choose>
+                                    <c:when test="${not empty book[2] && book[2] != 'null'}">
+                                        <img src="${book[2]}" class="item-img">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="item-img" style="display:flex; align-items:center; justify-content:center; font-size:16px; color:#94a3b8;"><i class="fas fa-book"></i></div>
+                                    </c:otherwise>
+                                </c:choose>
+                                <div>
+                                    <div class="item-name">${book[0]}</div>
+                                    <div class="item-sub"><i class="fas fa-fire" style="color: #ef4444;"></i> Sản phẩm nổi bật</div>
+                                </div>
+                            </div>
+                            <div class="item-badge badge-green">Đã bán: ${book[1]}</div>
+                        </div>
+                    </c:forEach>
+                    <c:if test="${empty topBooks}">
+                        <div class="empty-state">
+                            <i class="fas fa-box-open"></i>
+                            <p>Chưa có dữ liệu sách bán chạy</p>
+                        </div>
+                    </c:if>
+                </div>
+            </div>
+
+            <!-- Sách Sắp Hết Hàng -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i> Sách Sắp Hết Hàng (<= 5)</h3>
+                </div>
+                <div class="panel-body">
+                    <c:forEach var="book" items="${lowStockList}">
+                        <div class="list-item">
+                            <div class="item-info">
+                                <div class="item-img" style="display:flex; align-items:center; justify-content:center; font-size:16px; color:#ef4444; background: #fee2e2;"><i class="fas fa-exclamation-circle"></i></div>
+                                <div>
+                                    <div class="item-name">${book[0]}</div>
+                                    <div class="item-sub">Cần nhập thêm hàng</div>
+                                </div>
+                            </div>
+                            <div class="item-badge badge-red">Còn: ${book[1]}</div>
+                        </div>
+                    </c:forEach>
+                    <c:if test="${empty lowStockList}">
+                        <div class="empty-state">
+                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                            <p style="color: #10b981;">Kho hàng đầy đủ</p>
+                        </div>
+                    </c:if>
+                </div>
             </div>
         </div>
         
-        <div class="kpi-grid" style="margin-top: 20px;">
-            <div class="kpi-card">
-                <div class="kpi-icon" style="background:#e0f2fe; color:#0284c7;"><i class="fas fa-book"></i></div>
-                <div class="kpi-title">SỐ LƯỢNG SÁCH</div>
-                <div class="kpi-value">${totalBooks}</div>
-                <div class="kpi-desc">Tổng số sách trong kho</div>
+        <div class="dashboard-row equal">
+            <!-- Hoạt động gần đây (Đơn hàng) -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-history" style="color:#6366f1;"></i> Hóa Đơn Mới Gần Đây</h3>
+                </div>
+                <div class="panel-body">
+                    <c:forEach var="order" items="${recentOrders}">
+                        <div class="list-item">
+                            <div class="item-info">
+                                <div style="width: 45px; height: 45px; border-radius: 12px; background: linear-gradient(135deg, #e0e7ff, #c7d2fe); color: #4f46e5; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                                    <i class="fas fa-receipt"></i>
+                                </div>
+                                <div>
+                                    <div class="item-name">Hóa đơn #${order[0]}</div>
+                                    <div class="item-sub"><i class="fas fa-user" style="opacity:0.7;"></i> ${order[1]} &nbsp;&bull;&nbsp; <i class="far fa-clock" style="opacity:0.7;"></i> ${order[3]}</div>
+                                </div>
+                            </div>
+                            <div class="item-badge badge-blue">
+                                <fmt:formatNumber value="${order[2]}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+                            </div>
+                        </div>
+                    </c:forEach>
+                    <c:if test="${empty recentOrders}">
+                        <div class="empty-state">
+                            <i class="fas fa-receipt"></i>
+                            <p>Chưa có hóa đơn nào</p>
+                        </div>
+                    </c:if>
+                </div>
             </div>
-            
-            <div class="kpi-card">
-                <div class="kpi-icon" style="background:#fce7f3; color:#db2777;"><i class="fas fa-file-invoice"></i></div>
-                <div class="kpi-title">TỔNG HÓA ĐƠN</div>
-                <div class="kpi-value">${totalOrders}</div>
-                <div class="kpi-desc">Tổng số hóa đơn đã bán</div>
-            </div>
-            
-            <div class="kpi-card">
-                <div class="kpi-icon" style="background:#ffedd5; color:#ea580c;"><i class="fas fa-id-badge"></i></div>
-                <div class="kpi-title">NHÂN VIÊN</div>
-                <div class="kpi-value">${totalEmployees}</div>
-                <div class="kpi-desc">Nhân viên đang làm việc</div>
-            </div>
-            
-            <div class="kpi-card">
-                <div class="kpi-icon" style="background:#f3f4f6; color:#4b5563;"><i class="fas fa-user-shield"></i></div>
-                <div class="kpi-title">TÀI KHOẢN</div>
-                <div class="kpi-value">${totalAccounts}</div>
-                <div class="kpi-desc">Tài khoản hệ thống</div>
+
+            <!-- Top Nhân Viên & Thể Loại -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-medal" style="color:#8b5cf6;"></i> Top Hiệu Suất</h3>
+                </div>
+                <div class="panel-body">
+                    <h4 style="margin: 0 0 15px 0; color: #64748b; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;"><i class="fas fa-crown" style="color: #f59e0b; margin-right: 5px;"></i> Top Nhân Viên Bán Hàng</h4>
+                    <c:forEach var="emp" items="${topEmployees}">
+                        <div class="list-item" style="padding: 10px 15px; margin-bottom: 8px;">
+                            <div class="item-info">
+                                <div class="item-img" style="width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(135deg, #fef3c7, #fde68a); color: #d97706; display: flex; align-items: center; justify-content: center;"><i class="fas fa-user-tie"></i></div>
+                                <div><div class="item-name" style="margin: 0;">${emp[0]}</div></div>
+                            </div>
+                            <div class="item-badge badge-yellow">
+                                <fmt:formatNumber value="${emp[1]}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+                            </div>
+                        </div>
+                    </c:forEach>
+                    <c:if test="${empty topEmployees}"><div class="empty-state" style="padding: 20px;"><p>Chưa có dữ liệu</p></div></c:if>
+                    
+                    <h4 style="margin: 25px 0 15px 0; color: #64748b; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;"><i class="fas fa-chart-pie" style="color: #0ea5e9; margin-right: 5px;"></i> Phân Bổ Thể Loại Bán Chạy</h4>
+                    <c:if test="${not empty topCategories}">
+                        <c:set var="maxCat" value="${topCategories[0][1]}" />
+                        <div style="display: flex; flex-direction: column; gap: 15px;">
+                            <c:forEach var="cat" items="${topCategories}">
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 6px;">
+                                        <span>${cat[0]}</span>
+                                        <span style="color: #0ea5e9;">${cat[1]} cuốn</span>
+                                    </div>
+                                    <div style="width: 100%; height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);">
+                                        <div style="width: ${(cat[1] * 100.0) / maxCat}%; height: 100%; background: linear-gradient(90deg, #38bdf8, #0284c7); border-radius: 4px; transition: width 1s ease-in-out;"></div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </c:if>
+                    <c:if test="${empty topCategories}"><div class="empty-state" style="padding: 20px;"><p>Chưa có dữ liệu</p></div></c:if>
+                </div>
             </div>
         </div>
     </c:if>
 
     <c:if test="${sessionScope.quyen != 'admin'}">
         <!-- NHAN VIEN DASHBOARD -->
-        <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); text-align: center; margin-top: 20px;">
-            <i class="fas fa-cash-register" style="font-size: 64px; color: #2d6652; margin-bottom: 20px;"></i>
-            <h2 style="color: #1e293b; margin-bottom: 10px;">Xin chào, ${sessionScope.username}!</h2>
-            <p style="color: #64748b; font-size: 15px; margin-bottom: 30px;">Chào mừng bạn đến với hệ thống quản lý Book Store. Hãy bắt đầu ca làm việc của bạn.</p>
+        <div style="background: white; padding: 50px; border-radius: 16px; box-shadow: var(--shadow-lg); text-align: center; margin-top: 40px; animation: fadeInUp 0.5s ease-out;">
+            <div style="width: 100px; height: 100px; background: #e0f2fe; color: #0ea5e9; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 20px auto;">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <h2 style="color: #1e293b; margin-bottom: 10px; font-size: 28px;">Xin chào, ${sessionScope.username}!</h2>
+            <p style="color: #64748b; font-size: 16px; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                Chúc bạn một ngày làm việc hiệu quả. Hãy kiểm tra các đơn hàng và phục vụ khách hàng chu đáo nhé!
+            </p>
             
-            <a href="banhang" style="display: inline-block; background: #2d6652; color: white; text-decoration: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; font-size: 16px;">
-                <i class="fas fa-shopping-cart"></i> Vào Bán Hàng Ngay
-            </a>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <a href="banhang" style="display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: white; text-decoration: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; font-size: 16px; transition: var(--transition); box-shadow: var(--shadow-md);">
+                    <i class="fas fa-shopping-cart"></i> Màn hình Bán Hàng (POS)
+                </a>
+                <a href="quanlyhoadon" style="display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--text-main); border: 1px solid var(--border-color); text-decoration: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; font-size: 16px; transition: var(--transition); box-shadow: var(--shadow-sm);">
+                    <i class="fas fa-file-invoice"></i> Lịch sử Hóa đơn
+                </a>
+            </div>
         </div>
     </c:if>
 
 </main>
+
+<script>
+    // Dropdown Logic
+    function toggleDropdown(id) {
+        // Đóng các dropdown khác
+        document.querySelectorAll('.custom-dropdown').forEach(d => {
+            if (d.id !== id) d.classList.remove('active');
+        });
+        document.getElementById(id).classList.toggle('active');
+    }
+
+    function selectOption(dropdownId, value, label, callback) {
+        document.getElementById(dropdownId).classList.remove('active');
+        // Update label
+        if (dropdownId === 'dropdown-revenue') document.getElementById('lbl-revenue').innerHTML = label;
+        if (dropdownId === 'dropdown-orders') document.getElementById('lbl-orders').innerHTML = label;
+        // Call function
+        callback(value);
+    }
+
+    // Đóng dropdown khi click ra ngoài
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.custom-dropdown')) {
+            document.querySelectorAll('.custom-dropdown').forEach(d => d.classList.remove('active'));
+        }
+    });
+
+    // Xử lý Loading Screen & Hiển thị Main Content
+    window.onload = function() {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('mainContent').style.opacity = '1';
+        
+        // Khởi tạo đồng hồ
+        initClock();
+        
+        // Khởi tạo Chart.js (Chỉ nếu là admin)
+        <c:if test="${sessionScope.quyen == 'admin'}">
+            initCharts();
+        </c:if>
+    };
+
+    function initClock() {
+        const timeEl = document.getElementById('clock');
+        const dateEl = document.getElementById('currentDate');
+        
+        const days = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+        
+        setInterval(() => {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            timeEl.innerText = h + ':' + m + ':' + s;
+            
+            if (now.getSeconds() === 0 || dateEl.innerText.includes('Đang cập nhật')) {
+                const dayName = days[now.getDay()];
+                const d = String(now.getDate()).padStart(2, '0');
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const y = now.getFullYear();
+                dateEl.innerHTML = '<i class="far fa-calendar-alt"></i> ' + dayName + ', ' + d + '/' + month + '/' + y;
+            }
+        }, 1000);
+    }
+
+    <c:if test="${sessionScope.quyen == 'admin'}">
+    // Biến lưu trữ dữ liệu doanh thu
+    const revData = {
+        today: ${todayRevenue},
+        week: ${weeklyRevenue},
+        month: ${monthlyRevenue},
+        year: ${yearlyRevenue},
+        all: ${totalRevenue}
+    };
+    
+    // Biến lưu trữ dữ liệu đơn hàng
+    const orderData = {
+        today: ${todayOrders},
+        all: ${totalOrders}
+    };
+
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+    }
+
+    function updateRevenue(timeframe) {
+        const revVal = revData[timeframe] || 0;
+        document.getElementById('revenue-val').innerText = formatCurrency(revVal);
+    }
+
+    function updateOrders(timeframe) {
+        const oVal = orderData[timeframe] || 0;
+        document.getElementById('orders-val').innerText = oVal + ' \u0111\u01A1n';
+    }
+
+    function initCharts() {
+        // Dữ liệu từ Server
+        let daysData = [];
+        let revDaysData = [];
+        <c:forEach var="item" items="${revenueByDay}">
+            // Note: Data is ordered by Ngay DESC, so we need to reverse it or handle it.
+            // Better to push to front to have chronological order
+            daysData.unshift('${item[0]}');
+            revDaysData.unshift(${item[1]});
+        </c:forEach>
+
+        let monthsData = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
+        let revMonthsData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        <c:forEach var="item" items="${revenueByMonth}">
+            var monthIndex = ${item[0]} - 1;
+            if(monthIndex >= 0 && monthIndex < 12) {
+                revMonthsData[monthIndex] = ${item[1]};
+            }
+        </c:forEach>
+
+
+        // Chart 1: Doanh thu 7 ngày qua (Line Chart with gradient)
+        const ctxDay = document.getElementById('revenueByDayChart');
+        if (ctxDay) {
+            const ctxD = ctxDay.getContext('2d');
+            let gradientDay = ctxD.createLinearGradient(0, 0, 0, 400);
+            gradientDay.addColorStop(0, 'rgba(45, 102, 82, 0.5)'); // Theme primary: 2d6652
+            gradientDay.addColorStop(1, 'rgba(45, 102, 82, 0.0)');
+
+            new Chart(ctxD, {
+                type: 'line',
+                data: {
+                    labels: daysData.length > 0 ? daysData : ['Chưa có dữ liệu'],
+                    datasets: [{
+                        label: 'Doanh thu (VNĐ)',
+                        data: revDaysData.length > 0 ? revDaysData : [0],
+                        borderColor: '#2d6652',
+                        backgroundColor: gradientDay,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#2d6652',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Chart 2: Doanh thu theo tháng (Bar Chart)
+        const ctxMonth = document.getElementById('revenueByMonthChart');
+        if (ctxMonth) {
+            const ctxM = ctxMonth.getContext('2d');
+            new Chart(ctxM, {
+                type: 'bar',
+                data: {
+                    labels: monthsData.length > 0 ? monthsData : ['Chưa có dữ liệu'],
+                    datasets: [{
+                        label: 'Doanh thu (VNĐ)',
+                        data: revMonthsData.length > 0 ? revMonthsData : [0],
+                        backgroundColor: '#2d6652',
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+    }
+    </c:if>
+</script>
 
 </body>
 </html>
