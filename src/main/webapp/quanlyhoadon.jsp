@@ -21,22 +21,22 @@
         <h1>Lịch Sử Hóa Đơn Bán Hàng</h1>
     </div>
 
-    <div class="filter-card">
+    <form class="filter-card" action="quanlyhoadon" method="get">
         <div class="filter-group" style="flex: 2;">
             <label>TÌM KIẾM</label>
-            <input type="text" placeholder="Mã HĐ hoặc Tên khách, nhân viên" style="width: 100%;">
+            <input type="text" name="keyword" value="${keyword}" placeholder="Mã HĐ hoặc Tên khách, nhân viên" style="width: 100%;">
         </div>
         <div class="filter-group">
             <label>TỪ NGÀY</label>
-            <input type="date">
+            <input type="date" name="fromDate" value="${fromDate}">
         </div>
         <div class="filter-group">
             <label>ĐẾN NGÀY</label>
-            <input type="date">
+            <input type="date" name="toDate" value="${toDate}">
         </div>
-        <button class="btn-filter" style="margin-bottom: 2px;">Lọc</button>
-        <button class="btn-reset" style="margin-bottom: 2px;"><i class="fas fa-undo"></i></button>
-    </div>
+        <button type="submit" class="btn-filter" style="margin-bottom: 2px;">Lọc</button>
+        <a href="quanlyhoadon" class="btn-reset" style="margin-bottom: 2px; display: flex; align-items: center; justify-content: center; text-decoration: none;"><i class="fas fa-undo"></i></a>
+    </form>
 
     <div class="table-container">
         <table>
@@ -59,8 +59,8 @@
                         <td>${hd.tenNV}</td>
                         <td>${hd.tenKH}</td>
                         <td style="font-weight:700; color:#1e293b;"><fmt:formatNumber value="${hd.tongTien}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></td>
-                        <td class="${hd.trangThai == 1 ? 'status-active' : 'status-leave'}">
-                            ${hd.trangThai == 1 ? 'Thành công' : 'Đã hủy'}
+                        <td class="${hd.trangThai == 1 ? 'status-active' : (hd.trangThai == 0 ? 'status-leave' : 'status-leave')}">
+                            ${hd.trangThai == 1 ? 'Thành công' : (hd.trangThai == 0 ? 'Chờ TT' : 'Đã hủy')}
                         </td>
                         <td>
                             <a href="quanlyhoadon?action=viewDetail&id=${hd.maHD}" style="color:#2d6652; text-decoration:none; font-weight:600;"><i class="fas fa-eye"></i> Chi tiết</a>

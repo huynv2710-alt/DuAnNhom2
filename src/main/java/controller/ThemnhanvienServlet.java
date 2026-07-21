@@ -59,24 +59,29 @@ public class ThemnhanvienServlet extends HttpServlet {
         nv.setDacDiemNhanDang(request.getParameter("dacDiemNhanDang"));
         nv.setMaTrangThai(Integer.parseInt(request.getParameter("maTrangThai")));
 
-        if (s.addNhanVien(nv)) {
-            String pass = request.getParameter("password");
-            int maQuyen = Integer.parseInt(request.getParameter("maQuyen"));
-            try {
-                tkService.addTaiKhoan(username, pass, maNV, maQuyen);
-                response.sendRedirect("quanlinhanvien");
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            if (s.addNhanVien(nv)) {
+                String pass = request.getParameter("password");
+                int maQuyen = Integer.parseInt(request.getParameter("maQuyen"));
+                try {
+                    tkService.addTaiKhoan(username, pass, maNV, maQuyen);
+                    response.sendRedirect("quanlinhanvien");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.setContentType("text/html;charset=UTF-8");
+                    response.getWriter().println("<html><body>");
+                    response.getWriter().println("<h3 style='color:red;'>Thêm nhân viên thành công nhưng tạo Tài Khoản thất bại!</h3>");
+                    response.getWriter().println("<p><b>Chi tiết lỗi từ Database:</b> " + e.getMessage() + "</p>");
+                    response.getWriter().println("<button onclick='window.history.back()'>Quay lại</button>");
+                    response.getWriter().println("</body></html>");
+                }
+            } else {
                 response.setContentType("text/html;charset=UTF-8");
-                response.getWriter().println("<html><body>");
-                response.getWriter().println("<h3 style='color:red;'>Thêm nhân viên thành công nhưng tạo Tài Khoản thất bại!</h3>");
-                response.getWriter().println("<p><b>Chi tiết lỗi từ Database:</b> " + e.getMessage() + "</p>");
-                response.getWriter().println("<button onclick='window.history.back()'>Quay lại</button>");
-                response.getWriter().println("</body></html>");
+                response.getWriter().println("<script>alert('Lỗi hệ thống: Không thể thêm nhân viên vào Database!'); window.history.back();</script>");
             }
-        } else {
+        } catch (RuntimeException e) {
             response.setContentType("text/html;charset=UTF-8");
-            response.getWriter().println("<script>alert('Lỗi hệ thống: Không thể thêm nhân viên vào Database!'); window.history.back();</script>");
+            response.getWriter().println("<script>alert('Lỗi SQL: " + e.getMessage().replace("'", "\\'") + "'); window.history.back();</script>");
         }
     }
 }

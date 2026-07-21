@@ -80,7 +80,7 @@
                                     <tr>
                                         <td>${s.maSach}</td>
                                         <td class="td-name">${s.tenSach}</td>
-                                        <td>${s.tacGia}</td>
+                                        <td>${s.tacGiaString}</td>
                                         <td>${s.theLoai}</td>
                                         <td class="td-price">${s.donGia}đ</td>
                                         <td>${s.tonKho}</td>

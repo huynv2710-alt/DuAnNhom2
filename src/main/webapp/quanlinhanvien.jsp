@@ -75,10 +75,8 @@
                     <td>${nv.diaChi}</td>
                     <td style="text-align: center;">
                         <span style="display:inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; 
-                            ${nv.maTrangThai == 1 ? 'background:#ecfdf5; color:#059669;' : 
-                              nv.maTrangThai == 2 ? 'background:#fffbeb; color:#d97706;' : 
-                              'background:#fef2f2; color:#ef4444;'}">
-                            ${nv.maTrangThai == 1 ? 'ĐANG LÀM VIỆC' : (nv.maTrangThai == 2 ? 'THỬ VIỆC' : 'NGHỈ VIỆC')}
+                            ${nv.maTrangThai == 1 ? 'background:#ecfdf5; color:#059669;' : 'background:#fef2f2; color:#ef4444;'}">
+                            ${nv.maTrangThai == 1 ? 'ĐANG LÀM VIỆC' : 'NGHỈ VIỆC'}
                         </span>
                     </td>
                     <td style="text-align: center; display: flex; gap: 8px; justify-content: center; align-items: center; border-bottom: none;">

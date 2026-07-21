@@ -4,7 +4,7 @@ public class TheLoai {
     private int maTheLoai;
     private String tenTheLoai;
     private String moTa;
-    private Integer maTheLoaiCha; // Dùng Integer để có thể null
+    private Integer maTheLoaiCha;
 
     public TheLoai() {}
 
@@ -23,4 +23,8 @@ public class TheLoai {
     public void setMoTa(String moTa) { this.moTa = moTa; }
     public Integer getMaTheLoaiCha() { return maTheLoaiCha; }
     public void setMaTheLoaiCha(Integer maTheLoaiCha) { this.maTheLoaiCha = maTheLoaiCha; }
+    
+    private int soLuongSach;
+    public int getSoLuongSach() { return soLuongSach; }
+    public void setSoLuongSach(int soLuongSach) { this.soLuongSach = soLuongSach; }
 }

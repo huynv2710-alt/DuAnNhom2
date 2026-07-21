@@ -13,53 +13,86 @@ public class ThuocTinhSachService {
     // ==== THE LOAI ====
     public List<TheLoai> getAllTheLoai() {
         List<TheLoai> list = new ArrayList<>();
-        String sql = "SELECT * FROM TheLoai";
+        String sql = "SELECT t.*, (SELECT COUNT(*) FROM Sach s WHERE s.MaTheLoai = t.MaTheLoai) AS SoLuongSach FROM TheLoai t";
         try (Connection con = new connectService().myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Integer maTheLoaiCha = rs.getObject("MaTheLoaiCha") != null ? rs.getInt("MaTheLoaiCha") : null;
-                list.add(new TheLoai(rs.getInt("MaTheLoai"), rs.getString("TenTheLoai"), rs.getString("MoTa"), maTheLoaiCha));
+                TheLoai tl = new TheLoai(rs.getInt("MaTheLoai"), rs.getString("TenTheLoai"), rs.getString("MoTa"), maTheLoaiCha);
+                tl.setSoLuongSach(rs.getInt("SoLuongSach"));
+                list.add(tl);
             }
         } catch (Exception e) { e.printStackTrace(); }
         return list;
     }
 
     public boolean addTheLoai(String ten, String moTa, Integer maTheLoaiCha) {
-        String sql = "INSERT INTO TheLoai (TenTheLoai, MoTa, MaTheLoaiCha) VALUES (?, ?, ?)";
-        try (Connection con = new connectService().myConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = new connectService().myConnection()) {
+            // Check unique
+            PreparedStatement checkPs = con.prepareStatement("SELECT COUNT(*) FROM TheLoai WHERE TenTheLoai = ?");
+            checkPs.setString(1, ten);
+            ResultSet rs = checkPs.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                throw new RuntimeException("Tên thể loại đã tồn tại!");
+            }
+            
+            String sql = "INSERT INTO TheLoai (TenTheLoai, MoTa, MaTheLoaiCha) VALUES (?, ?, ?)";
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, ten);
             ps.setString(2, moTa);
             if (maTheLoaiCha != null) ps.setInt(3, maTheLoaiCha);
             else ps.setNull(3, java.sql.Types.INTEGER);
             return ps.executeUpdate() > 0;
-        } catch (Exception e) { e.printStackTrace(); }
-        return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public boolean updateTheLoai(int id, String ten, String moTa, Integer maTheLoaiCha) {
-        String sql = "UPDATE TheLoai SET TenTheLoai=?, MoTa=?, MaTheLoaiCha=? WHERE MaTheLoai=?";
-        try (Connection con = new connectService().myConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = new connectService().myConnection()) {
+            // Check unique
+            PreparedStatement checkPs = con.prepareStatement("SELECT COUNT(*) FROM TheLoai WHERE TenTheLoai = ? AND MaTheLoai != ?");
+            checkPs.setString(1, ten);
+            checkPs.setInt(2, id);
+            ResultSet rs = checkPs.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                throw new RuntimeException("Tên thể loại đã tồn tại!");
+            }
+            
+            String sql = "UPDATE TheLoai SET TenTheLoai=?, MoTa=?, MaTheLoaiCha=? WHERE MaTheLoai=?";
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, ten);
             ps.setString(2, moTa);
             if (maTheLoaiCha != null) ps.setInt(3, maTheLoaiCha);
             else ps.setNull(3, java.sql.Types.INTEGER);
             ps.setInt(4, id);
             return ps.executeUpdate() > 0;
-        } catch (Exception e) { e.printStackTrace(); }
-        return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public boolean deleteTheLoai(int id) {
-        String sql = "DELETE FROM TheLoai WHERE MaTheLoai=?";
-        try (Connection con = new connectService().myConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = new connectService().myConnection()) {
+            // Check constraints
+            PreparedStatement checkPs = con.prepareStatement("SELECT COUNT(*) FROM Sach WHERE MaTheLoai = ?");
+            checkPs.setInt(1, id);
+            ResultSet rs = checkPs.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                throw new RuntimeException("Thể loại này đang chứa sách, không thể xóa!");
+            }
+            
+            String sql = "DELETE FROM TheLoai WHERE MaTheLoai=?";
+            PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
-        } catch (Exception e) { e.printStackTrace(); }
-        return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     // ==== NHA XUAT BAN ====

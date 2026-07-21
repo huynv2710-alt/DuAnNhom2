@@ -78,6 +78,16 @@
             <i class="fas fa-exclamation-circle"></i> Giỏ hàng trống! Vui lòng chọn sản phẩm.
         </div>
     </c:if>
+    <c:if test="${param.error == 'out_of_stock'}">
+        <div style="background: #fef2f2; color: #ef4444; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; text-align: center; border: 1px solid #fecaca;">
+            <i class="fas fa-exclamation-circle"></i> Sản phẩm trong giỏ hàng đã hết hoặc không đủ tồn kho! Vui lòng kiểm tra lại.
+        </div>
+    </c:if>
+    <c:if test="${param.error == 'db_error'}">
+        <div style="background: #fef2f2; color: #ef4444; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; text-align: center; border: 1px solid #fecaca;">
+            <i class="fas fa-exclamation-circle"></i> Đã xảy ra lỗi khi tạo hóa đơn. Vui lòng thử lại.
+        </div>
+    </c:if>
 
     <div class="pos-container">
         <!-- CỘT TRÁI: DANH SÁCH SẢN PHẨM -->
@@ -85,8 +95,11 @@
             <div class="pos-header-actions">
                 <form class="search-bar" action="banhang" method="get">
                     <input type="text" name="searchSach" value="${searchSach}" placeholder="Tìm kiếm sách bằng tên...">
-                    <select>
-                        <option>-- Tất cả danh mục --</option>
+                    <select name="maTheLoai" onchange="this.form.submit()">
+                        <option value="0">-- Tất cả danh mục --</option>
+                        <c:forEach var="tl" items="${dsTheLoai}">
+                            <option value="${tl.maTheLoai}" ${maTheLoai == tl.maTheLoai ? 'selected' : ''}>${tl.tenTheLoai}</option>
+                        </c:forEach>
                     </select>
                 </form>
             </div>
@@ -105,15 +118,20 @@
                         
                         <div class="product-info">
                             <div class="product-name" title="${s.tenSach}">${s.tenSach}</div>
-                            <div class="product-author">${s.tacGia}</div>
+                            <div class="product-author">${s.tacGiaString}</div>
                             <div class="product-price"><fmt:formatNumber value="${s.giaBan}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></div>
                             <div class="product-stock">Tồn kho: ${s.soLuongTon}</div>
                             
                             <c:if test="${s.soLuongTon > 0}">
-                                <a href="banhang?action=addCart&maSach=${s.maSach}" class="btn-add-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</a>
+                                <form action="banhang" method="get" style="display: flex; gap: 8px; margin-top: auto;">
+                                    <input type="hidden" name="action" value="addCartMulti">
+                                    <input type="hidden" name="maSach" value="${s.maSach}">
+                                    <input type="number" name="soLuong" value="1" min="1" max="${s.soLuongTon}" title="Nhập số lượng" style="width: 70px; padding: 8px 5px; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; outline: none; font-weight: bold; color: #1e293b; box-sizing: border-box;">
+                                    <button type="submit" class="btn-add-cart" style="flex: 1; margin-top: 0; padding: 10px 0;"><i class="fas fa-cart-plus"></i> Thêm</button>
+                                </form>
                             </c:if>
                             <c:if test="${s.soLuongTon <= 0}">
-                                <button class="btn-add-cart" style="background:#e2e8f0; color:#94a3b8; cursor:not-allowed;" disabled>Hết hàng</button>
+                                <button class="btn-add-cart" style="background:#e2e8f0; color:#94a3b8; cursor:not-allowed; margin-top: auto;" disabled>Hết hàng</button>
                             </c:if>
                         </div>
                     </div>
@@ -139,8 +157,13 @@
                     <div class="cart-item">
                         <div class="cart-item-info">
                             <div class="cart-item-title">${item.tenSach}</div>
-                            <div class="cart-item-price">
-                                ${item.soLuong} x <fmt:formatNumber value="${item.donGia}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+                            <div class="cart-item-price" style="display:flex; align-items:center; gap:8px; margin-top:5px;">
+                                <form action="banhang" method="get" style="margin:0; display: flex; align-items: center;">
+                                    <input type="hidden" name="action" value="updateCart">
+                                    <input type="hidden" name="maSach" value="${item.maSach}">
+                                    <input type="number" name="soLuong" value="${item.soLuong}" min="1" onchange="this.form.submit()" style="width: 60px; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center; font-size:13px; font-weight: bold; outline: none;">
+                                </form>
+                                <span style="color: #64748b;">x</span> <span><fmt:formatNumber value="${item.donGia}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                             </div>
                         </div>
                         <form action="banhang" method="get" style="margin:0;">
@@ -184,12 +207,20 @@
                         <span>Tạm tính:</span>
                         <span id="tamTinh"><fmt:formatNumber value="${tongTien}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                     </div>
+                    <div class="checkout-group">
+                        <label>VOUCHER / KHUYẾN MÃI</label>
+                        <select name="maKM" id="maKM" onchange="calculateTotal()">
+                            <option value="0" data-phantram="0">-- Không áp dụng --</option>
+                            <c:forEach var="km" items="${dsKhuyenMai}">
+                                <option value="${km.maKM}" data-phantram="${km.phanTramGiam}">${km.tenKM} (-${km.phanTramGiam}%)</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    
                     <div class="checkout-total" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <span>Giảm giá:</span>
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <input type="number" id="giamGia" name="giamGia" value="0" min="0" style="width: 80px; padding: 5px; border-radius: 4px; border: 1px solid #cbd5e1; text-align: right;" oninput="calculateTotal()">
-                            <span>đ</span>
-                        </div>
+                        <span id="giamGiaText" style="color: #ef4444; font-weight: bold;">- 0 đ</span>
+                        <input type="hidden" id="giamGia" name="giamGia" value="0">
                     </div>
                     <div class="checkout-total final">
                         <span>Tổng cộng:</span>
@@ -216,13 +247,8 @@
                         </div>
                     </div>
                     
-                    <div id="qr-fields" style="display:none; text-align:center; margin-top:15px; margin-bottom:15px;">
-                        <p style="font-size:13px; font-weight:bold; color:#2d6652; margin-bottom: 8px;">Quét mã QR để thanh toán</p>
-                        <img id="vietqr-img" src="" alt="VietQR" style="width: 200px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                    </div>
-                    
                     <button type="submit" class="btn-checkout" ${empty sessionScope.cart ? 'disabled' : ''}>
-                        <i class="fas fa-check-circle"></i> THANH TOÁN & IN HĐ
+                        <i class="fas fa-check-circle"></i> THANH TOÁN
                     </button>
                 </form>
                 
@@ -232,36 +258,28 @@
                     function togglePaymentFields() {
                         let method = document.getElementById('phuongThucTT').value;
                         let cashFields = document.getElementById('cash-fields');
-                        let qrFields = document.getElementById('qr-fields');
                         
                         if(method === 'TienMat') {
                             cashFields.style.display = 'block';
-                            qrFields.style.display = 'none';
                         } else {
                             cashFields.style.display = 'none';
-                            qrFields.style.display = 'block';
                             document.getElementById('tienKhachDua').value = '';
-                            updateQRCode();
                             calculateTotal();
                         }
                     }
                     
-                    function updateQRCode() {
-                        let giamGia = parseFloat(document.getElementById('giamGia').value) || 0;
-                        let finalTotal = baseTotal - giamGia;
-                        if(finalTotal <= 0) {
-                            document.getElementById('qr-fields').style.display = 'none';
-                            return;
-                        }
-                        // MBBank BIN: 970422, VCB: 970436. Replace with real ones if needed.
-                        let bankBin = '970422'; 
-                        let accountNo = '0123456789';
-                        let accountName = 'BOOK STORE N2';
-                        document.getElementById('vietqr-img').src = `https://img.vietqr.io/image/${bankBin}-${accountNo}-compact2.jpg?amount=${finalTotal}&addInfo=Thanh toan don hang&accountName=${accountName}`;
-                    }
-                    
                     function calculateTotal() {
-                        let giamGia = parseFloat(document.getElementById('giamGia').value) || 0;
+                        let selectKM = document.getElementById('maKM');
+                        let phanTram = 0;
+                        if(selectKM && selectKM.options.length > 0) {
+                            let selectedOption = selectKM.options[selectKM.selectedIndex];
+                            phanTram = parseFloat(selectedOption.getAttribute('data-phantram')) || 0;
+                        }
+                        
+                        let giamGia = baseTotal * (phanTram / 100.0);
+                        document.getElementById('giamGia').value = giamGia;
+                        document.getElementById('giamGiaText').innerText = "- " + new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(giamGia);
+                        
                         let finalTotal = baseTotal - giamGia;
                         if(finalTotal < 0) finalTotal = 0;
                         
@@ -282,7 +300,6 @@
                         } else {
                             document.getElementById('tienThua').value = "0 đ";
                             document.getElementById('tienThua').style.color = '#ef4444';
-                            updateQRCode();
                         }
                     }
                     

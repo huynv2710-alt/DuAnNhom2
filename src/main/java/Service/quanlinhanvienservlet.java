@@ -82,9 +82,8 @@ public class quanlinhanvienservlet {
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
-
-        return false;
     }
     public NhanVien getById(int maNV) {
 
@@ -167,9 +166,8 @@ public class quanlinhanvienservlet {
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
-
-        return false;
     }
 
     }

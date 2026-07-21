@@ -3,6 +3,7 @@ package controller;
 import Models.Sach;
 import Service.SachService;
 import Service.ThuocTinhSachService;
+import Service.TacGiaService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +15,7 @@ import java.util.List;
 public class QuanLySachServlet extends HttpServlet {
     private SachService sachService = new SachService();
     private ThuocTinhSachService thuocTinhService = new ThuocTinhSachService();
+    private TacGiaService tacGiaService = new TacGiaService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -43,6 +45,7 @@ public class QuanLySachServlet extends HttpServlet {
         // Load dropdown lists
         request.setAttribute("listTL", thuocTinhService.getAllTheLoai());
         request.setAttribute("listNXB", thuocTinhService.getAllNXB());
+        request.setAttribute("listTG", tacGiaService.getAllTacGia()); // Mới thêm
         
         request.getRequestDispatcher("quanlysach.jsp").forward(request, response);
     }
@@ -54,11 +57,12 @@ public class QuanLySachServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         String tenSach = request.getParameter("tenSach");
-        String tacGia = request.getParameter("tacGia");
+        String tacGiasStr = request.getParameter("tacGias"); // Nhận chuỗi tác giả
+        
         String isbn = request.getParameter("isbn");
         int maTheLoai = Integer.parseInt(request.getParameter("maTheLoai"));
         int maNXB = Integer.parseInt(request.getParameter("maNXB"));
-        double giaNhap = Double.parseDouble(request.getParameter("giaNhap") != null ? request.getParameter("giaNhap") : "0");
+        double giaNhap = Double.parseDouble(request.getParameter("giaNhap") != null && !request.getParameter("giaNhap").isEmpty() ? request.getParameter("giaNhap") : "0");
         double giaBan = Double.parseDouble(request.getParameter("giaBan"));
         int soLuongTon = Integer.parseInt(request.getParameter("soLuongTon"));
         String hinhAnh = request.getParameter("hinhAnh");
@@ -71,14 +75,30 @@ public class QuanLySachServlet extends HttpServlet {
         
         String kichThuoc = request.getParameter("kichThuoc");
         String ngonNgu = request.getParameter("ngonNgu");
+        String moTa = request.getParameter("moTa");
+
+        Sach s = new Sach();
+        s.setTenSach(tenSach);
+        s.setIsbn(isbn);
+        s.setMaTheLoai(maTheLoai);
+        s.setMaNXB(maNXB);
+        s.setGiaNhap(giaNhap);
+        s.setGiaBan(giaBan);
+        s.setSoLuongTon(soLuongTon);
+        s.setHinhAnh(hinhAnh);
+        s.setTrangThai(trangThai);
+        s.setSoTrang(soTrang);
+        s.setTrongLuong(trongLuong);
+        s.setKichThuoc(kichThuoc);
+        s.setNgonNgu(ngonNgu);
+        s.setMoTa(moTa);
 
         if ("add".equals(action)) {
-            Sach s = new Sach(0, tenSach, tacGia, isbn, maTheLoai, maNXB, giaNhap, giaBan, soLuongTon, hinhAnh, trangThai, soTrang, kichThuoc, trongLuong, ngonNgu);
-            sachService.addSach(s);
+            sachService.addSach(s, tacGiasStr);
         } else if ("edit".equals(action)) {
             int maSach = Integer.parseInt(request.getParameter("maSach"));
-            Sach s = new Sach(maSach, tenSach, tacGia, isbn, maTheLoai, maNXB, giaNhap, giaBan, soLuongTon, hinhAnh, trangThai, soTrang, kichThuoc, trongLuong, ngonNgu);
-            sachService.updateSach(s);
+            s.setMaSach(maSach);
+            sachService.updateSach(s, tacGiasStr);
         }
         
         response.sendRedirect("quanlysach");

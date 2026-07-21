@@ -20,7 +20,7 @@ public class DashboardService {
 
     public double getTotalRevenue() {
         try (Connection con = connect.myConnection();
-             PreparedStatement ps = con.prepareStatement("SELECT SUM(TongTien) FROM HoaDon")) {
+             PreparedStatement ps = con.prepareStatement("SELECT SUM(TongTien) FROM HoaDon WHERE TrangThai = 1")) {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return rs.getDouble(1);
         } catch (Exception e) {
@@ -31,7 +31,7 @@ public class DashboardService {
     
     public double getTodayRevenue() {
         try (Connection con = connect.myConnection();
-             PreparedStatement ps = con.prepareStatement("SELECT SUM(TongTien) FROM HoaDon WHERE CAST(NgayTao AS DATE) = CAST(GETDATE() AS DATE)")) {
+             PreparedStatement ps = con.prepareStatement("SELECT SUM(TongTien) FROM HoaDon WHERE CAST(NgayTao AS DATE) = CAST(GETDATE() AS DATE) AND TrangThai = 1")) {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return rs.getDouble(1);
         } catch (Exception e) {
@@ -42,7 +42,7 @@ public class DashboardService {
     
     public int getTodayOrders() {
         try (Connection con = connect.myConnection();
-             PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM HoaDon WHERE CAST(NgayTao AS DATE) = CAST(GETDATE() AS DATE)")) {
+             PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM HoaDon WHERE CAST(NgayTao AS DATE) = CAST(GETDATE() AS DATE) AND TrangThai = 1")) {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return rs.getInt(1);
         } catch (Exception e) {

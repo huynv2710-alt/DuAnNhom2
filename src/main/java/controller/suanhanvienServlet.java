@@ -47,8 +47,13 @@ public class suanhanvienServlet extends HttpServlet {
             nv.setDacDiemNhanDang(request.getParameter("dacDiemNhanDang"));
             nv.setMaTrangThai(Integer.parseInt(request.getParameter("maTrangThai")));
             
-            qlService.update(nv);
-            response.sendRedirect("quanlinhanvien");
+            try {
+                qlService.update(nv);
+                response.sendRedirect("quanlinhanvien");
+            } catch (RuntimeException e) {
+                response.setContentType("text/html;charset=UTF-8");
+                response.getWriter().println("<script>alert('Lỗi SQL khi sửa nhân viên: " + e.getMessage().replace("'", "\\'") + "'); window.history.back();</script>");
+            }
         } else {
             response.sendRedirect("index.jsp");
         }

@@ -64,28 +64,27 @@
 <div class="form-group" style="grid-column: span 2;">
 <label>Địa chỉ</label>
 <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-    <select id="city" required style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+    <select id="city" style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
         <option value="" selected>Chọn Tỉnh Thành</option>
     </select>
-    <select id="district" required style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-        <option value="" selected>Chọn Quận Huyện</option>
-    </select>
-    <select id="ward" required style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+    <select id="ward" style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
         <option value="" selected>Chọn Phường Xã</option>
     </select>
 </div>
-<input type="text" id="addressDetail" placeholder="Số nhà, Tên đường..." required style="width: 100%;">
+<input type="text" id="addressDetail" placeholder="Nhập bổ sung: Số nhà, Thôn xóm, Tên đường..." required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
 <input type="hidden" name="diaChi" id="diaChiHidden" value="${nv.diaChi}">
 </div>
 
 <div class="form-group">
 <label>CCCD</label>
-<input type="text" name="cccd" value="${nv.cccd}" required>
+<input type="text" id="cccd" name="cccd" value="${nv.cccd}" required oninput="validateNV()">
+<span id="errCccd" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
 </div>
 
 <div class="form-group">
 <label>Ngày cấp CCCD</label>
-<input type="date" name="ngayCapCCCD" value="${nv.ngayCapCCCD}" required>
+<input type="date" id="ngayCapCCCD" name="ngayCapCCCD" value="${nv.ngayCapCCCD}" required oninput="validateNV()">
+<span id="errNgayCapCCCD" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
 </div>
 
 <div class="form-group">
@@ -105,9 +104,8 @@
         <div class="form-group">
             <label>Trạng thái</label>
             <select name="maTrangThai" >
-                <option value="1" ${nv.maTrangThai == 1 ? 'selected' : ''}>Hoạt động</option>
-                <option value="2" ${nv.maTrangThai == 2 ? 'selected' : ''}>Thử việc</option>
-                <option value="3" ${nv.maTrangThai == 3 ? 'selected' : ''}>Nghỉ việc</option>
+                <option value="1" ${nv.maTrangThai == 1 ? 'selected' : ''}>Đang làm việc</option>
+                <option value="2" ${nv.maTrangThai == 2 ? 'selected' : ''}>Nghỉ việc</option>
             </select>
         </div>
     </c:otherwise>
@@ -175,7 +173,49 @@ Quay lại
             document.getElementById('errEmail').style.display = 'none';
         }
 
-        document.querySelector('.btn-save').disabled = !isValid;
+        let cccd = document.getElementById('cccd') ? document.getElementById('cccd').value.trim() : '';
+        let cccdRegex = /^[0-9]{12}$/;
+        if(cccd.length > 0 && !cccdRegex.test(cccd)) {
+            document.getElementById('errCccd').innerText = "CCCD phải bao gồm đúng 12 chữ số!";
+            document.getElementById('errCccd').style.display = 'block';
+            isValid = false;
+        } else if(document.getElementById('errCccd')) {
+            document.getElementById('errCccd').style.display = 'none';
+        }
+
+        let ngayCapStr = document.getElementById('ngayCapCCCD') ? document.getElementById('ngayCapCCCD').value : '';
+        if(ngaySinh && ngayCapStr) {
+            let birthDate = new Date(ngaySinh);
+            let issueDate = new Date(ngayCapStr);
+            let today = new Date();
+            
+            if (issueDate > today) {
+                if(document.getElementById('errNgayCapCCCD')) {
+                    document.getElementById('errNgayCapCCCD').innerText = "Ngày cấp không được ở tương lai!";
+                    document.getElementById('errNgayCapCCCD').style.display = 'block';
+                }
+                isValid = false;
+            } else {
+                let ageAtIssue = issueDate.getFullYear() - birthDate.getFullYear();
+                let m = issueDate.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && issueDate.getDate() < birthDate.getDate())) {
+                    ageAtIssue--;
+                }
+                if (ageAtIssue < 16) {
+                    if(document.getElementById('errNgayCapCCCD')) {
+                        document.getElementById('errNgayCapCCCD').innerText = "Ngày cấp phải cách ngày sinh ít nhất 16 năm!";
+                        document.getElementById('errNgayCapCCCD').style.display = 'block';
+                    }
+                    isValid = false;
+                } else if(document.getElementById('errNgayCapCCCD')) {
+                    document.getElementById('errNgayCapCCCD').style.display = 'none';
+                }
+            }
+        }
+
+        let btnSubmit = document.querySelector(".btn-save");
+        if(btnSubmit) btnSubmit.disabled = !isValid;
+        
         return isValid;
     }
 
@@ -183,62 +223,89 @@ Quay lại
         let today = new Date();
         let maxDate = new Date(today.getFullYear() - 16, today.getMonth(), today.getDate());
         document.getElementById("ngaySinh").max = maxDate.toISOString().split("T")[0];
-        
-        let oldAddress = document.getElementById('diaChiHidden').value;
-        document.getElementById('addressDetail').value = oldAddress; // Tạm thời để toàn bộ vào ô chi tiết
+        if(document.getElementById("ngayCapCCCD")) {
+            document.getElementById("ngayCapCCCD").max = today.toISOString().split("T")[0];
+        }
 
-        fetch('https://provinces.open-api.vn/api/?depth=3')
+        let oldAddress = document.getElementById('diaChiHidden').value;
+
+        fetch('https://provinces.open-api.vn/api/v2/?depth=2')
             .then(response => response.json())
             .then(data => {
                 let citySelect = document.getElementById('city');
-                let districtSelect = document.getElementById('district');
                 let wardSelect = document.getElementById('ward');
                 
                 data.forEach(city => {
-                    citySelect.innerHTML += `<option value="${city.name}" data-code="${city.code}">${city.name}</option>`;
+                    let opt = document.createElement('option');
+                    opt.value = city.name;
+                    opt.setAttribute('data-code', city.code);
+                    opt.textContent = city.name;
+                    citySelect.appendChild(opt);
                 });
+
+                if (oldAddress) {
+                    let parts = oldAddress.split(',');
+                    if (parts.length >= 2) {
+                        let cName = parts[parts.length - 1].trim();
+                        let wName = parts[parts.length - 2].trim();
+                        
+                        let matchedCity = data.find(c => c.name === cName);
+                        if(matchedCity) {
+                            citySelect.value = cName;
+                            if (matchedCity.wards) {
+                                matchedCity.wards.forEach(w => {
+                                    let opt = document.createElement('option');
+                                    opt.value = w.name;
+                                    opt.textContent = w.name;
+                                    wardSelect.appendChild(opt);
+                                });
+                                let matchedWard = matchedCity.wards.find(w => w.name === wName);
+                                if (matchedWard) {
+                                    wardSelect.value = wName;
+                                    document.getElementById('addressDetail').value = parts.slice(0, parts.length - 2).join(',').trim();
+                                } else {
+                                    document.getElementById('addressDetail').value = parts.slice(0, parts.length - 1).join(',').trim();
+                                }
+                            }
+                        } else {
+                            document.getElementById('addressDetail').value = oldAddress;
+                        }
+                    } else {
+                        document.getElementById('addressDetail').value = oldAddress;
+                    }
+                }
 
                 citySelect.addEventListener('change', function() {
-                    districtSelect.innerHTML = '<option value="">Chọn Quận Huyện</option>';
                     wardSelect.innerHTML = '<option value="">Chọn Phường Xã</option>';
                     let selectedCity = data.find(c => c.code == citySelect.options[citySelect.selectedIndex].getAttribute('data-code'));
-                    if (selectedCity) {
-                        selectedCity.districts.forEach(d => {
-                            districtSelect.innerHTML += `<option value="${d.name}" data-code="${d.code}">${d.name}</option>`;
+                    if (selectedCity && selectedCity.wards) {
+                        selectedCity.wards.forEach(w => {
+                            let opt = document.createElement('option');
+                            opt.value = w.name;
+                            opt.textContent = w.name;
+                            wardSelect.appendChild(opt);
                         });
-                    }
-                    updateAddress();
-                });
-
-                districtSelect.addEventListener('change', function() {
-                    wardSelect.innerHTML = '<option value="">Chọn Phường Xã</option>';
-                    let selectedCity = data.find(c => c.code == citySelect.options[citySelect.selectedIndex].getAttribute('data-code'));
-                    if (selectedCity) {
-                        let selectedDistrict = selectedCity.districts.find(d => d.code == districtSelect.options[districtSelect.selectedIndex].getAttribute('data-code'));
-                        if (selectedDistrict) {
-                            selectedDistrict.wards.forEach(w => {
-                                wardSelect.innerHTML += `<option value="${w.name}">${w.name}</option>`;
-                            });
-                        }
                     }
                     updateAddress();
                 });
 
                 wardSelect.addEventListener('change', updateAddress);
                 document.getElementById('addressDetail').addEventListener('input', updateAddress);
+            })
+            .catch(error => {
+                console.error("Lỗi tải API Tỉnh/Thành: ", error);
+                document.getElementById('addressDetail').value = oldAddress;
             });
     });
 
     function updateAddress() {
         let city = document.getElementById('city').value;
-        let district = document.getElementById('district').value;
         let ward = document.getElementById('ward').value;
         let detail = document.getElementById('addressDetail').value;
         
         let fullAddress = [];
         if (detail) fullAddress.push(detail);
         if (ward) fullAddress.push(ward);
-        if (district) fullAddress.push(district);
         if (city) fullAddress.push(city);
         
         document.getElementById('diaChiHidden').value = fullAddress.join(', ');
