@@ -56,18 +56,11 @@
                             <span style="font-size: 13px; color: #64748b; margin-top: 5px; display: inline-block;">Mã: ${parent.maTheLoai} | ${parent.moTa}</span>
                         </div>
                         <div style="display: flex; gap: 10px;">
-                            <button class="btn-edit" style="background: white; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 4px; cursor: pointer; color: #334155; font-weight: 600;" 
+                            <button class="btn-edit" style="background: white; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 4px; cursor: pointer; color: #334155; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f1f5f9'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)';" onmouseout="this.style.background='white'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)';"
                                 onclick="openModal(${parent.maTheLoai}, '${parent.tenTheLoai}', '${parent.moTa}', '')">
                                 <i class="fas fa-edit"></i> Sửa
                             </button>
-                            <form action="quanlytheloai" method="post" style="display:inline;">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="maTheLoai" value="${parent.maTheLoai}">
-                                <button type="submit" class="btn-edit" style="background: #fee2e2; border: 1px solid #fca5a5; padding: 6px 12px; border-radius: 4px; cursor: pointer; color: #ef4444; font-weight: 600;" onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục gốc này?');">
-                                    <i class="fas fa-trash-alt"></i> Xóa
-                                </button>
-                            </form>
-                            <button class="btn-add" style="padding: 6px 12px; border-radius: 4px; font-weight: 600;" 
+                            <button class="btn-add" style="padding: 6px 12px; border-radius: 4px; font-weight: 600; background: #2d6652; color: white; border: none; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(45,102,82,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 6px rgba(45,102,82,0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(45,102,82,0.2)';"
                                 onclick="openModal(0, '', '', ${parent.maTheLoai})">
                                 <i class="fas fa-plus"></i> Thêm Thể Loại Con
                             </button>
@@ -96,17 +89,10 @@
                                             <td style="padding: 12px; font-weight: bold; color: #2d6652;">${child.soLuongSach}</td>
                                             <td style="padding: 12px; color: #64748b; font-size: 14px;">${child.moTa}</td>
                                             <td style="padding: 12px; text-align: center;">
-                                                <button title="Sửa Thể Loại" style="background: none; border: none; color: #0ea5e9; cursor: pointer; font-size: 16px; margin-right: 10px;" 
+                                                <button title="Sửa Thể Loại" style="background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; cursor: pointer; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 4px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" onmouseover="this.style.background='#e2e8f0'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)';" onmouseout="this.style.background='#f8fafc'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)';"
                                                     onclick="openModal(${child.maTheLoai}, '${child.tenTheLoai}', '${child.moTa}', ${parent.maTheLoai})">
-                                                    <i class="fas fa-edit"></i>
+                                                    Sửa
                                                 </button>
-                                                <form action="quanlytheloai" method="post" style="display:inline;">
-                                                    <input type="hidden" name="action" value="delete">
-                                                    <input type="hidden" name="maTheLoai" value="${child.maTheLoai}">
-                                                    <button type="submit" title="Xóa Thể Loại" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 16px;" onclick="return confirm('Bạn có chắc chắn muốn xóa thể loại này?');">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
-                                                </form>
                                             </td>
                                         </tr>
                                     </c:if>

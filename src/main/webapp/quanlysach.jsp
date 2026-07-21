@@ -131,14 +131,14 @@
                             </c:choose>
                         </td>
                         <td style="text-align: center; display: flex; gap: 8px; justify-content: center; align-items: center; border-bottom: none;">
-                            <button class="btn-edit" title="Sửa"
+                            <button title="Sửa" style="background: white; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 6px; cursor: pointer; color: #334155; font-size: 13px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f1f5f9'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)';" onmouseout="this.style.background='white'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)';"
                                 onclick="openEditModal(${s.maSach}, '${s.tenSach}', '${s.tacGiaString}', '${s.isbn}', ${s.maTheLoai}, ${s.maNXB}, ${s.giaNhap}, ${s.giaBan}, ${s.soLuongTon}, '${s.hinhAnh}', ${s.trangThai}, ${s.soTrang}, '${s.kichThuoc}', ${s.trongLuong}, '${s.ngonNgu}', '${s.moTa}')">
-                                <i class="fas fa-edit"></i>
+                                Sửa
                             </button>
-                            <button class="btn-edit" title="Chi tiết" style="background-color: #0ea5e9;"
+                            <button title="Chi tiết" style="background: #0ea5e9; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; color: white; font-size: 13px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(14,165,233,0.3);" onmouseover="this.style.background='#0284c7'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 6px rgba(14,165,233,0.4)';" onmouseout="this.style.background='#0ea5e9'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(14,165,233,0.3)';"
                                 data-ten="${s.tenSach}" data-tg="${s.tacGiaString}" data-isbn="${s.isbn}" data-sotrang="${s.soTrang}" data-kt="${s.kichThuoc}" data-tl="${s.trongLuong}" data-nn="${s.ngonNgu}" data-mota="${s.moTa}" data-loai="${s.tenTheLoai}" data-nxb="${s.tenNXB}" data-gianhap="${s.giaNhap}" data-giaban="${s.giaBan}" data-ton="${s.soLuongTon}" data-img="${s.hinhAnh}"
                                 onclick="openBookDetails(this)">
-                                <i class="fas fa-info-circle"></i>
+                                Chi tiết
                             </button>
                         </td>
                     </tr>
