@@ -54,6 +54,54 @@ public class quanlinhanvienservlet {
         return list;
     }
 
+    public ArrayList<NhanVien> searchNhanVien(String keyword) {
+        connectService service = new connectService();
+        ArrayList<NhanVien> list = new ArrayList<>();
+
+        String sql =
+                "SELECT nv.MaNV, nv.HoTen, nv.NgaySinh, nv.GioiTinh, " +
+                        "nv.SDT, nv.Email, nv.DiaChi, nv.MaTrangThai, " +
+                        "nv.CCCD, nv.NgayCapCCCD, nv.DacDiemNhanDang, " +
+                        "tt.TenTrangThai " +
+                        "FROM NhanVien nv " +
+                        "INNER JOIN TrangThaiNhanVien tt " +
+                        "ON nv.MaTrangThai = tt.MaTrangThai " +
+                        "WHERE nv.HoTen LIKE ? OR nv.SDT LIKE ? OR nv.Email LIKE ? OR CAST(nv.MaNV AS VARCHAR) LIKE ?";
+
+        try (Connection conn = service.myConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            String kw = "%" + keyword + "%";
+            ps.setString(1, kw);
+            ps.setString(2, kw);
+            ps.setString(3, kw);
+            ps.setString(4, kw);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                NhanVien nv = new NhanVien(
+                        rs.getInt("MaNV"),
+                        rs.getString("HoTen"),
+                        rs.getDate("NgaySinh"),
+                        rs.getString("GioiTinh"),
+                        rs.getString("SDT"),
+                        rs.getString("Email"),
+                        rs.getString("DiaChi"),
+                        rs.getInt("MaTrangThai"),
+                        rs.getString("TenTrangThai"),
+                        rs.getString("CCCD"),
+                        rs.getDate("NgayCapCCCD"),
+                        rs.getString("DacDiemNhanDang")
+                );
+                list.add(nv);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
     public boolean addNhanVien(NhanVien nv) {
 
         connectService service = new connectService();

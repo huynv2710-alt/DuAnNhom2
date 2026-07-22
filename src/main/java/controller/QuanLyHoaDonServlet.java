@@ -42,7 +42,7 @@ public class QuanLyHoaDonServlet extends HttpServlet {
             if (hd != null && hd.getTrangThai() != 2) {
                 hoaDonService.updateTrangThai(maHD, 2); // 2 = Đã hủy
                 
-                // Hoàn trả tồn kho cho sách
+
                 List<HoaDonChiTiet> detailsToCancel = hoaDonService.getChiTietByHoaDonId(maHD);
                 if (detailsToCancel != null) {
                     for (HoaDonChiTiet ct : detailsToCancel) {

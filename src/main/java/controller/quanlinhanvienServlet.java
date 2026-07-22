@@ -18,13 +18,22 @@ public class quanlinhanvienServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
 
         quanlinhanvienservlet dao = new quanlinhanvienservlet();
 
-        ArrayList<NhanVien> list = dao.getAllNhanVien();
+        String search = req.getParameter("search");
+        ArrayList<NhanVien> list;
+
+        if (search != null && !search.trim().isEmpty()) {
+            list = dao.searchNhanVien(search.trim());
+        } else {
+            list = dao.getAllNhanVien();
+        }
 
         req.setAttribute("lst", list);
+        req.setAttribute("search", search);
 
         req.getRequestDispatcher("quanlinhanvien.jsp")
                 .forward(req, resp);

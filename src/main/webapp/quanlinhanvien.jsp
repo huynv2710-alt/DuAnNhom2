@@ -38,15 +38,18 @@
         </a>
     </div>
 
-    <!-- Tạm thời ẩn thanh tìm kiếm vì chưa có code search backend
     <div class="filter-card">
-        <div class="filter-group" style="flex: 1;">
-            <label>TÌM KIẾM NHÂN VIÊN</label>
-            <input type="text" placeholder="Tên, SĐT, Email...">
-        </div>
-        <button class="btn-filter" style="margin-bottom: 2px;">Lọc</button>
+        <form action="quanlinhanvien" method="get" style="display: flex; gap: 12px; align-items: flex-end; width: 100%;">
+            <div class="filter-group" style="flex: 1;">
+                <label>TÌM KIẾM NHÂN VIÊN</label>
+                <input type="text" name="search" placeholder="Tên, Mã NV, SĐT, Email..." value="${search}">
+            </div>
+            <button type="submit" class="btn-filter" style="margin-bottom: 2px;"><i class="fas fa-search"></i> Tìm</button>
+            <c:if test="${not empty search}">
+                <a href="quanlinhanvien" class="btn-filter" style="margin-bottom: 2px; text-decoration: none; background: #e2e8f0; color: #334155;"><i class="fas fa-times"></i> Xóa lọc</a>
+            </c:if>
+        </form>
     </div>
-    -->
 
     <div class="table-container">
         <table>
