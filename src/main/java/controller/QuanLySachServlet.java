@@ -62,11 +62,16 @@ public class QuanLySachServlet extends HttpServlet {
         String isbn = request.getParameter("isbn");
         int maTheLoai = Integer.parseInt(request.getParameter("maTheLoai"));
         int maNXB = Integer.parseInt(request.getParameter("maNXB"));
-        double giaNhap = Double.parseDouble(request.getParameter("giaNhap") != null && !request.getParameter("giaNhap").isEmpty() ? request.getParameter("giaNhap") : "0");
-        double giaBan = Double.parseDouble(request.getParameter("giaBan"));
-        int soLuongTon = Integer.parseInt(request.getParameter("soLuongTon"));
+        double giaNhap = 0;
+        double giaBan = 0;
+        int soLuongTon = 0;
+        try { giaNhap = Double.parseDouble(request.getParameter("giaNhap")); } catch(Exception e){}
+        try { giaBan = Double.parseDouble(request.getParameter("giaBan")); } catch(Exception e){}
+        try { soLuongTon = Integer.parseInt(request.getParameter("soLuongTon")); } catch(Exception e){}
+        
         String hinhAnh = request.getParameter("hinhAnh");
-        int trangThai = Integer.parseInt(request.getParameter("trangThai"));
+        int trangThai = 1;
+        try { trangThai = Integer.parseInt(request.getParameter("trangThai")); } catch(Exception e){}
 
         int soTrang = 0;
         int trongLuong = 0;

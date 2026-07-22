@@ -36,13 +36,18 @@ public class QuanLyHoaDonServlet extends HttpServlet {
             return;
         } else if ("cancel".equals(action)) {
             int maHD = Integer.parseInt(request.getParameter("id"));
-            hoaDonService.updateTrangThai(maHD, 2); // 2 = Đã hủy
+            HoaDon hd = hoaDonService.getHoaDonById(maHD);
             
-            // Hoàn trả tồn kho cho sách
-            List<HoaDonChiTiet> detailsToCancel = hoaDonService.getChiTietByHoaDonId(maHD);
-            if (detailsToCancel != null) {
-                for (HoaDonChiTiet ct : detailsToCancel) {
-                    hoaDonService.increaseSachQuantity(ct.getMaSach(), ct.getSoLuong());
+            // LỖI LOGIC ĐÃ FIX: Chỉ thực hiện hủy và hoàn kho nếu hóa đơn chưa bị hủy
+            if (hd != null && hd.getTrangThai() != 2) {
+                hoaDonService.updateTrangThai(maHD, 2); // 2 = Đã hủy
+                
+                // Hoàn trả tồn kho cho sách
+                List<HoaDonChiTiet> detailsToCancel = hoaDonService.getChiTietByHoaDonId(maHD);
+                if (detailsToCancel != null) {
+                    for (HoaDonChiTiet ct : detailsToCancel) {
+                        hoaDonService.increaseSachQuantity(ct.getMaSach(), ct.getSoLuong());
+                    }
                 }
             }
 
