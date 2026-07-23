@@ -18,6 +18,7 @@ public class quanlinhanvienservlet {
                 "SELECT nv.MaNV, nv.HoTen, nv.NgaySinh, nv.GioiTinh, " +
                         "nv.SDT, nv.Email, nv.DiaChi, nv.MaTrangThai, " +
                         "nv.CCCD, nv.NgayCapCCCD, nv.DacDiemNhanDang, " +
+                        "nv.NoiCapCCCD, nv.NgayHetHanCCCD, " +
                         "tt.TenTrangThai " +
                         "FROM NhanVien nv " +
                         "INNER JOIN TrangThaiNhanVien tt " +
@@ -41,7 +42,9 @@ public class quanlinhanvienservlet {
                         rs.getString("TenTrangThai"),
                         rs.getString("CCCD"),
                         rs.getDate("NgayCapCCCD"),
-                        rs.getString("DacDiemNhanDang")
+                        rs.getString("DacDiemNhanDang"),
+                        rs.getString("NoiCapCCCD"),
+                        rs.getDate("NgayHetHanCCCD")
                 );
 
                 list.add(nv);
@@ -62,6 +65,7 @@ public class quanlinhanvienservlet {
                 "SELECT nv.MaNV, nv.HoTen, nv.NgaySinh, nv.GioiTinh, " +
                         "nv.SDT, nv.Email, nv.DiaChi, nv.MaTrangThai, " +
                         "nv.CCCD, nv.NgayCapCCCD, nv.DacDiemNhanDang, " +
+                        "nv.NoiCapCCCD, nv.NgayHetHanCCCD, " +
                         "tt.TenTrangThai " +
                         "FROM NhanVien nv " +
                         "INNER JOIN TrangThaiNhanVien tt " +
@@ -91,7 +95,9 @@ public class quanlinhanvienservlet {
                         rs.getString("TenTrangThai"),
                         rs.getString("CCCD"),
                         rs.getDate("NgayCapCCCD"),
-                        rs.getString("DacDiemNhanDang")
+                        rs.getString("DacDiemNhanDang"),
+                        rs.getString("NoiCapCCCD"),
+                        rs.getDate("NgayHetHanCCCD")
                 );
                 list.add(nv);
             }
@@ -108,8 +114,8 @@ public class quanlinhanvienservlet {
 
         String sql = "INSERT INTO NhanVien "
                 + "(MaNV, HoTen, NgaySinh, GioiTinh, SDT, Email, DiaChi, "
-                + "MaTrangThai, CCCD, NgayCapCCCD, DacDiemNhanDang) "
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                + "MaTrangThai, CCCD, NgayCapCCCD, DacDiemNhanDang, NoiCapCCCD, NgayHetHanCCCD) "
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try (Connection conn = service.myConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -125,6 +131,8 @@ public class quanlinhanvienservlet {
             ps.setString(9, nv.getCccd());
             ps.setDate(10, nv.getNgayCapCCCD());
             ps.setString(11, nv.getDacDiemNhanDang());
+            ps.setString(12, nv.getNoiCapCCCD());
+            ps.setDate(13, nv.getNgayHetHanCCCD());
 
             return ps.executeUpdate() > 0;
 
@@ -141,6 +149,7 @@ public class quanlinhanvienservlet {
                 "SELECT nv.MaNV, nv.HoTen, nv.NgaySinh, nv.GioiTinh, " +
                         "nv.SDT, nv.Email, nv.DiaChi, nv.MaTrangThai, " +
                         "nv.CCCD, nv.NgayCapCCCD, nv.DacDiemNhanDang, " +
+                        "nv.NoiCapCCCD, nv.NgayHetHanCCCD, " +
                         "tt.TenTrangThai " +
                         "FROM NhanVien nv " +
                         "INNER JOIN TrangThaiNhanVien tt " +
@@ -168,7 +177,9 @@ public class quanlinhanvienservlet {
                         rs.getString("TenTrangThai"),
                         rs.getString("CCCD"),
                         rs.getDate("NgayCapCCCD"),
-                        rs.getString("DacDiemNhanDang")
+                        rs.getString("DacDiemNhanDang"),
+                        rs.getString("NoiCapCCCD"),
+                        rs.getDate("NgayHetHanCCCD")
                 );
             }
 
@@ -192,7 +203,9 @@ public class quanlinhanvienservlet {
                 + "MaTrangThai=?, "
                 + "CCCD=?, "
                 + "NgayCapCCCD=?, "
-                + "DacDiemNhanDang=? "
+                + "DacDiemNhanDang=?, "
+                + "NoiCapCCCD=?, "
+                + "NgayHetHanCCCD=? "
                 + "WHERE MaNV=?";
 
         try (Connection conn = service.myConnection();
@@ -208,7 +221,9 @@ public class quanlinhanvienservlet {
             ps.setString(8, nv.getCccd());
             ps.setDate(9, nv.getNgayCapCCCD());
             ps.setString(10, nv.getDacDiemNhanDang());
-            ps.setInt(11, nv.getMaNV());
+            ps.setString(11, nv.getNoiCapCCCD());
+            ps.setDate(12, nv.getNgayHetHanCCCD());
+            ps.setInt(13, nv.getMaNV());
 
             return ps.executeUpdate() > 0;
 

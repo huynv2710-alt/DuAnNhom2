@@ -19,6 +19,7 @@
 
     <div class="header">
         <h1>Lịch Sử Hóa Đơn Bán Hàng</h1>
+        <button onclick="exportToExcel()" class="btn-filter" style="background:#10b981; border:none; color:white; padding:10px 20px; border-radius:6px; cursor:pointer; font-weight:bold;"><i class="fas fa-file-excel"></i> Xuất Excel</button>
     </div>
 
     <form class="filter-card" action="quanlyhoadon" method="get">
@@ -75,6 +76,24 @@
     </div>
 
 </main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+    function exportToExcel() {
+        // Lấy bảng dữ liệu
+        var table = document.querySelector(".table-container table");
+        
+        // Tạo workbook mới từ bảng HTML
+        var wb = XLSX.utils.table_to_book(table, {sheet: "LichSuHoaDon"});
+        
+        // Lấy ngày tháng năm hiện tại để đặt tên file
+        var d = new Date();
+        var dateString = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + d.getHours() + "-" + d.getMinutes();
+        
+        // Xuất file Excel
+        XLSX.writeFile(wb, "LichSuHoaDon_" + dateString + ".xlsx");
+    }
+</script>
 
 </body>
 </html>

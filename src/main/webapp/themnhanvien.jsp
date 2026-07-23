@@ -15,6 +15,8 @@
     String pDiaChi   = request.getParameter("diaChi")          != null ? request.getParameter("diaChi")          : "";
     String pCccd     = request.getParameter("cccd")            != null ? request.getParameter("cccd")            : "";
     String pNgayCap  = request.getParameter("ngayCapCCCD")     != null ? request.getParameter("ngayCapCCCD")     : "";
+    String pNoiCap   = request.getParameter("noiCapCCCD")      != null ? request.getParameter("noiCapCCCD")      : "";
+    String pNgayHetHan= request.getParameter("ngayHetHanCCCD") != null ? request.getParameter("ngayHetHanCCCD")  : "";
     String pDacDiem  = request.getParameter("dacDiemNhanDang") != null ? request.getParameter("dacDiemNhanDang") : "";
     String pUsername = request.getParameter("username")        != null ? request.getParameter("username")        : "";
     String pTrangThai= request.getParameter("maTrangThai")     != null ? request.getParameter("maTrangThai")     : "1";
@@ -53,7 +55,8 @@
 
                 <div class="form-group">
                     <label>Ngày sinh</label>
-                    <input type="date" name="ngaySinh" value="<%= pNgaySinh %>" required>
+                    <input type="date" id="ngaySinh" name="ngaySinh" value="<%= pNgaySinh %>" required oninput="validateNV()">
+                    <span id="errNgaySinh" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
                 </div>
 
                 <div class="form-group">
@@ -66,22 +69,20 @@
 
                 <div class="form-group">
                     <label>Số điện thoại</label>
-                    <input type="text" name="sdt" value="<%= pSdt %>" required>
+                    <input type="text" id="sdt" name="sdt" value="<%= pSdt %>" required oninput="validateNV()">
+                    <span id="errSdt" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
                 </div>
 
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="email" value="<%= pEmail %>" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Địa chỉ</label>
-                    <input type="text" name="diaChi" value="<%= pDiaChi %>" required>
+                    <input type="email" id="email" name="email" value="<%= pEmail %>" required oninput="validateNV()">
+                    <span id="errEmail" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
                 </div>
 
                 <div class="form-group">
                     <label>CCCD</label>
-                    <input type="text" name="cccd" value="<%= pCccd %>" required>
+                    <input type="text" id="cccd" name="cccd" value="<%= pCccd %>" required oninput="validateNV()">
+                    <span id="errCccd" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
                 </div>
 
 <div class="form-group" style="grid-column: span 2;">
@@ -102,6 +103,21 @@
 <label>Ngày cấp CCCD</label>
 <input type="date" id="ngayCapCCCD" name="ngayCapCCCD" value="<%= pNgayCap %>" required oninput="validateNV()">
 <span id="errNgayCapCCCD" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
+</div>
+
+<div class="form-group">
+    <label>Nơi cấp CCCD</label>
+    <select name="noiCapCCCD" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+        <option value="Bộ Công an" <%= pNoiCap.equals("Bộ Công an") ? "selected" : "" %>>Bộ Công an</option>
+        <option value="Cục Cảnh sát quản lý hành chính về trật tự xã hội" <%= pNoiCap.equals("Cục Cảnh sát quản lý hành chính về trật tự xã hội") ? "selected" : "" %>>Cục Cảnh sát quản lý hành chính về trật tự xã hội</option>
+        <option value="Cục Cảnh sát ĐKQL cư trú và DLQG về dân cư" <%= pNoiCap.equals("Cục Cảnh sát ĐKQL cư trú và DLQG về dân cư") ? "selected" : "" %>>Cục Cảnh sát ĐKQL cư trú và DLQG về dân cư</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label>Ngày hết hạn CCCD</label>
+    <input type="date" id="ngayHetHanCCCD" name="ngayHetHanCCCD" value="<%= pNgayHetHan %>" oninput="validateNV()">
+    <span id="errNgayHetHanCCCD" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
 </div>
 
 <div class="form-group">
@@ -220,10 +236,28 @@
         }
 
         let ngayCapStr = document.getElementById('ngayCapCCCD') ? document.getElementById('ngayCapCCCD').value : '';
+        let ngayHetHanStr = document.getElementById('ngayHetHanCCCD') ? document.getElementById('ngayHetHanCCCD').value : '';
+        
+        if (!ngayCapStr) {
+            if(document.getElementById('errNgayCapCCCD')) {
+                document.getElementById('errNgayCapCCCD').innerText = "Vui lòng nhập ngày cấp hợp lệ!";
+                document.getElementById('errNgayCapCCCD').style.display = 'block';
+            }
+            isValid = false;
+        } else {
+            if(document.getElementById('errNgayCapCCCD')) document.getElementById('errNgayCapCCCD').style.display = 'none';
+        }
+
         if(ngaySinh && ngayCapStr) {
             let birthDate = new Date(ngaySinh);
             let issueDate = new Date(ngayCapStr);
             let today = new Date();
+            
+            let ageAtIssue = issueDate.getFullYear() - birthDate.getFullYear();
+            let mIssue = issueDate.getMonth() - birthDate.getMonth();
+            if (mIssue < 0 || (mIssue === 0 && issueDate.getDate() < birthDate.getDate())) {
+                ageAtIssue--;
+            }
             
             if (issueDate > today) {
                 if(document.getElementById('errNgayCapCCCD')) {
@@ -231,20 +265,59 @@
                     document.getElementById('errNgayCapCCCD').style.display = 'block';
                 }
                 isValid = false;
-            } else {
-                let ageAtIssue = issueDate.getFullYear() - birthDate.getFullYear();
-                let m = issueDate.getMonth() - birthDate.getMonth();
-                if (m < 0 || (m === 0 && issueDate.getDate() < birthDate.getDate())) {
-                    ageAtIssue--;
+            } else if (issueDate < birthDate) {
+                if(document.getElementById('errNgayCapCCCD')) {
+                    document.getElementById('errNgayCapCCCD').innerText = "Ngày cấp không hợp lý (trước ngày sinh)!";
+                    document.getElementById('errNgayCapCCCD').style.display = 'block';
                 }
-                if (ageAtIssue < 16) {
-                    if(document.getElementById('errNgayCapCCCD')) {
-                        document.getElementById('errNgayCapCCCD').innerText = "Ngày cấp phải cách ngày sinh ít nhất 16 năm!";
-                        document.getElementById('errNgayCapCCCD').style.display = 'block';
+                isValid = false;
+            } else if (ageAtIssue < 14) {
+                if(document.getElementById('errNgayCapCCCD')) {
+                    document.getElementById('errNgayCapCCCD').innerText = "Tuổi lúc cấp CCCD phải từ đủ 14 tuổi!";
+                    document.getElementById('errNgayCapCCCD').style.display = 'block';
+                }
+                isValid = false;
+            }
+            
+            if (ngayHetHanStr) {
+                let expDate = new Date(ngayHetHanStr);
+                let expectedExpYear = null;
+                if (ageAtIssue >= 14 && ageAtIssue < 23) expectedExpYear = birthDate.getFullYear() + 25;
+                else if (ageAtIssue >= 23 && ageAtIssue < 38) expectedExpYear = birthDate.getFullYear() + 40;
+                else if (ageAtIssue >= 38 && ageAtIssue < 58) expectedExpYear = birthDate.getFullYear() + 60;
+
+                if (expectedExpYear !== null) {
+                    if (expDate.getFullYear() !== expectedExpYear) {
+                        if(document.getElementById('errNgayHetHanCCCD')) {
+                            document.getElementById('errNgayHetHanCCCD').innerText = "Ngày hết hạn chưa phù hợp với độ tuổi lúc cấp (phải là năm " + expectedExpYear + ")!";
+                            document.getElementById('errNgayHetHanCCCD').style.display = 'block';
+                        }
+                        isValid = false;
+                    } else if (issueDate >= expDate) {
+                        if(document.getElementById('errNgayHetHanCCCD')) {
+                            document.getElementById('errNgayHetHanCCCD').innerText = "Ngày cấp phải nhỏ hơn ngày hết hạn!";
+                            document.getElementById('errNgayHetHanCCCD').style.display = 'block';
+                        }
+                        isValid = false;
+                    } else {
+                        if(document.getElementById('errNgayHetHanCCCD')) document.getElementById('errNgayHetHanCCCD').style.display = 'none';
+                    }
+                } else if (ageAtIssue >= 58) {
+                    if(document.getElementById('errNgayHetHanCCCD')) {
+                        document.getElementById('errNgayHetHanCCCD').innerText = "Người từ đủ 58 tuổi khi cấp thẻ không có ngày hết hạn (hãy để trống)!";
+                        document.getElementById('errNgayHetHanCCCD').style.display = 'block';
                     }
                     isValid = false;
-                } else if(document.getElementById('errNgayCapCCCD')) {
-                    document.getElementById('errNgayCapCCCD').style.display = 'none';
+                }
+            } else {
+                if (ageAtIssue >= 14 && ageAtIssue < 58) {
+                    if(document.getElementById('errNgayHetHanCCCD')) {
+                        document.getElementById('errNgayHetHanCCCD').innerText = "Vui lòng nhập ngày hết hạn hợp lệ!";
+                        document.getElementById('errNgayHetHanCCCD').style.display = 'block';
+                    }
+                    isValid = false;
+                } else if (ageAtIssue >= 58) {
+                    if(document.getElementById('errNgayHetHanCCCD')) document.getElementById('errNgayHetHanCCCD').style.display = 'none';
                 }
             }
         }
@@ -267,7 +340,7 @@
         }
         
         // Load API Tỉnh/Thành
-        fetch('https://provinces.open-api.vn/api/v2/?depth=2')
+        fetch('https://provinces.open-api.vn/api/?depth=2')
             .then(response => response.json())
             .then(data => {
                 let citySelect = document.getElementById('city');
@@ -285,12 +358,14 @@
 
                 citySelect.addEventListener('change', function() {
                     wardSelect.innerHTML = '<option value="">Chọn Phường Xã</option>';
+                    
                     let selectedCity = data.find(c => c.code == citySelect.options[citySelect.selectedIndex].getAttribute('data-code'));
-                    if (selectedCity && selectedCity.wards) {
-                        selectedCity.wards.forEach(w => {
+                    if (selectedCity && selectedCity.districts) {
+                        selectedCity.districts.forEach(d => {
                             let opt = document.createElement('option');
-                            opt.value = w.name;
-                            opt.textContent = w.name;
+                            opt.value = d.name;
+                            opt.setAttribute('data-code', d.code);
+                            opt.textContent = d.name;
                             wardSelect.appendChild(opt);
                         });
                     }
@@ -321,6 +396,7 @@
             document.getElementById('diaChiHidden').value = fullAddress.join(', ');
         }
     }
+</script>
 
 <% if (successMsg != null && !successMsg.isEmpty()) { %>
 <script>

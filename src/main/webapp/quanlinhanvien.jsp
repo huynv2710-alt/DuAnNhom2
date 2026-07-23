@@ -86,7 +86,7 @@
                         <a href="suanhanvien?action=edit&id=${nv.maNV}" class="btn-edit" style="text-decoration: none;" title="Sửa thông tin">
                             Sửa
                         </a>
-                        <button onclick="openDetailsModal('${nv.hoTen}', '${nv.cccd}', '${nv.ngayCapCCCD}', '${nv.dacDiemNhanDang}')" class="btn-edit" style="text-decoration: none;" title="Xem chi tiết">
+                        <button onclick="openDetailsModal('${nv.maNV}', '${nv.hoTen}', '${nv.gioiTinh}', '${nv.ngaySinh}', '${nv.sdt}', '${nv.email}', '${nv.diaChi}', '${nv.cccd}', '${nv.ngayCapCCCD}', '${nv.noiCapCCCD}', '${nv.ngayHetHanCCCD}', '${nv.dacDiemNhanDang}')" class="btn-edit" style="text-decoration: none;" title="Xem chi tiết">
                             Chi tiết
                         </button>
                     </td>
@@ -103,24 +103,60 @@
 
 <!-- Modal Chi Tiết -->
 <div id="detailsModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
-    <div style="background:white; width:450px; margin:100px auto; padding:25px; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+    <div style="background:white; width:600px; margin:50px auto; padding:25px; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.2); max-height: 85vh; overflow-y: auto;">
         <h2 style="color:#00897b; border-bottom:2px solid #00897b; padding-bottom:10px; margin-bottom:20px;">Chi Tiết Nhân Viên</h2>
-        <div style="margin-bottom: 15px;">
-            <label style="font-weight: bold; color: #64748b; font-size: 13px;">Họ và tên</label>
-            <div id="detHoTen" style="font-size: 15px; font-weight: 600; color: #1e293b; margin-top: 5px;"></div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Mã nhân viên</label>
+                <div id="detMaNV" style="font-size: 15px; font-weight: 600; color: #1e293b; margin-top: 5px;"></div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Họ và tên</label>
+                <div id="detHoTen" style="font-size: 15px; font-weight: 600; color: #1e293b; margin-top: 5px;"></div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Giới tính</label>
+                <div id="detGioiTinh" style="font-size: 15px; color: #1e293b; margin-top: 5px;"></div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Ngày sinh</label>
+                <div id="detNgaySinh" style="font-size: 15px; color: #1e293b; margin-top: 5px;"></div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Số điện thoại</label>
+                <div id="detSDT" style="font-size: 15px; color: #1e293b; margin-top: 5px;"></div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Email</label>
+                <div id="detEmail" style="font-size: 15px; color: #1e293b; margin-top: 5px;"></div>
+            </div>
+            <div style="margin-bottom: 15px; grid-column: span 2;">
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Địa chỉ</label>
+                <div id="detDiaChi" style="font-size: 15px; color: #1e293b; margin-top: 5px;"></div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Số CCCD</label>
+                <div id="detCCCD" style="font-size: 15px; color: #1e293b; margin-top: 5px;"></div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Ngày cấp CCCD</label>
+                <div id="detNgayCap" style="font-size: 15px; color: #1e293b; margin-top: 5px;"></div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Nơi cấp CCCD</label>
+                <div id="detNoiCap" style="font-size: 15px; color: #1e293b; margin-top: 5px;"></div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Ngày hết hạn CCCD</label>
+                <div id="detNgayHetHan" style="font-size: 15px; color: #1e293b; margin-top: 5px;"></div>
+            </div>
+            <div style="margin-bottom: 25px; grid-column: span 2;">
+                <label style="font-weight: bold; color: #64748b; font-size: 13px;">Đặc điểm nhận dạng</label>
+                <div id="detDacDiem" style="font-size: 15px; color: #1e293b; margin-top: 5px;"></div>
+            </div>
         </div>
-        <div style="margin-bottom: 15px;">
-            <label style="font-weight: bold; color: #64748b; font-size: 13px;">Số CCCD</label>
-            <div id="detCCCD" style="font-size: 15px; color: #1e293b; margin-top: 5px;"></div>
-        </div>
-        <div style="margin-bottom: 15px;">
-            <label style="font-weight: bold; color: #64748b; font-size: 13px;">Ngày cấp CCCD</label>
-            <div id="detNgayCap" style="font-size: 15px; color: #1e293b; margin-top: 5px;"></div>
-        </div>
-        <div style="margin-bottom: 25px;">
-            <label style="font-weight: bold; color: #64748b; font-size: 13px;">Đặc điểm nhận dạng</label>
-            <div id="detDacDiem" style="font-size: 15px; color: #1e293b; margin-top: 5px;"></div>
-        </div>
+        
         <div style="text-align: right;">
             <button onclick="document.getElementById('detailsModal').style.display='none'" style="padding:10px 20px; background:#e2e8f0; color:#334155; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">Đóng</button>
         </div>
@@ -128,11 +164,19 @@
 </div>
 
 <script>
-    function openDetailsModal(hoten, cccd, ngaycap, dacdiem) {
+    function openDetailsModal(manv, hoten, gioitinh, ngaysinh, sdt, email, diachi, cccd, ngaycap, noicap, ngayhethan, dacdiem) {
+        document.getElementById('detMaNV').innerText = '#' + manv;
         document.getElementById('detHoTen').innerText = hoten;
-        document.getElementById('detCCCD').innerText = cccd;
-        document.getElementById('detNgayCap').innerText = ngaycap;
-        document.getElementById('detDacDiem').innerText = dacdiem;
+        document.getElementById('detGioiTinh').innerText = gioitinh || 'N/A';
+        document.getElementById('detNgaySinh').innerText = ngaysinh || 'N/A';
+        document.getElementById('detSDT').innerText = sdt || 'N/A';
+        document.getElementById('detEmail').innerText = email || 'N/A';
+        document.getElementById('detDiaChi').innerText = diachi || 'N/A';
+        document.getElementById('detCCCD').innerText = cccd || 'N/A';
+        document.getElementById('detNgayCap').innerText = ngaycap || 'N/A';
+        document.getElementById('detNoiCap').innerText = noicap || 'N/A';
+        document.getElementById('detNgayHetHan').innerText = ngayhethan || 'N/A';
+        document.getElementById('detDacDiem').innerText = dacdiem || 'N/A';
         document.getElementById('detailsModal').style.display = 'block';
     }
 </script>

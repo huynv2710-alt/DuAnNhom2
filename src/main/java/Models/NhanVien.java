@@ -16,6 +16,8 @@ public class NhanVien {
     private String cccd;
     private Date ngayCapCCCD;
     private String dacDiemNhanDang;
+    private String noiCapCCCD;
+    private Date ngayHetHanCCCD;
 
     public NhanVien() {
     }
@@ -24,6 +26,15 @@ public class NhanVien {
                     String sdt, String email, String diaChi,
                     int maTrangThai, String tenTrangThai,
                     String cccd, Date ngayCapCCCD, String dacDiemNhanDang) {
+
+        this(maNV, hoTen, ngaySinh, gioiTinh, sdt, email, diaChi, maTrangThai, tenTrangThai, cccd, ngayCapCCCD, dacDiemNhanDang, null, null);
+    }
+
+    public NhanVien(int maNV, String hoTen, Date ngaySinh, String gioiTinh,
+                    String sdt, String email, String diaChi,
+                    int maTrangThai, String tenTrangThai,
+                    String cccd, Date ngayCapCCCD, String dacDiemNhanDang,
+                    String noiCapCCCD, Date ngayHetHanCCCD) {
 
         this.maNV = maNV;
         this.hoTen = hoTen;
@@ -37,6 +48,8 @@ public class NhanVien {
         this.cccd = cccd;
         this.ngayCapCCCD = ngayCapCCCD;
         this.dacDiemNhanDang = dacDiemNhanDang;
+        this.noiCapCCCD = noiCapCCCD;
+        this.ngayHetHanCCCD = ngayHetHanCCCD;
     }
 
     // ==================== GETTER & SETTER ====================
@@ -135,5 +148,21 @@ public class NhanVien {
 
     public void setDacDiemNhanDang(String dacDiemNhanDang) {
         this.dacDiemNhanDang = dacDiemNhanDang;
+    }
+
+    public String getNoiCapCCCD() {
+        return noiCapCCCD;
+    }
+
+    public void setNoiCapCCCD(String noiCapCCCD) {
+        this.noiCapCCCD = noiCapCCCD;
+    }
+
+    public Date getNgayHetHanCCCD() {
+        return ngayHetHanCCCD;
+    }
+
+    public void setNgayHetHanCCCD(Date ngayHetHanCCCD) {
+        this.ngayHetHanCCCD = ngayHetHanCCCD;
     }
 }

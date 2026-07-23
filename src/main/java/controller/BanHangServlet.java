@@ -96,16 +96,21 @@ public class BanHangServlet extends HttpServlet {
             int maSach = Integer.parseInt(request.getParameter("maSach"));
             int soLuong = Integer.parseInt(request.getParameter("soLuong"));
             Sach sach = sachService.getSachById(maSach);
-            if (sach != null && soLuong > 0) {
-                if (soLuong > sach.getSoLuongTon()) {
-                    soLuong = sach.getSoLuongTon();
-                }
-                List<HoaDonChiTiet> cart = (List<HoaDonChiTiet>) session.getAttribute("cart");
-                for (HoaDonChiTiet item : cart) {
-                    if (item.getMaSach() == maSach) {
-                        item.setSoLuong(soLuong);
-                        break;
+            List<HoaDonChiTiet> cart = (List<HoaDonChiTiet>) session.getAttribute("cart");
+            if (sach != null) {
+                if (soLuong > 0) {
+                    if (soLuong > sach.getSoLuongTon()) {
+                        soLuong = sach.getSoLuongTon();
                     }
+                    for (HoaDonChiTiet item : cart) {
+                        if (item.getMaSach() == maSach) {
+                            item.setSoLuong(soLuong);
+                            break;
+                        }
+                    }
+                } else {
+                    // Remove item if quantity is zero or negative
+                    cart.removeIf(item -> item.getMaSach() == maSach);
                 }
             }
             response.sendRedirect("banhang");

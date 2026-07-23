@@ -88,6 +88,21 @@
 </div>
 
 <div class="form-group">
+<label>Nơi cấp CCCD</label>
+<select name="noiCapCCCD" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+    <option value="Bộ Công an" ${nv.noiCapCCCD == 'Bộ Công an' ? 'selected' : ''}>Bộ Công an</option>
+    <option value="Cục Cảnh sát quản lý hành chính về trật tự xã hội" ${nv.noiCapCCCD == 'Cục Cảnh sát quản lý hành chính về trật tự xã hội' ? 'selected' : ''}>Cục Cảnh sát quản lý hành chính về trật tự xã hội</option>
+    <option value="Cục Cảnh sát ĐKQL cư trú và DLQG về dân cư" ${nv.noiCapCCCD == 'Cục Cảnh sát ĐKQL cư trú và DLQG về dân cư' ? 'selected' : ''}>Cục Cảnh sát ĐKQL cư trú và DLQG về dân cư</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Ngày hết hạn CCCD</label>
+<input type="date" id="ngayHetHanCCCD" name="ngayHetHanCCCD" value="${nv.ngayHetHanCCCD}" oninput="validateNV()">
+<span id="errNgayHetHanCCCD" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
+</div>
+
+<div class="form-group">
 <label>Đặc điểm nhận dạng</label>
 <input type="text" name="dacDiemNhanDang" value="${nv.dacDiemNhanDang}" required>
 </div>
@@ -184,10 +199,28 @@ Quay lại
         }
 
         let ngayCapStr = document.getElementById('ngayCapCCCD') ? document.getElementById('ngayCapCCCD').value : '';
+        let ngayHetHanStr = document.getElementById('ngayHetHanCCCD') ? document.getElementById('ngayHetHanCCCD').value : '';
+        
+        if (!ngayCapStr) {
+            if(document.getElementById('errNgayCapCCCD')) {
+                document.getElementById('errNgayCapCCCD').innerText = "Vui lòng nhập ngày cấp hợp lệ!";
+                document.getElementById('errNgayCapCCCD').style.display = 'block';
+            }
+            isValid = false;
+        } else {
+            if(document.getElementById('errNgayCapCCCD')) document.getElementById('errNgayCapCCCD').style.display = 'none';
+        }
+
         if(ngaySinh && ngayCapStr) {
             let birthDate = new Date(ngaySinh);
             let issueDate = new Date(ngayCapStr);
             let today = new Date();
+            
+            let ageAtIssue = issueDate.getFullYear() - birthDate.getFullYear();
+            let mIssue = issueDate.getMonth() - birthDate.getMonth();
+            if (mIssue < 0 || (mIssue === 0 && issueDate.getDate() < birthDate.getDate())) {
+                ageAtIssue--;
+            }
             
             if (issueDate > today) {
                 if(document.getElementById('errNgayCapCCCD')) {
@@ -195,20 +228,59 @@ Quay lại
                     document.getElementById('errNgayCapCCCD').style.display = 'block';
                 }
                 isValid = false;
-            } else {
-                let ageAtIssue = issueDate.getFullYear() - birthDate.getFullYear();
-                let m = issueDate.getMonth() - birthDate.getMonth();
-                if (m < 0 || (m === 0 && issueDate.getDate() < birthDate.getDate())) {
-                    ageAtIssue--;
+            } else if (issueDate < birthDate) {
+                if(document.getElementById('errNgayCapCCCD')) {
+                    document.getElementById('errNgayCapCCCD').innerText = "Ngày cấp không hợp lý (trước ngày sinh)!";
+                    document.getElementById('errNgayCapCCCD').style.display = 'block';
                 }
-                if (ageAtIssue < 16) {
-                    if(document.getElementById('errNgayCapCCCD')) {
-                        document.getElementById('errNgayCapCCCD').innerText = "Ngày cấp phải cách ngày sinh ít nhất 16 năm!";
-                        document.getElementById('errNgayCapCCCD').style.display = 'block';
+                isValid = false;
+            } else if (ageAtIssue < 14) {
+                if(document.getElementById('errNgayCapCCCD')) {
+                    document.getElementById('errNgayCapCCCD').innerText = "Tuổi lúc cấp CCCD phải từ đủ 14 tuổi!";
+                    document.getElementById('errNgayCapCCCD').style.display = 'block';
+                }
+                isValid = false;
+            }
+            
+            if (ngayHetHanStr) {
+                let expDate = new Date(ngayHetHanStr);
+                let expectedExpYear = null;
+                if (ageAtIssue >= 14 && ageAtIssue < 23) expectedExpYear = birthDate.getFullYear() + 25;
+                else if (ageAtIssue >= 23 && ageAtIssue < 38) expectedExpYear = birthDate.getFullYear() + 40;
+                else if (ageAtIssue >= 38 && ageAtIssue < 58) expectedExpYear = birthDate.getFullYear() + 60;
+
+                if (expectedExpYear !== null) {
+                    if (expDate.getFullYear() !== expectedExpYear) {
+                        if(document.getElementById('errNgayHetHanCCCD')) {
+                            document.getElementById('errNgayHetHanCCCD').innerText = "Ngày hết hạn chưa phù hợp với độ tuổi lúc cấp (phải là năm " + expectedExpYear + ")!";
+                            document.getElementById('errNgayHetHanCCCD').style.display = 'block';
+                        }
+                        isValid = false;
+                    } else if (issueDate >= expDate) {
+                        if(document.getElementById('errNgayHetHanCCCD')) {
+                            document.getElementById('errNgayHetHanCCCD').innerText = "Ngày cấp phải nhỏ hơn ngày hết hạn!";
+                            document.getElementById('errNgayHetHanCCCD').style.display = 'block';
+                        }
+                        isValid = false;
+                    } else {
+                        if(document.getElementById('errNgayHetHanCCCD')) document.getElementById('errNgayHetHanCCCD').style.display = 'none';
+                    }
+                } else if (ageAtIssue >= 58) {
+                    if(document.getElementById('errNgayHetHanCCCD')) {
+                        document.getElementById('errNgayHetHanCCCD').innerText = "Người từ đủ 58 tuổi khi cấp thẻ không có ngày hết hạn (hãy để trống)!";
+                        document.getElementById('errNgayHetHanCCCD').style.display = 'block';
                     }
                     isValid = false;
-                } else if(document.getElementById('errNgayCapCCCD')) {
-                    document.getElementById('errNgayCapCCCD').style.display = 'none';
+                }
+            } else {
+                if (ageAtIssue >= 14 && ageAtIssue < 58) {
+                    if(document.getElementById('errNgayHetHanCCCD')) {
+                        document.getElementById('errNgayHetHanCCCD').innerText = "Vui lòng nhập ngày hết hạn hợp lệ!";
+                        document.getElementById('errNgayHetHanCCCD').style.display = 'block';
+                    }
+                    isValid = false;
+                } else if (ageAtIssue >= 58) {
+                    if(document.getElementById('errNgayHetHanCCCD')) document.getElementById('errNgayHetHanCCCD').style.display = 'none';
                 }
             }
         }
@@ -229,7 +301,7 @@ Quay lại
 
         let oldAddress = document.getElementById('diaChiHidden').value;
 
-        fetch('https://provinces.open-api.vn/api/v2/?depth=2')
+        fetch('https://provinces.open-api.vn/api/?depth=2')
             .then(response => response.json())
             .then(data => {
                 let citySelect = document.getElementById('city');
@@ -252,14 +324,15 @@ Quay lại
                         let matchedCity = data.find(c => c.name === cName);
                         if(matchedCity) {
                             citySelect.value = cName;
-                            if (matchedCity.wards) {
-                                matchedCity.wards.forEach(w => {
+                            if (matchedCity.districts) {
+                                matchedCity.districts.forEach(d => {
                                     let opt = document.createElement('option');
-                                    opt.value = w.name;
-                                    opt.textContent = w.name;
+                                    opt.value = d.name;
+                                    opt.setAttribute('data-code', d.code);
+                                    opt.textContent = d.name;
                                     wardSelect.appendChild(opt);
                                 });
-                                let matchedWard = matchedCity.wards.find(w => w.name === wName);
+                                let matchedWard = matchedCity.districts.find(d => d.name === wName);
                                 if (matchedWard) {
                                     wardSelect.value = wName;
                                     document.getElementById('addressDetail').value = parts.slice(0, parts.length - 2).join(',').trim();
@@ -278,11 +351,12 @@ Quay lại
                 citySelect.addEventListener('change', function() {
                     wardSelect.innerHTML = '<option value="">Chọn Phường Xã</option>';
                     let selectedCity = data.find(c => c.code == citySelect.options[citySelect.selectedIndex].getAttribute('data-code'));
-                    if (selectedCity && selectedCity.wards) {
-                        selectedCity.wards.forEach(w => {
+                    if (selectedCity && selectedCity.districts) {
+                        selectedCity.districts.forEach(d => {
                             let opt = document.createElement('option');
-                            opt.value = w.name;
-                            opt.textContent = w.name;
+                            opt.value = d.name;
+                            opt.setAttribute('data-code', d.code);
+                            opt.textContent = d.name;
                             wardSelect.appendChild(opt);
                         });
                     }
@@ -290,25 +364,28 @@ Quay lại
                 });
 
                 wardSelect.addEventListener('change', updateAddress);
-                document.getElementById('addressDetail').addEventListener('input', updateAddress);
+                if(document.getElementById('addressDetail')) {
+                    document.getElementById('addressDetail').addEventListener('input', updateAddress);
+                }
             })
             .catch(error => {
-                console.error("Lỗi tải API Tỉnh/Thành: ", error);
-                document.getElementById('addressDetail').value = oldAddress;
+                console.error("Lỗi tải API: ", error);
             });
     });
 
     function updateAddress() {
-        let city = document.getElementById('city').value;
-        let ward = document.getElementById('ward').value;
-        let detail = document.getElementById('addressDetail').value;
+        let city = document.getElementById('city') ? document.getElementById('city').value : '';
+        let ward = document.getElementById('ward') ? document.getElementById('ward').value : '';
+        let detail = document.getElementById('addressDetail') ? document.getElementById('addressDetail').value : '';
         
         let fullAddress = [];
         if (detail) fullAddress.push(detail);
         if (ward) fullAddress.push(ward);
         if (city) fullAddress.push(city);
         
-        document.getElementById('diaChiHidden').value = fullAddress.join(', ');
+        if(document.getElementById('diaChiHidden')) {
+            document.getElementById('diaChiHidden').value = fullAddress.join(', ');
+        }
     }
 </script>
 

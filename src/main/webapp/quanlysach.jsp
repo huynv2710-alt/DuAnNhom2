@@ -106,7 +106,36 @@
                         </td>
                         <td style="font-weight: 600; color: #1e293b;">${s.tenSach}</td>
                         <td style="color: #64748b;">${s.tacGiaString}</td>
-                        <td style="font-weight: 500; color: #0f2820;">${s.tenTheLoai}</td>
+                        <td style="font-weight: 500; color: #0f2820;">
+                            <c:set var="currentChild" value="${null}" />
+                            <c:set var="currentParent" value="${null}" />
+                            <c:forEach var="tl" items="${listTL}">
+                                <c:if test="${tl.maTheLoai == s.maTheLoai}">
+                                    <c:set var="currentChild" value="${tl}" />
+                                </c:if>
+                            </c:forEach>
+                            <c:forEach var="tl" items="${listTL}">
+                                <c:if test="${not empty currentChild and tl.maTheLoai == currentChild.maTheLoaiCha}">
+                                    <c:set var="currentParent" value="${tl}" />
+                                </c:if>
+                            </c:forEach>
+                            
+                            <c:choose>
+                                <c:when test="${not empty currentParent}">
+                                    <div style="font-size: 13px;">
+                                        <span style="color: #64748b;">${currentParent.tenTheLoai}</span>
+                                        <span style="color: #cbd5e1; margin: 0 4px;">/</span>
+                                        <span style="font-weight: 600; color: #0f2820;">${currentChild.tenTheLoai}</span>
+                                    </div>
+                                </c:when>
+                                <c:when test="${not empty currentChild}">
+                                    <span style="font-weight: 600; color: #0f2820;">${currentChild.tenTheLoai}</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span style="font-weight: 500; color: #0f2820;">${s.tenTheLoai}</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
                         <td style="color: #64748b;">${s.tenNXB}</td>
                         <td style="font-weight: 600; color: #ca8a04;">
                             <fmt:formatNumber value="${s.giaNhap}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>

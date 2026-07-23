@@ -17,17 +17,18 @@
             --primary: #2d6652;
             --primary-light: #e6f0ec;
             --secondary: #0ea5e9;
-            --bg-color: #f0f4f3; 
-            --card-bg: rgba(255, 255, 255, 0.95);
+            --bg-color: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.85);
             --text-main: #1e293b;
             --text-muted: #64748b;
-            --border-color: rgba(226, 232, 240, 0.8);
-            --shadow-sm: 0 2px 10px rgba(45, 102, 82, 0.03);
-            --shadow-md: 0 10px 30px -10px rgba(45, 102, 82, 0.1);
-            --shadow-lg: 0 20px 40px -10px rgba(45, 102, 82, 0.15);
-            --radius-md: 16px;
-            --radius-lg: 20px;
-            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --border-color: rgba(255, 255, 255, 0.6);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-3d: 0 15px 35px rgba(45, 102, 82, 0.1), 0 5px 15px rgba(0,0,0,0.05);
+            --radius-md: 18px;
+            --radius-lg: 22px;
+            --transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         body, .content {
@@ -37,6 +38,7 @@
                 radial-gradient(circle at bottom left, rgba(14,165,233,0.06) 0%, transparent 40%);
             background-attachment: fixed;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-main);
         }
 
         .dashboard-container {
@@ -59,39 +61,120 @@
         }
 
         .kpi-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; margin-bottom: 30px; 
+            perspective: 1200px;
+            position: relative;
+            z-index: 20;
             animation: fadeInUp 0.6s ease-out;
         }
         .kpi-card { 
-            background: var(--card-bg); padding: 25px; border-radius: var(--radius-md); 
-            box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); 
-            position: relative; overflow: visible; transition: var(--transition);
-            backdrop-filter: blur(10px);
+            padding: 28px; border-radius: var(--radius-md); 
+            position: relative; overflow: visible;
             display: flex; flex-direction: column; justify-content: space-between;
+            
+            /* 3D Light Glassmorphism */
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.8));
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 1);
+            
+            /* 3D Depth Shadow */
+            box-shadow: 
+                0 15px 35px -10px rgba(0, 0, 0, 0.08),
+                0 5px 15px rgba(0, 0, 0, 0.03),
+                inset 0 1px 0 rgba(255, 255, 255, 1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.02);
+            
+            /* 3D Transform */
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0);
+            transition: 
+                transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.5s ease,
+                border-color 0.3s ease;
         }
-        .kpi-card:hover { transform: translateY(-5px) scale(1.01); box-shadow: var(--shadow-md); border-color: rgba(45, 102, 82, 0.3); }
-        .kpi-title { font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-        .kpi-value { font-size: 28px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; letter-spacing: -0.5px; }
-        .kpi-icon { position: absolute; top: 25px; right: 25px; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: var(--transition); }
-        .kpi-card:hover .kpi-icon { transform: scale(1.1) rotate(5deg); }
+
+        .kpi-card:hover { 
+            transform: perspective(1000px) rotateX(-3deg) rotateY(3deg) translateZ(15px) translateY(-6px); 
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.15),
+                0 10px 20px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+            border-color: rgba(255, 255, 255, 1);
+        }
+
+        .kpi-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; position: relative; z-index: 1; }
+        .kpi-value { font-size: 30px; font-weight: 900; color: var(--text-main); margin-bottom: 5px; letter-spacing: -0.5px; position: relative; z-index: 1; text-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .kpi-icon { 
+            position: absolute; top: 25px; right: 25px; width: 50px; height: 50px; border-radius: 14px; 
+            display: flex; align-items: center; justify-content: center; font-size: 22px; 
+            z-index: 1;
+            /* 3D icon shadow */
+            box-shadow: 
+                0 4px 12px rgba(0,0,0,0.1),
+                inset 0 1px 1px rgba(255,255,255,0.6),
+                inset 0 -1px 1px rgba(0,0,0,0.05);
+            transform: perspective(500px) rotateY(0deg);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .kpi-card:hover .kpi-icon { 
+            transform: perspective(500px) rotateY(15deg) scale(1.12); 
+            box-shadow: 
+                0 8px 20px rgba(0,0,0,0.15),
+                inset 0 1px 1px rgba(255,255,255,0.8);
+        }
         
         /* Grid cho biểu đồ và danh sách */
-        .dashboard-row { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 25px; animation: fadeInUp 0.8s ease-out; }
+        .dashboard-row { 
+            display: grid; grid-template-columns: 2fr 1fr; gap: 22px; margin-bottom: 28px; 
+            perspective: 1000px;
+            position: relative;
+            z-index: 10;
+            animation: fadeInUp 0.8s ease-out; 
+        }
         .dashboard-row.equal { grid-template-columns: 1fr 1fr; }
         
         .panel { 
-            background: var(--card-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); 
-            border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden;
-            transition: var(--transition); backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg); 
+            display: flex; flex-direction: column; overflow: hidden;
+            
+            /* 3D Glass Panel */
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.85));
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 
+                0 15px 35px -10px rgba(0, 0, 0, 0.08),
+                0 5px 15px rgba(0, 0, 0, 0.03),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+            
+            transform: perspective(1000px) translateZ(0);
+            transition: var(--transition);
         }
-        .panel:hover { box-shadow: var(--shadow-md); border-color: rgba(45, 102, 82, 0.2); }
-        .panel-header { padding: 20px 25px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.5); }
+        .panel:hover { 
+            transform: perspective(1000px) translateZ(10px) translateY(-4px); 
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.12),
+                0 10px 20px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+            border-color: rgba(255, 255, 255, 1);
+        }
+        .panel-header { padding: 20px 25px; border-bottom: 1px solid rgba(226, 232, 240, 0.6); display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.4); }
         .panel-title { font-size: 16px; font-weight: 800; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 10px; }
         .panel-body { padding: 25px; flex: 1; overflow-y: auto; max-height: 420px; }
         
         /* Danh sách Item Premium */
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.6); border: 1px solid transparent; border-radius: 12px; margin-bottom: 12px; transition: var(--transition); }
-        .list-item:hover { background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border-color: rgba(45,102,82,0.1); transform: translateX(4px); }
+        .list-item { 
+            display: flex; justify-content: space-between; align-items: center; padding: 15px; 
+            background: rgba(255, 255, 255, 0.6); 
+            border: 1px solid rgba(255, 255, 255, 0.8); 
+            border-radius: 14px; margin-bottom: 12px; 
+            transition: var(--transition);
+            transform: perspective(600px) translateZ(0);
+        }
+        .list-item:hover { 
+            background: #ffffff; 
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06); 
+            border-color: #ffffff; 
+            transform: perspective(600px) translateZ(8px) translateX(4px); 
+        }
         .list-item:last-child { margin-bottom: 0; }
         .item-info { display: flex; align-items: center; gap: 15px; }
         .item-img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; background: #f1f5f9; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -144,11 +227,69 @@
         .dropdown-options div:hover { background: #e6f0ec; color: #2d6652; transform: translateX(4px); }
         .dropdown-options div i { width: 16px; text-align: center; opacity: 0.7; }
 
+        /* Small Inline Filter Dropdown for Panel Headers */
+        .filter-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .filter-dropdown .filter-btn {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #b45309; /* Yellow/Orange matching the trophy */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .filter-dropdown .filter-btn:hover {
+            background: #ffffff;
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.5);
+            transform: translateY(-1px);
+        }
+        .filter-dropdown .filter-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            min-width: 130px;
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(10px);
+            display: none;
+            flex-direction: column;
+            padding: 6px;
+            z-index: 100;
+        }
+        .filter-dropdown.active .filter-menu { display: flex; animation: slideDown 0.2s ease-out; }
+        .filter-dropdown .filter-menu div {
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+        .filter-dropdown .filter-menu div:hover {
+            background: #fef3c7; /* light yellow bg */
+            color: #d97706; /* dark yellow/orange text */
+        }
+
         /* Animations */
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
         
         /* Loading Overlay */
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
@@ -280,6 +421,27 @@
             <div class="panel">
                 <div class="panel-header">
                     <h3 class="panel-title"><i class="fas fa-trophy" style="color:#f59e0b;"></i> Top 5 Sách Bán Chạy Nhất</h3>
+                    <div class="filter-dropdown" id="dropdown-top-books">
+                        <div class="filter-btn" onclick="toggleDropdown('dropdown-top-books')">
+                            <span id="lbl-top-books">
+                                <c:choose>
+                                    <c:when test="${topBooksFilter == 'today'}">Hôm nay</c:when>
+                                    <c:when test="${topBooksFilter == 'week'}">Tuần này</c:when>
+                                    <c:when test="${topBooksFilter == 'month'}">Tháng này</c:when>
+                                    <c:when test="${topBooksFilter == 'year'}">Năm nay</c:when>
+                                    <c:otherwise>Tất cả</c:otherwise>
+                                </c:choose>
+                            </span> 
+                            <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+                        </div>
+                        <div class="filter-menu">
+                            <div onclick="filterTopBooks('today')">Hôm nay</div>
+                            <div onclick="filterTopBooks('week')">Tuần này</div>
+                            <div onclick="filterTopBooks('month')">Tháng này</div>
+                            <div onclick="filterTopBooks('year')">Năm nay</div>
+                            <div onclick="filterTopBooks('all')">Tất cả</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="panel-body">
                     <c:forEach var="book" items="${topBooks}">
@@ -441,7 +603,7 @@
     // Dropdown Logic
     function toggleDropdown(id) {
         // Đóng các dropdown khác
-        document.querySelectorAll('.custom-dropdown').forEach(d => {
+        document.querySelectorAll('.custom-dropdown, .filter-dropdown').forEach(d => {
             if (d.id !== id) d.classList.remove('active');
         });
         document.getElementById(id).classList.toggle('active');
@@ -458,8 +620,8 @@
 
     // Đóng dropdown khi click ra ngoài
     document.addEventListener('click', function(e) {
-        if (!e.target.closest('.custom-dropdown')) {
-            document.querySelectorAll('.custom-dropdown').forEach(d => d.classList.remove('active'));
+        if (!e.target.closest('.custom-dropdown') && !e.target.closest('.filter-dropdown')) {
+            document.querySelectorAll('.custom-dropdown, .filter-dropdown').forEach(d => d.classList.remove('active'));
         }
     });
 
@@ -623,6 +785,10 @@
         }
     }
     </c:if>
+
+    function filterTopBooks(filterValue) {
+        window.location.href = 'dashboard?topBooksFilter=' + filterValue;
+    }
 </script>
 
 </body>

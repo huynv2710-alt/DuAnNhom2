@@ -41,7 +41,13 @@ public class DashboardServlet extends HttpServlet {
             double monthlyRevenue = dashboardService.getMonthlyRevenue();
             double yearlyRevenue = dashboardService.getYearlyRevenue();
             
-            List<Object[]> topBooks = dashboardService.getTopSellingBooks(5);
+            String topBooksFilter = request.getParameter("topBooksFilter");
+            if (topBooksFilter == null) {
+                topBooksFilter = "all";
+            }
+            
+            List<Object[]> topBooks = dashboardService.getTopSellingBooks(5, topBooksFilter);
+            request.setAttribute("topBooksFilter", topBooksFilter);
             List<Object[]> topCategories = dashboardService.getTopCategories(5);
             List<Object[]> topPublishers = dashboardService.getTopPublishers(5);
             List<Object[]> topEmployees = dashboardService.getTopEmployees(5);

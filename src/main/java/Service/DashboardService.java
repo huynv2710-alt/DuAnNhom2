@@ -91,11 +91,22 @@ public class DashboardService {
         return 0.0;
     }
 
-    public List<Object[]> getTopSellingBooks(int limit) {
+    public List<Object[]> getTopSellingBooks(int limit, String filter) {
         List<Object[]> list = new ArrayList<>();
+        String timeCondition = "";
+        if ("today".equals(filter)) {
+            timeCondition = " AND CAST(H.NgayTao AS DATE) = CAST(GETDATE() AS DATE) ";
+        } else if ("week".equals(filter)) {
+            timeCondition = " AND DATEPART(ww, H.NgayTao) = DATEPART(ww, GETDATE()) AND YEAR(H.NgayTao) = YEAR(GETDATE()) ";
+        } else if ("month".equals(filter)) {
+            timeCondition = " AND MONTH(H.NgayTao) = MONTH(GETDATE()) AND YEAR(H.NgayTao) = YEAR(GETDATE()) ";
+        } else if ("year".equals(filter)) {
+            timeCondition = " AND YEAR(H.NgayTao) = YEAR(GETDATE()) ";
+        }
+
         String sql = "SELECT TOP (?) S.TenSach, SUM(CT.SoLuong) as TotalSold, S.HinhAnh " +
-                     "FROM ChiTietHoaDon CT JOIN Sach S ON CT.MaSach = S.MaSach " +
-                     "JOIN HoaDon H ON CT.MaHoaDon = H.MaHoaDon WHERE H.TrangThai = 1 " +
+                     "FROM HoaDonChiTiet CT JOIN Sach S ON CT.MaSach = S.MaSach " +
+                     "JOIN HoaDon H ON CT.MaHD = H.MaHD WHERE H.TrangThai = 1 " + timeCondition +
                      "GROUP BY S.MaSach, S.TenSach, S.HinhAnh ORDER BY TotalSold DESC";
         try (Connection con = connect.myConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, limit);
@@ -110,9 +121,9 @@ public class DashboardService {
     public List<Object[]> getTopCategories(int limit) {
         List<Object[]> list = new ArrayList<>();
         String sql = "SELECT TOP (?) TL.TenTheLoai, SUM(CT.SoLuong) as TotalSold " +
-                     "FROM ChiTietHoaDon CT JOIN Sach S ON CT.MaSach = S.MaSach " +
+                     "FROM HoaDonChiTiet CT JOIN Sach S ON CT.MaSach = S.MaSach " +
                      "JOIN TheLoai TL ON S.MaTheLoai = TL.MaTheLoai " +
-                     "JOIN HoaDon H ON CT.MaHoaDon = H.MaHoaDon WHERE H.TrangThai = 1 " +
+                     "JOIN HoaDon H ON CT.MaHD = H.MaHD WHERE H.TrangThai = 1 " +
                      "GROUP BY TL.MaTheLoai, TL.TenTheLoai ORDER BY TotalSold DESC";
         try (Connection con = connect.myConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, limit);
@@ -125,9 +136,9 @@ public class DashboardService {
     public List<Object[]> getTopPublishers(int limit) {
         List<Object[]> list = new ArrayList<>();
         String sql = "SELECT TOP (?) NXB.TenNXB, SUM(CT.SoLuong) as TotalSold " +
-                     "FROM ChiTietHoaDon CT JOIN Sach S ON CT.MaSach = S.MaSach " +
+                     "FROM HoaDonChiTiet CT JOIN Sach S ON CT.MaSach = S.MaSach " +
                      "JOIN NhaXuatBan NXB ON S.MaNXB = NXB.MaNXB " +
-                     "JOIN HoaDon H ON CT.MaHoaDon = H.MaHoaDon WHERE H.TrangThai = 1 " +
+                     "JOIN HoaDon H ON CT.MaHD = H.MaHD WHERE H.TrangThai = 1 " +
                      "GROUP BY NXB.MaNXB, NXB.TenNXB ORDER BY TotalSold DESC";
         try (Connection con = connect.myConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, limit);
@@ -152,7 +163,7 @@ public class DashboardService {
 
     public List<Object[]> getRecentOrders(int limit) {
         List<Object[]> list = new ArrayList<>();
-        String sql = "SELECT TOP (?) H.MaHoaDon, KH.HoTen, H.TongTien, H.NgayTao " +
+        String sql = "SELECT TOP (?) H.MaHD, KH.HoTen, H.TongTien, H.NgayTao " +
                      "FROM HoaDon H LEFT JOIN KhachHang KH ON H.MaKH = KH.MaKH " +
                      "ORDER BY H.NgayTao DESC";
         try (Connection con = connect.myConnection(); PreparedStatement ps = con.prepareStatement(sql)) {

@@ -97,8 +97,15 @@
                     <input type="text" name="searchSach" value="${searchSach}" placeholder="Tìm kiếm sách bằng tên...">
                     <select name="maTheLoai" onchange="this.form.submit()">
                         <option value="0">-- Tất cả danh mục --</option>
-                        <c:forEach var="tl" items="${dsTheLoai}">
-                            <option value="${tl.maTheLoai}" ${maTheLoai == tl.maTheLoai ? 'selected' : ''}>${tl.tenTheLoai}</option>
+                        <c:forEach var="parent" items="${dsTheLoai}">
+                            <c:if test="${empty parent.maTheLoaiCha}">
+                                <option value="${parent.maTheLoai}" style="font-weight: bold; background: #f8fafc;" ${maTheLoai == parent.maTheLoai ? 'selected' : ''}>■ ${parent.tenTheLoai}</option>
+                                <c:forEach var="child" items="${dsTheLoai}">
+                                    <c:if test="${child.maTheLoaiCha == parent.maTheLoai}">
+                                        <option value="${child.maTheLoai}" ${maTheLoai == child.maTheLoai ? 'selected' : ''}>&nbsp;&nbsp;&nbsp;&nbsp;↳ ${child.tenTheLoai}</option>
+                                    </c:if>
+                                </c:forEach>
+                            </c:if>
                         </c:forEach>
                     </select>
                 </form>
@@ -161,7 +168,7 @@
                                 <form action="banhang" method="get" style="margin:0; display: flex; align-items: center;">
                                     <input type="hidden" name="action" value="updateCart">
                                     <input type="hidden" name="maSach" value="${item.maSach}">
-                                    <input type="number" name="soLuong" value="${item.soLuong}" min="1" onchange="this.form.submit()" style="width: 60px; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center; font-size:13px; font-weight: bold; outline: none;">
+                                    <input type="number" name="soLuong" value="${item.soLuong}" min="1" onchange="this.form.submit()" onkeydown="if(event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-') return false;" style="width: 60px; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center; font-size:13px; font-weight: bold; outline: none;">
                                 </form>
                                 <span style="color: #64748b;">x</span> <span><fmt:formatNumber value="${item.donGia}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                             </div>

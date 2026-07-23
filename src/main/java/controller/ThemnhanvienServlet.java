@@ -51,6 +51,9 @@ public class ThemnhanvienServlet extends HttpServlet {
         String cccd = request.getParameter("cccd").trim();
         String ngayCap = request.getParameter("ngayCapCCCD");
         String dacDiem = request.getParameter("dacDiemNhanDang").trim();
+        String noiCapCCCD = request.getParameter("noiCapCCCD");
+        if(noiCapCCCD != null) noiCapCCCD = noiCapCCCD.trim();
+        String ngayHetHan = request.getParameter("ngayHetHanCCCD");
         String username = request.getParameter("username").trim();
         String password = request.getParameter("password");
 
@@ -140,6 +143,16 @@ public class ThemnhanvienServlet extends HttpServlet {
             return;
         }
 
+        // =================== Ngày hết hạn CCCD ===================
+        Date ngayHetHanCCCD = null;
+        if (ngayHetHan != null && !ngayHetHan.isEmpty()) {
+            ngayHetHanCCCD = Date.valueOf(ngayHetHan);
+            if (!ngayCapCCCD.before(ngayHetHanCCCD)) {
+                showError(request, response, "Ngày cấp CCCD phải nhỏ hơn ngày hết hạn!");
+                return;
+            }
+        }
+
         // =================== Đặc điểm ===================
         if (dacDiem.length() < 5) {
             showError(request, response, "Đặc điểm nhận dạng phải có ít nhất 5 ký tự!");
@@ -158,6 +171,8 @@ public class ThemnhanvienServlet extends HttpServlet {
         nv.setCccd(cccd);
         nv.setNgayCapCCCD(ngayCapCCCD);
         nv.setDacDiemNhanDang(dacDiem);
+        nv.setNoiCapCCCD(noiCapCCCD);
+        nv.setNgayHetHanCCCD(ngayHetHanCCCD);
         nv.setMaTrangThai(Integer.parseInt(request.getParameter("maTrangThai")));
         // ======= Thêm nhân viên =======
 

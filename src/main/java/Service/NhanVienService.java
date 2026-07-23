@@ -14,7 +14,8 @@ public class NhanVienService {
 
         String sql = "SELECT nv.MaNV, nv.HoTen, nv.NgaySinh, nv.GioiTinh, " +
                 "nv.SDT, nv.Email, nv.DiaChi, nv.MaTrangThai, tt.TenTrangThai, " +
-                "nv.CCCD, nv.NgayCapCCCD, nv.DacDiemNhanDang " +
+                "nv.CCCD, nv.NgayCapCCCD, nv.DacDiemNhanDang, " +
+                "nv.NoiCapCCCD, nv.NgayHetHanCCCD " +
                 "FROM TaiKhoan tk " +
                 "LEFT JOIN NhanVien nv ON tk.MaNV = nv.MaNV " +
                 "LEFT JOIN TrangThaiNhanVien tt ON nv.MaTrangThai = tt.MaTrangThai " +
@@ -42,7 +43,9 @@ public class NhanVienService {
                             rs.getString("TenTrangThai"),
                             rs.getString("CCCD"),
                             rs.getDate("NgayCapCCCD"),
-                            rs.getString("DacDiemNhanDang")
+                            rs.getString("DacDiemNhanDang"),
+                            rs.getString("NoiCapCCCD"),
+                            rs.getDate("NgayHetHanCCCD")
                     );
                 }
             }
