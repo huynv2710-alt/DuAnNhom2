@@ -46,6 +46,7 @@
             <thead>
                 <tr>
                     <th>Username</th>
+                    <th>Mật khẩu</th>
                     <th>Họ tên</th>
                     <th>Quyền</th>
                     <th>Trạng thái</th>
@@ -56,6 +57,7 @@
                 <c:forEach var="tk" items="${listTK}">
                     <tr>
                         <td><b>${tk.username}</b></td>
+                        <td style="color: #ef4444; font-weight: bold; font-family: monospace;">${tk.pass}</td>
                         <td>${tk.hoTen}</td>
                         <td>${tk.tenQuyen}</td>
                         <td class="
@@ -69,7 +71,7 @@
                             </c:choose>
                         </td>
                         <td>
-                            <button class="btn-edit" style="border:none; cursor:pointer;" onclick="openEditModal('${tk.username}', ${tk.maQuyen})">
+                            <button class="btn-edit" style="border:none; cursor:pointer;" onclick="openEditModal('${tk.username}', '${tk.pass}', ${tk.maQuyen})">
                                 Sửa
                             </button>
                         </td>
@@ -93,8 +95,8 @@
                 <input type="text" id="editUsername" name="newUsername" required>
             </div>
             <div class="form-group">
-                <label>Mật Khẩu Mới (Bỏ trống = không đổi)</label>
-                <input type="password" name="password">
+                <label>Mật Khẩu</label>
+                <input type="text" id="editPassword" name="password" required>
             </div>
             <div class="form-group">
                 <label>Vai trò</label>
@@ -118,9 +120,10 @@
     function closeModal(id) {
         document.getElementById(id).style.display = 'none';
     }
-    function openEditModal(username, maQuyen) {
+    function openEditModal(username, pass, maQuyen) {
         document.getElementById('oldUsername').value = username;
         document.getElementById('editUsername').value = username;
+        document.getElementById('editPassword').value = pass;
         document.getElementById('editMaQuyen').value = maQuyen;
         openModal('editModal');
     }

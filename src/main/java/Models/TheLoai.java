@@ -4,13 +4,15 @@ public class TheLoai {
     private int maTheLoai;
     private String tenTheLoai;
     private String moTa;
+    private Integer maTheLoaiCha;
 
     public TheLoai() {}
 
-    public TheLoai(int maTheLoai, String tenTheLoai, String moTa) {
+    public TheLoai(int maTheLoai, String tenTheLoai, String moTa, Integer maTheLoaiCha) {
         this.maTheLoai = maTheLoai;
         this.tenTheLoai = tenTheLoai;
         this.moTa = moTa;
+        this.maTheLoaiCha = maTheLoaiCha;
     }
 
     public int getMaTheLoai() { return maTheLoai; }
@@ -19,4 +21,10 @@ public class TheLoai {
     public void setTenTheLoai(String tenTheLoai) { this.tenTheLoai = tenTheLoai; }
     public String getMoTa() { return moTa; }
     public void setMoTa(String moTa) { this.moTa = moTa; }
+    public Integer getMaTheLoaiCha() { return maTheLoaiCha; }
+    public void setMaTheLoaiCha(Integer maTheLoaiCha) { this.maTheLoaiCha = maTheLoaiCha; }
+    
+    private int soLuongSach;
+    public int getSoLuongSach() { return soLuongSach; }
+    public void setSoLuongSach(int soLuongSach) { this.soLuongSach = soLuongSach; }
 }

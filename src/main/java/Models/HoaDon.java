@@ -1,13 +1,16 @@
 package Models;
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class HoaDon {
     private int maHD;
     private int maNV;
     private int maKH;
-    private Date ngayTao;
+    private Timestamp ngayTao;
     private double tongTien;
     private int trangThai; // 1: Hoàn thành, 0: Đã hủy
+    private double giamGia;
+    private String phuongThucTT;
+    private Integer maKM;
     
     // For display purpose
     private String tenNV;
@@ -16,7 +19,7 @@ public class HoaDon {
 
     public HoaDon() {}
 
-    public HoaDon(int maHD, int maNV, int maKH, Date ngayTao, double tongTien, int trangThai) {
+    public HoaDon(int maHD, int maNV, int maKH, Timestamp ngayTao, double tongTien, int trangThai) {
         this.maHD = maHD;
         this.maNV = maNV;
         this.maKH = maKH;
@@ -31,8 +34,8 @@ public class HoaDon {
     public void setMaNV(int maNV) { this.maNV = maNV; }
     public int getMaKH() { return maKH; }
     public void setMaKH(int maKH) { this.maKH = maKH; }
-    public Date getNgayTao() { return ngayTao; }
-    public void setNgayTao(Date ngayTao) { this.ngayTao = ngayTao; }
+    public Timestamp getNgayTao() { return ngayTao; }
+    public void setNgayTao(Timestamp ngayTao) { this.ngayTao = ngayTao; }
     public double getTongTien() { return tongTien; }
     public void setTongTien(double tongTien) { this.tongTien = tongTien; }
     public int getTrangThai() { return trangThai; }
@@ -44,4 +47,13 @@ public class HoaDon {
     public void setTenKH(String tenKH) { this.tenKH = tenKH; }
     public String getSdtKH() { return sdtKH; }
     public void setSdtKH(String sdtKH) { this.sdtKH = sdtKH; }
+    
+    public double getGiamGia() { return giamGia; }
+    public void setGiamGia(double giamGia) { this.giamGia = giamGia; }
+    
+    public String getPhuongThucTT() { return phuongThucTT; }
+    public void setPhuongThucTT(String phuongThucTT) { this.phuongThucTT = phuongThucTT; }
+    
+    public Integer getMaKM() { return maKM; }
+    public void setMaKM(Integer maKM) { this.maKM = maKM; }
 }

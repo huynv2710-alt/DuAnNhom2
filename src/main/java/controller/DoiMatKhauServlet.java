@@ -44,6 +44,12 @@ public class DoiMatKhauServlet extends HttpServlet {
             request.getRequestDispatcher("doimatkhau.jsp").forward(request, response);
             return;
         }
+        // Validate new password strength
+        if (!isStrongPassword(newPass)) {
+            request.setAttribute("error", "Mat khau moi yeu qua yeu: it nhat 8 ky tu, chua chu in hoa, chu thuong va so.");
+            request.getRequestDispatcher("doimatkhau.jsp").forward(request, response);
+            return;
+        }
 
         TaiKhoan tk = tkService.getUser(username);
         if (tk == null || !tk.getPass().equals(oldPass)) {
@@ -59,5 +65,18 @@ public class DoiMatKhauServlet extends HttpServlet {
             request.setAttribute("error", "Doi mat khau that bai!");
         }
         request.getRequestDispatcher("doimatkhau.jsp").forward(request, response);
+    }
+
+    // Helper method to check password strength
+    private boolean isStrongPassword(String pass) {
+        if (pass == null) return false;
+        if (pass.length() < 8) return false;
+        boolean hasUpper = false, hasLower = false, hasDigit = false;
+        for (char c : pass.toCharArray()) {
+            if (Character.isUpperCase(c)) hasUpper = true;
+            else if (Character.isLowerCase(c)) hasLower = true;
+            else if (Character.isDigit(c)) hasDigit = true;
+        }
+        return hasUpper && hasLower && hasDigit;
     }
 }

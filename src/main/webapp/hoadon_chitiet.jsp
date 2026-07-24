@@ -67,6 +67,17 @@
 
     <a href="quanlyhoadon" class="print-hide" style="display:inline-block; margin-bottom:20px; color:#64748b; text-decoration:none; font-weight:600;"><i class="fas fa-arrow-left"></i> Quay lại</a>
 
+    <c:if test="${param.fromPOS == '1'}">
+        <div class="print-hide" style="background: #dcfce7; color: #166534; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
+            <i class="fas fa-check-circle"></i> Thanh toán thành công! Vui lòng ấn "IN HÓA ĐƠN" để hoàn tất.
+        </div>
+    </c:if>
+    <c:if test="${param.success == '1' && param.fromPOS != '1'}">
+        <div class="print-hide" style="background: #dcfce7; color: #166534; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
+            <i class="fas fa-check-circle"></i> Đã nhận được tiền. Thanh toán thành công!
+        </div>
+    </c:if>
+
     <div class="receipt-card">
         <div class="receipt-header">
             <div class="store-info">
@@ -77,7 +88,12 @@
                 </div>
             </div>
             <div class="invoice-info">
-                <div class="invoice-title">HÓA ĐƠN BÁN LẺ</div>
+                <div class="invoice-title">
+                    HÓA ĐƠN BÁN LẺ
+                    <span style="font-size: 12px; padding: 3px 8px; border-radius: 4px; ${hd.trangThai == 1 ? 'background: #dcfce7; color: #166534;' : (hd.trangThai == 0 ? 'background: #fef08a; color: #854d0e;' : 'background: #fee2e2; color: #991b1b;')} vertical-align: middle; margin-left: 10px;">
+                        ${hd.trangThai == 1 ? 'Đã TT' : (hd.trangThai == 0 ? 'Chờ TT' : 'Đã Hủy')}
+                    </span>
+                </div>
                 <div class="invoice-meta">
                     Mã HĐ: <b>#${param.id}</b><br>
                     Ngày lập: <fmt:formatDate value="${hd.ngayTao}" pattern="HH:mm:ss dd/MM/yyyy"/>
@@ -91,7 +107,7 @@
                     <div style="font-weight: 700; font-size: 16px; margin-bottom: 4px;">${not empty hd.tenKH ? hd.tenKH : 'Khách lẻ'}</div>
                     <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">Số điện thoại: ${not empty hd.sdtKH ? hd.sdtKH : '0000000000'}</div>
                     <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">Địa chỉ: Tại cửa hàng</div>
-                    <div style="font-size: 13px; color: #64748b;">Hình thức TT: <span style="font-weight: bold; color: #1e293b;">${sessionScope.lastPhuongThucTT eq 'ChuyenKhoan' ? 'Chuyển khoản' : 'Tiền mặt'}</span></div>
+                    <div style="font-size: 13px; color: #64748b;">Hình thức TT: <span style="font-weight: bold; color: #1e293b;">${not empty hd.phuongThucTT ? hd.phuongThucTT : 'Chưa xác định'}</span></div>
                 </div>
             <div class="party-box">
                 <div class="party-heading">ĐƠN VỊ BÁN HÀNG</div>
@@ -131,35 +147,55 @@
             </div>
             <div class="summary-row">
                 <span>Giảm giá:</span>
-                <span><fmt:formatNumber value="${not empty sessionScope.lastGiamGia ? sessionScope.lastGiamGia : 0}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                <span><fmt:formatNumber value="${hd.giamGia}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
             </div>
             <div class="summary-row total">
                 <span>Tổng cộng:</span>
-                <span><fmt:formatNumber value="${total - (not empty sessionScope.lastGiamGia ? sessionScope.lastGiamGia : 0)}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                <span><fmt:formatNumber value="${total - hd.giamGia}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
             </div>
-            <c:if test="${not empty sessionScope.lastTienKhachDua && sessionScope.lastPhuongThucTT eq 'TienMat'}">
+            <c:if test="${not empty sessionScope.lastTienKhachDua && hd.phuongThucTT eq 'Tiền mặt'}">
             <div class="summary-row" style="margin-top: 15px;">
                 <span>Khách đưa:</span>
                 <span><fmt:formatNumber value="${sessionScope.lastTienKhachDua}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
             </div>
             <div class="summary-row">
                 <span>Tiền thừa:</span>
-                <span><fmt:formatNumber value="${sessionScope.lastTienKhachDua - (total - (not empty sessionScope.lastGiamGia ? sessionScope.lastGiamGia : 0))}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
+                <span><fmt:formatNumber value="${sessionScope.lastTienKhachDua - (total - hd.giamGia)}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
             </div>
             </c:if>
         </div>
         
         <div class="print-hide" style="text-align: center; margin-top: 40px;">
-            <button onclick="window.print()" style="background: #2d6652; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 4px 10px rgba(45,102,82,0.2);"><i class="fas fa-print"></i> IN HÓA ĐƠN NÀY</button>
+            <c:choose>
+                <c:when test="${hd.trangThai == 1}">
+                    <span style="background: #dcfce7; color: #166534; padding: 5px 15px; border-radius: 20px; font-weight: 700; font-size: 14px;"><i class="fas fa-check-circle"></i> Đã Thanh Toán</span>
+                    <button onclick="window.print()" style="background: #2d6652; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 4px 10px rgba(45,102,82,0.2); transition: 0.2s; margin-left: 15px;"><i class="fas fa-print"></i> IN HÓA ĐƠN</button>
+                </c:when>
+                <c:when test="${hd.trangThai == 0}">
+                    <span style="background: #fef9c3; color: #854d0e; padding: 5px 15px; border-radius: 20px; font-weight: 700; font-size: 14px;"><i class="fas fa-clock"></i> Chờ Thanh Toán</span>
+                    <a href="quanlyhoadon?action=cancel&id=${hd.maHD}" onclick="return confirm('Bạn có chắc chắn muốn hủy hóa đơn này không?');" style="background: #ef4444; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; box-shadow: 0 4px 10px rgba(239,68,68,0.2); display: inline-block; transition: 0.2s; margin-left: 15px;"><i class="fas fa-times-circle"></i> HỦY HÓA ĐƠN</a>
+                </c:when>
+                <c:otherwise>
+                    <span style="background: #fee2e2; color: #991b1b; padding: 5px 15px; border-radius: 20px; font-weight: 700; font-size: 14px;"><i class="fas fa-times-circle"></i> Đã Hủy</span>
+                </c:otherwise>
+            </c:choose>
             <a href="banhang" style="display:inline-block; margin-left: 15px; background: #e2e8f0; color: #1e293b; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;"><i class="fas fa-shopping-cart"></i> BÁN ĐƠN MỚI</a>
         </div>
     </div>
 
+    <c:if test="${param.fromPOS == '1'}">
+        <script>
+            // Khi người dùng in xong (hoặc ấn Hủy in), tự động chuyển về trang Bán hàng
+            window.onafterprint = function() {
+                window.location.href = 'banhang?success=1';
+            };
+        </script>
+    </c:if>
     <c:if test="${param.print == 'true'}">
         <script>
-            window.onload = function() {
-                setTimeout(function() { window.print(); }, 500);
-            };
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(function() { window.print(); }, 600);
+            });
         </script>
     </c:if>
 </main>

@@ -45,10 +45,30 @@ public class suanhanvienServlet extends HttpServlet {
             nv.setCccd(request.getParameter("cccd"));
             nv.setNgayCapCCCD(java.sql.Date.valueOf(request.getParameter("ngayCapCCCD")));
             nv.setDacDiemNhanDang(request.getParameter("dacDiemNhanDang"));
+            
+            String noiCap = request.getParameter("noiCapCCCD");
+            if(noiCap != null) nv.setNoiCapCCCD(noiCap.trim());
+            
+            String ngayHetHan = request.getParameter("ngayHetHanCCCD");
+            if (ngayHetHan != null && !ngayHetHan.isEmpty()) {
+                java.sql.Date expDate = java.sql.Date.valueOf(ngayHetHan);
+                if (!nv.getNgayCapCCCD().before(expDate)) {
+                    response.setContentType("text/html;charset=UTF-8");
+                    response.getWriter().println("<script>alert('Ngày cấp CCCD phải nhỏ hơn ngày hết hạn!'); window.history.back();</script>");
+                    return;
+                }
+                nv.setNgayHetHanCCCD(expDate);
+            }
+            
             nv.setMaTrangThai(Integer.parseInt(request.getParameter("maTrangThai")));
             
-            qlService.update(nv);
-            response.sendRedirect("quanlinhanvien");
+            try {
+                qlService.update(nv);
+                response.sendRedirect("quanlinhanvien");
+            } catch (RuntimeException e) {
+                response.setContentType("text/html;charset=UTF-8");
+                response.getWriter().println("<script>alert('Lỗi SQL khi sửa nhân viên: " + e.getMessage().replace("'", "\\'") + "'); window.history.back();</script>");
+            }
         } else {
             response.sendRedirect("index.jsp");
         }
@@ -84,6 +104,8 @@ public class suanhanvienServlet extends HttpServlet {
             session.setAttribute("cccd", nv.getCccd());
             session.setAttribute("ngayCapCCCD", nv.getNgayCapCCCD());
             session.setAttribute("dacDiemNhanDang", nv.getDacDiemNhanDang());
+            session.setAttribute("noiCapCCCD", nv.getNoiCapCCCD());
+            session.setAttribute("ngayHetHanCCCD", nv.getNgayHetHanCCCD());
             session.setAttribute("tenTrangThai", nv.getTenTrangThai());
             session.setAttribute("maNV", nv.getMaNV());
         } else {

@@ -28,11 +28,25 @@ public class TheLoaiServlet extends HttpServlet {
         String tenTheLoai = request.getParameter("tenTheLoai");
         String moTa = request.getParameter("moTa");
 
-        if ("add".equals(action)) {
-            service.addTheLoai(tenTheLoai, moTa);
-        } else if ("edit".equals(action)) {
-            int id = Integer.parseInt(request.getParameter("maTheLoai"));
-            service.updateTheLoai(id, tenTheLoai, moTa);
+        try {
+            if ("add".equals(action)) {
+                String cha = request.getParameter("maTheLoaiCha");
+                Integer maTheLoaiCha = (cha != null && !cha.trim().isEmpty()) ? Integer.parseInt(cha) : null;
+                service.addTheLoai(tenTheLoai, moTa, maTheLoaiCha);
+                request.getSession().setAttribute("success", "Thêm thể loại thành công!");
+            } else if ("edit".equals(action)) {
+                int id = Integer.parseInt(request.getParameter("maTheLoai"));
+                String cha = request.getParameter("maTheLoaiCha");
+                Integer maTheLoaiCha = (cha != null && !cha.trim().isEmpty()) ? Integer.parseInt(cha) : null;
+                service.updateTheLoai(id, tenTheLoai, moTa, maTheLoaiCha);
+                request.getSession().setAttribute("success", "Cập nhật thể loại thành công!");
+            } else if ("delete".equals(action)) {
+                int id = Integer.parseInt(request.getParameter("maTheLoai"));
+                service.deleteTheLoai(id);
+                request.getSession().setAttribute("success", "Xóa thể loại thành công!");
+            }
+        } catch (RuntimeException e) {
+            request.getSession().setAttribute("error", e.getMessage());
         }
 
         response.sendRedirect("quanlytheloai");

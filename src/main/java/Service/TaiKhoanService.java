@@ -15,7 +15,7 @@ public class TaiKhoanService {
         try (Connection con = connect.myConnection();
              PreparedStatement ps = con.prepareStatement(
                      "SELECT 1 FROM TaiKhoan tk JOIN NhanVien nv ON tk.MaNV = nv.MaNV " +
-                     "WHERE tk.Username=? AND tk.PASS=? AND (nv.MaTrangThai IN (1, 2) OR nv.MaTrangThai IS NULL)")) {
+                     "WHERE tk.Username=? AND tk.PASS=? AND (nv.MaTrangThai = 1 OR nv.MaTrangThai IS NULL)")) {
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
@@ -36,7 +36,7 @@ public class TaiKhoanService {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 int maTrangThai = rs.getInt("MaTrangThai");
-                if (rs.wasNull() || maTrangThai == 1 || maTrangThai == 2) {
+                if (rs.wasNull() || maTrangThai == 1) {
                     return 1;
                 } else {
                     return -1;
@@ -131,8 +131,7 @@ public class TaiKhoanService {
     public boolean addTaiKhoan(String username, String password, int maNV, int maPhanQuyen) {
         try (Connection con = connect.myConnection();
              PreparedStatement ps = con.prepareStatement(
-                     "INSERT INTO TaiKhoan (MaTK, Username, PASS, MaNV, MaPhanQuyen) " +
-                     "SELECT (SELECT ISNULL(MAX(MaTK),0)+1 FROM TaiKhoan), ?, ?, ?, ?")) {
+                     "INSERT INTO TaiKhoan (Username, PASS, MaNV, MaPhanQuyen) VALUES (?, ?, ?, ?)")) {
             ps.setString(1, username);
             ps.setString(2, password);
             ps.setInt(3, maNV);

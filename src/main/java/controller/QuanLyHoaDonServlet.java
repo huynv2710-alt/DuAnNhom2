@@ -34,10 +34,36 @@ public class QuanLyHoaDonServlet extends HttpServlet {
             request.setAttribute("details", details);
             request.getRequestDispatcher("hoadon_chitiet.jsp").forward(request, response);
             return;
+        } else if ("cancel".equals(action)) {
+            int maHD = Integer.parseInt(request.getParameter("id"));
+            HoaDon hd = hoaDonService.getHoaDonById(maHD);
+            
+            // LỖI LOGIC ĐÃ FIX: Chỉ thực hiện hủy và hoàn kho nếu hóa đơn chưa bị hủy
+            if (hd != null && hd.getTrangThai() != 2) {
+                hoaDonService.updateTrangThai(maHD, 2); // 2 = Đã hủy
+                
+
+                List<HoaDonChiTiet> detailsToCancel = hoaDonService.getChiTietByHoaDonId(maHD);
+                if (detailsToCancel != null) {
+                    for (HoaDonChiTiet ct : detailsToCancel) {
+                        hoaDonService.increaseSachQuantity(ct.getMaSach(), ct.getSoLuong());
+                    }
+                }
+            }
+
+            response.sendRedirect("quanlyhoadon?action=viewDetail&id=" + maHD);
+            return;
         }
 
-        List<HoaDon> list = hoaDonService.getAllHoaDon();
+        String keyword = request.getParameter("keyword");
+        String fromDate = request.getParameter("fromDate");
+        String toDate = request.getParameter("toDate");
+
+        List<HoaDon> list = hoaDonService.getAllHoaDon(keyword, fromDate, toDate);
         request.setAttribute("listHD", list);
+        request.setAttribute("keyword", keyword);
+        request.setAttribute("fromDate", fromDate);
+        request.setAttribute("toDate", toDate);
         request.getRequestDispatcher("quanlyhoadon.jsp").forward(request, response);
     }
 }
