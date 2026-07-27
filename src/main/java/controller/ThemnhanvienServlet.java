@@ -106,8 +106,8 @@ public class ThemnhanvienServlet extends HttpServlet {
             return;
         }
 
-        if (Period.between(birth, LocalDate.now()).getYears() < 18) {
-            showError(request, response, "Nhân viên phải từ 18 tuổi trở lên!");
+        if (Period.between(birth, LocalDate.now()).getYears() < 16) {
+            showError(request, response, "Nhân viên phải từ 16 tuổi trở lên!");
             return;
         }
 

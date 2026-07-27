@@ -215,7 +215,12 @@
                         <span id="tamTinh"><fmt:formatNumber value="${tongTien}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></span>
                     </div>
                     <div class="checkout-group">
-                        <label>VOUCHER / KHUYẾN MÃI</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <label style="margin-bottom: 0;">VOUCHER / KHUYẾN MÃI</label>
+                            <c:if test="${sessionScope.quyen == 'admin'}">
+                                <a href="javascript:void(0)" onclick="openAddKMModal()" style="font-size:12px; color:#2d6652; font-weight:600;"><i class="fas fa-plus"></i> Thêm mã mới</a>
+                            </c:if>
+                        </div>
                         <select name="maKM" id="maKM" onchange="calculateTotal()">
                             <option value="0" data-phantram="0">-- Không áp dụng --</option>
                             <c:forEach var="km" items="${dsKhuyenMai}">
@@ -337,6 +342,54 @@
     </div>
 
 </main>
+
+<!-- Modal Thêm Khuyến Mãi -->
+<div id="addKMModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
+    <div style="background-color:#fff; margin:10% auto; padding:20px; border-radius:8px; width:400px; box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+        <h3 style="margin-top:0; color:#1e293b;">Thêm Khuyến Mãi Mới</h3>
+        <form action="quanlykhuyenmai" method="post" onsubmit="return validateKMForm()">
+            <input type="hidden" name="action" value="add">
+            <input type="hidden" name="trangThai" value="1">
+            <div style="margin-bottom:15px;">
+                <label style="display:block; font-size:13px; font-weight:600; color:#64748b; margin-bottom:5px;">Tên Khuyến Mãi</label>
+                <input type="text" name="tenKM" required style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; box-sizing:border-box; outline:none;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; font-size:13px; font-weight:600; color:#64748b; margin-bottom:5px;">Phần trăm giảm (%)</label>
+                <input type="number" name="phanTramGiam" min="1" max="100" required style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; box-sizing:border-box; outline:none;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; font-size:13px; font-weight:600; color:#64748b; margin-bottom:5px;">Ngày Bắt Đầu</label>
+                <input type="datetime-local" id="kmNgayBatDau" name="ngayBatDau" required style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; box-sizing:border-box; outline:none;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; font-size:13px; font-weight:600; color:#64748b; margin-bottom:5px;">Ngày Kết Thúc</label>
+                <input type="datetime-local" id="kmNgayKetThuc" name="ngayKetThuc" required style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; box-sizing:border-box; outline:none;">
+            </div>
+            <div style="text-align:right; margin-top:20px;">
+                <button type="button" onclick="closeAddKMModal()" style="padding:8px 15px; background:#e2e8f0; border:none; border-radius:4px; cursor:pointer; color:#475569; font-weight:600; margin-right:10px;">Hủy</button>
+                <button type="submit" style="padding:8px 15px; background:#2d6652; border:none; border-radius:4px; cursor:pointer; color:white; font-weight:600;">Lưu Mã</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+function openAddKMModal() {
+    document.getElementById('addKMModal').style.display = 'block';
+}
+function closeAddKMModal() {
+    document.getElementById('addKMModal').style.display = 'none';
+}
+function validateKMForm() {
+    let start = new Date(document.getElementById('kmNgayBatDau').value);
+    let end = new Date(document.getElementById('kmNgayKetThuc').value);
+    if(end <= start) {
+        alert("Ngày kết thúc phải sau ngày bắt đầu!");
+        return false;
+    }
+    return true;
+}
+</script>
 
 </body>
 </html>

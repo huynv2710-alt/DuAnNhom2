@@ -66,7 +66,7 @@
 <div id="nxbModal" class="modal">
     <div class="modal-content">
         <div class="modal-header" id="modalTitle">Thêm Nhà Xuất Bản</div>
-        <form action="quanlynxb" method="post">
+        <form action="quanlynxb" method="post" onsubmit="return validateNXB()">
             <input type="hidden" name="action" id="action" value="add">
             <input type="hidden" name="maNXB" id="maNXB" value="0">
             <div class="form-group">
@@ -74,12 +74,22 @@
                 <input type="text" id="tenNXB" name="tenNXB" required>
             </div>
             <div class="form-group">
-                <label>Số Điện Thoại</label>
-                <input type="text" id="sdt" name="sdt">
+                <label>Số Điện Thoại <span style="color:red">*</span></label>
+                <input type="text" id="sdt" name="sdt" required oninput="validateNXB()">
+                <span id="errSdtNXB" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
             </div>
             <div class="form-group">
                 <label>Địa Chỉ</label>
-                <input type="text" id="diaChi" name="diaChi">
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <select id="cityNXB" style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                        <option value="" selected>Chọn Tỉnh Thành</option>
+                    </select>
+                    <select id="wardNXB" style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                        <option value="" selected>Chọn Phường Xã</option>
+                    </select>
+                </div>
+                <input type="text" id="addressDetailNXB" placeholder="Nhập bổ sung: Số nhà, Thôn xóm..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <input type="hidden" name="diaChi" id="diaChiNXB">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-cancel" onclick="closeModal()">Hủy</button>
@@ -95,13 +105,98 @@
         document.getElementById('action').value = id == 0 ? 'add' : 'edit';
         document.getElementById('maNXB').value = id;
         document.getElementById('tenNXB').value = name;
-        document.getElementById('diaChi').value = address;
+        document.getElementById('diaChiNXB').value = address;
         document.getElementById('sdt').value = phone;
+        
+        if (id == 0) {
+            document.getElementById('addressDetailNXB').value = '';
+            document.getElementById('cityNXB').value = '';
+            document.getElementById('wardNXB').innerHTML = '<option value="">Chọn Phường Xã</option>';
+        }
+        
+        if(document.getElementById('errSdtNXB')) document.getElementById('errSdtNXB').style.display = 'none';
+        let btnSubmit = document.querySelector(".btn-save");
+        if(btnSubmit) btnSubmit.disabled = false;
+
         document.getElementById('nxbModal').style.display = 'block';
     }
     
     function closeModal() {
         document.getElementById('nxbModal').style.display = 'none';
+    }
+
+    function validateNXB() {
+        let isValid = true;
+        let sdt = document.getElementById('sdt').value.trim();
+        let phoneRegex = /^(0|\+84)[0-9]{9}$/;
+        if(sdt.length > 0 && !phoneRegex.test(sdt)) {
+            if(document.getElementById('errSdtNXB')) {
+                document.getElementById('errSdtNXB').innerText = "Số điện thoại phải bắt đầu bằng 0 hoặc +84 và đủ 10 số!";
+                document.getElementById('errSdtNXB').style.display = 'block';
+            }
+            isValid = false;
+        } else {
+            if(document.getElementById('errSdtNXB')) document.getElementById('errSdtNXB').style.display = 'none';
+        }
+
+        let btnSubmit = document.querySelector(".btn-save");
+        if(btnSubmit) btnSubmit.disabled = !isValid;
+        
+        return isValid;
+    }
+
+    // Load API Tỉnh/Thành
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch('https://provinces.open-api.vn/api/?depth=2')
+            .then(response => response.json())
+            .then(data => {
+                let citySelect = document.getElementById('cityNXB');
+                let wardSelect = document.getElementById('wardNXB');
+                
+                if(!citySelect) return;
+
+                data.forEach(city => {
+                    let opt = document.createElement('option');
+                    opt.value = city.name;
+                    opt.setAttribute('data-code', city.code);
+                    opt.textContent = city.name;
+                    citySelect.appendChild(opt);
+                });
+
+                citySelect.addEventListener('change', function() {
+                    wardSelect.innerHTML = '<option value="">Chọn Phường Xã</option>';
+                    let selectedCity = data.find(c => c.code == citySelect.options[citySelect.selectedIndex].getAttribute('data-code'));
+                    if (selectedCity && selectedCity.districts) {
+                        selectedCity.districts.forEach(d => {
+                            let opt = document.createElement('option');
+                            opt.value = d.name;
+                            opt.setAttribute('data-code', d.code);
+                            opt.textContent = d.name;
+                            wardSelect.appendChild(opt);
+                        });
+                    }
+                    updateAddressNXB();
+                });
+
+                wardSelect.addEventListener('change', updateAddressNXB);
+                document.getElementById('addressDetailNXB').addEventListener('input', updateAddressNXB);
+            })
+            .catch(error => {
+                console.error("Lỗi tải API: ", error);
+            });
+    });
+
+    function updateAddressNXB() {
+        let city = document.getElementById('cityNXB').value;
+        let ward = document.getElementById('wardNXB').value;
+        let detail = document.getElementById('addressDetailNXB').value;
+        
+        let fullAddress = [];
+        if (detail) fullAddress.push(detail);
+        if (ward) fullAddress.push(ward);
+        if (city) fullAddress.push(city);
+        
+        document.getElementById('diaChiNXB').value = fullAddress.join(', ');
     }
 </script>
 
