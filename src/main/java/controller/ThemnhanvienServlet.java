@@ -63,7 +63,7 @@ public class ThemnhanvienServlet extends HttpServlet {
 
         // =================== Mã nhân viên ===================
         if (!maNVStr.matches("\\d{1,5}")) {
-            showError(request, response, "Mã nhân viên bắt đầu từ số 1 không quá nhiều số");
+            showError(request, response, "Mã nhân viên chỉ được từ 1 đến 5 chữ số!");
             return;
         }
 
@@ -86,8 +86,8 @@ public class ThemnhanvienServlet extends HttpServlet {
         }
 
         // =================== Password ===================
-        if (password.length() < 3) {
-            showError(request, response, "Mật khẩu phải có ít nhất 3 ký tự!");
+        if (password.length() < 8) {
+            showError(request, response, "Mật khẩu phải có ít nhất 8 ký tự!");
             return;
         }
 
@@ -106,9 +106,8 @@ public class ThemnhanvienServlet extends HttpServlet {
             return;
         }
 
-
-        if (Period.between(birth, LocalDate.now()).getYears() < 18) {
-            showError(request, response, "Nhân viên phải từ 18 tuổi trở lên!");
+        if (Period.between(birth, LocalDate.now()).getYears() < 16) {
+            showError(request, response, "Nhân viên phải từ 16 tuổi trở lên!");
             return;
         }
 

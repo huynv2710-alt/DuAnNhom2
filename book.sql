@@ -1,7 +1,7 @@
-CREATE DATABASE BookStore;
+CREATE DATABASE BOOK;
 GO
 
-USE BookStore;
+USE BOOK;
 GO
 
 -- ==========================
@@ -51,6 +51,8 @@ CREATE TABLE NhanVien (
     MaTrangThai INT,
     CCCD VARCHAR(20) UNIQUE,
     NgayCapCCCD DATE,
+    NoiCapCCCD NVARCHAR(200),
+    NgayHetHanCCCD DATE,
     DacDiemNhanDang NVARCHAR(200),
     CONSTRAINT FK_NhanVien_TrangThai FOREIGN KEY (MaTrangThai) REFERENCES TrangThaiNhanVien(MaTrangThai)
 );
@@ -71,7 +73,9 @@ CREATE TABLE TaiKhoan (
 CREATE TABLE TheLoai (
     MaTheLoai INT IDENTITY(1,1) PRIMARY KEY,
     TenTheLoai NVARCHAR(100) UNIQUE,
-    MoTa NVARCHAR(255)
+    MoTa NVARCHAR(255),
+    MaTheLoaiCha INT NULL,
+    CONSTRAINT FK_TheLoai_TheLoaiCha FOREIGN KEY (MaTheLoaiCha) REFERENCES TheLoai(MaTheLoai)
 );
 
 CREATE TABLE NhaXuatBan (
@@ -180,17 +184,20 @@ INSERT INTO TrangThaiNhanVien(MaTrangThai, TenTrangThai) VALUES
 (1, N'Đang làm việc'),
 (2, N'Nghỉ việc');
 
-INSERT INTO NhanVien (MaNV, HoTen, NgaySinh, GioiTinh, SDT, Email, DiaChi, MaTrangThai, CCCD, NgayCapCCCD, DacDiemNhanDang) VALUES
-(1, N'Nguyễn Văn Quản', '1995-05-20', N'Nam', '0901234567', 'admin@gmail.com', N'Hà Nội', 1, '001122334455', '2020-01-01', N'Không'),
-(2, N'Trần Văn A', '1998-08-12', N'Nam', '0908888888', 'nv@gmail.com', N'Hải Phòng', 1, '009988776655', '2020-01-01', N'Không');
+INSERT INTO NhanVien (MaNV, HoTen, NgaySinh, GioiTinh, SDT, Email, DiaChi, MaTrangThai, CCCD, NgayCapCCCD, NoiCapCCCD, NgayHetHanCCCD, DacDiemNhanDang) VALUES
+(1, N'Nguyễn Văn Quản', '1995-05-20', N'Nam', '0901234567', 'admin@gmail.com', N'Hà Nội', 1, '001122334455', '2020-01-01', N'Cục Cảnh sát ĐKQL cư trú và DLQG về dân cư', '2040-01-01', N'Không'),
+(2, N'Trần Văn A', '1998-08-12', N'Nam', '0908888888', 'nv@gmail.com', N'Hải Phòng', 1, '009988776655', '2020-01-01', N'Cục Cảnh sát ĐKQL cư trú và DLQG về dân cư', '2040-01-01', N'Không');
 
 INSERT INTO TaiKhoan (Username, PASS, MaNV, MaPhanQuyen) VALUES
 ('admin', '123', 1, 1),
 ('nhanvien', '123', 2, 2);
 
-INSERT INTO TheLoai(TenTheLoai, MoTa) VALUES
-(N'Công nghệ', N'Sách CNTT'),
-(N'Văn học', N'Truyện');
+INSERT INTO TheLoai(TenTheLoai, MoTa, MaTheLoaiCha) VALUES
+(N'Công nghệ', N'Sách CNTT', NULL),
+(N'Văn học', N'Sách văn học', NULL),
+(N'Tiểu thuyết', N'Truyện dài', 2),
+(N'Kinh dị', N'Truyện ma', 3),
+(N'Truyện ngắn', N'Truyện ngắn', 2);
 
 INSERT INTO NhaXuatBan (TenNXB, SDT, Email, DiaChi) VALUES
 (N'NXB Trẻ', '028123456', 'tre@gmail.com', N'TP Hồ Chí Minh'),
@@ -204,8 +211,8 @@ INSERT INTO KhuyenMai(TenKM, PhanTramGiam, NgayBatDau, NgayKetThuc, TrangThai) V
 (N'Lễ Tết', 20, '2020-01-01', '2030-12-31', 1);
 
 INSERT INTO Sach (MaISBN, TenSach, MaTheLoai, MaNXB, GiaNhap, GiaBan, SoLuongTon, HinhAnh, TrangThai) VALUES
-('9786041234567', N'Lập trình Java', 1, 1, 120000, 180000, 50, 'default-book.png', 1),
-('9786048888888', N'Java Web JSP Servlet', 1, 2, 150000, 220000, 40, 'default-book.png', 1);
+('9786041234567', N'Lập trình Java', 5, 1, 120000, 180000, 50, 'default-book.png', 1),
+('9786048888888', N'Java Web JSP Servlet', 4, 2, 150000, 220000, 40, 'default-book.png', 1);
 
 INSERT INTO SachChiTiet(MaSach, SoTrang, KichThuoc, TrongLuong, NgonNgu, MoTa) VALUES
 (1, 650, '14x20 cm', 500, N'Tiếng Việt', N'Sách Java cơ bản'),

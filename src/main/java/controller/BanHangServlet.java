@@ -94,7 +94,15 @@ public class BanHangServlet extends HttpServlet {
             return;
         } else if ("updateCart".equals(action)) {
             int maSach = Integer.parseInt(request.getParameter("maSach"));
-            int soLuong = Integer.parseInt(request.getParameter("soLuong"));
+            String soLuongStr = request.getParameter("soLuong");
+            int soLuong = 0;
+            if (soLuongStr != null && !soLuongStr.trim().isEmpty()) {
+                try {
+                    soLuong = Integer.parseInt(soLuongStr);
+                } catch (NumberFormatException e) {
+                    soLuong = 0;
+                }
+            }
             Sach sach = sachService.getSachById(maSach);
             List<HoaDonChiTiet> cart = (List<HoaDonChiTiet>) session.getAttribute("cart");
             if (sach != null) {
@@ -173,7 +181,7 @@ public class BanHangServlet extends HttpServlet {
             }
             
             int maKH = Integer.parseInt(request.getParameter("maKH"));
-            int maNV = session.getAttribute("MaNV") != null ? (Integer) session.getAttribute("MaNV") : 1; 
+            int maNV = session.getAttribute("maNV") != null ? (Integer) session.getAttribute("maNV") : 1; 
 
             double tongTien = 0;
             for (HoaDonChiTiet item : cart) {
