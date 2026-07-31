@@ -2,13 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%
-    String errorMsg = (String) session.getAttribute("error");
-    String successMsg = (String) session.getAttribute("success");
-    session.removeAttribute("error");
-    session.removeAttribute("success");
-%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -99,14 +92,14 @@
         <form action="quanlykhuyenmai" method="post" onsubmit="return validateForm()">
             <input type="hidden" id="action" name="action" value="add">
             <input type="hidden" id="maKM" name="maKM" value="">
-            
+
             <div class="form-group">
                 <label>Tên Khuyến Mãi</label>
                 <input type="text" id="tenKM" name="tenKM" required>
             </div>
             <div class="form-group">
                 <label>Phần Trăm Giảm (%)</label>
-                <input type="number" id="phanTramGiam" name="phanTramGiam" min="1" max="100" required>
+                <input type="number" id="phanTramGiam" name="phanTramGiam" min="1" max="90" required>
             </div>
             <div class="form-group">
                 <label>Thời Gian Bắt Đầu</label>
@@ -123,7 +116,7 @@
                     <option value="0">Ngừng áp dụng</option>
                 </select>
             </div>
-            
+
             <div style="text-align: right; margin-top: 20px;">
                 <button type="button" class="btn" style="background-color:#ccc; color:black;" onclick="closeModal()">Hủy</button>
                 <button type="submit" class="btn btn-add" id="btnSubmit">Lưu</button>
@@ -177,12 +170,14 @@
         return true;
     }
 
-    <% if (errorMsg != null && !errorMsg.isEmpty()) { %>
-        Swal.fire({ icon: 'error', title: 'Lỗi', text: '<%= errorMsg %>' });
-    <% } %>
-    <% if (successMsg != null && !successMsg.isEmpty()) { %>
-        Swal.fire({ icon: 'success', title: 'Thành công', text: '<%= successMsg %>' });
-    <% } %>
+    <c:if test="${not empty sessionScope.error}">
+        Swal.fire({ icon: 'error', title: 'Lỗi', text: '${sessionScope.error}' });
+        <c:remove var="error" scope="session"/>
+    </c:if>
+    <c:if test="${not empty sessionScope.success}">
+        Swal.fire({ icon: 'success', title: 'Thành công', text: '${sessionScope.success}' });
+        <c:remove var="success" scope="session"/>
+    </c:if>
 </script>
 </body>
 </html>

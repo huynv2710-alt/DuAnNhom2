@@ -248,3 +248,22 @@
             .actions-grid { grid-template-columns: 1fr 1fr; }
             .welcome-badge { display: none; }
         }
+/* Ô mật khẩu có nút xem/ẩn (dùng chung) */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.password-wrapper input {
+    width: 100%;
+    padding-right: 38px;
+}
+.password-wrapper .toggle-eye {
+    position: absolute;
+    right: 12px;
+    cursor: pointer;
+    color: #888;
+}
+.password-wrapper .toggle-eye:hover {
+    color: #333;
+}

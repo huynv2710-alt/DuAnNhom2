@@ -1,10 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%
-    String errorMsg   = (String) request.getAttribute("error");
-    String successMsg = (String) request.getAttribute("success");
-
     // Giữ lại giá trị form
     String pMaNV     = request.getParameter("maNV")            != null ? request.getParameter("maNV")            : "";
     String pHoTen    = request.getParameter("hoTen")           != null ? request.getParameter("hoTen")           : "";
@@ -30,6 +28,7 @@
     <title>Thêm nhân viên</title>
     <link rel="stylesheet" href="css/themnv.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/togglePassword.js"></script>
 </head>
 <body>
 
@@ -141,7 +140,10 @@
 
                 <div class="form-group">
                     <label>Mật khẩu</label>
-                    <input type="password" name="password" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="newNVPassword" name="password" required>
+                        <i class="fa-solid fa-eye toggle-eye" onclick="togglePassword('newNVPassword', this)"></i>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -163,24 +165,24 @@
 
 </main>
 
-<% if (errorMsg != null && !errorMsg.isEmpty()) { %>
+<c:if test="${not empty error}">
 <script>
     window.addEventListener('DOMContentLoaded', function () {
         Swal.fire({
             icon: 'error',
             title: 'Lỗi',
-            text: '<%= errorMsg.replace("'", "\\'") %>',
+            text: '${fn:replace(error, "'", "\\'")}',
             confirmButtonColor: '#00897b',
             confirmButtonText: 'Đóng'
         });
     });
 </script>
-<% } %>
+</c:if>
 
 <script>
     function validateNV() {
         let isValid = true;
-        
+
         let ngaySinh = document.getElementById('ngaySinh').value;
         if(ngaySinh) {
             let birthDate = new Date(ngaySinh);
@@ -237,7 +239,7 @@
 
         let ngayCapStr = document.getElementById('ngayCapCCCD') ? document.getElementById('ngayCapCCCD').value : '';
         let ngayHetHanStr = document.getElementById('ngayHetHanCCCD') ? document.getElementById('ngayHetHanCCCD').value : '';
-        
+
         if (!ngayCapStr) {
             if(document.getElementById('errNgayCapCCCD')) {
                 document.getElementById('errNgayCapCCCD').innerText = "Vui lòng nhập ngày cấp hợp lệ!";
@@ -252,13 +254,13 @@
             let birthDate = new Date(ngaySinh);
             let issueDate = new Date(ngayCapStr);
             let today = new Date();
-            
+
             let ageAtIssue = issueDate.getFullYear() - birthDate.getFullYear();
             let mIssue = issueDate.getMonth() - birthDate.getMonth();
             if (mIssue < 0 || (mIssue === 0 && issueDate.getDate() < birthDate.getDate())) {
                 ageAtIssue--;
             }
-            
+
             if (issueDate > today) {
                 if(document.getElementById('errNgayCapCCCD')) {
                     document.getElementById('errNgayCapCCCD').innerText = "Ngày cấp không được ở tương lai!";
@@ -278,7 +280,7 @@
                 }
                 isValid = false;
             }
-            
+
             if (ngayHetHanStr) {
                 let expDate = new Date(ngayHetHanStr);
                 let expectedExpYear = null;
@@ -324,7 +326,7 @@
 
         let btnSubmit = document.querySelector(".btn-save");
         if(btnSubmit) btnSubmit.disabled = !isValid;
-        
+
         return isValid;
     }
 
@@ -338,14 +340,14 @@
         if(document.getElementById("ngayCapCCCD")) {
             document.getElementById("ngayCapCCCD").max = today.toISOString().split("T")[0];
         }
-        
+
         // Load API Tỉnh/Thành
         fetch('https://provinces.open-api.vn/api/?depth=2')
             .then(response => response.json())
             .then(data => {
                 let citySelect = document.getElementById('city');
                 let wardSelect = document.getElementById('ward');
-                
+
                 if(!citySelect) return;
 
                 data.forEach(city => {
@@ -358,7 +360,7 @@
 
                 citySelect.addEventListener('change', function() {
                     wardSelect.innerHTML = '<option value="">Chọn Phường Xã</option>';
-                    
+
                     let selectedCity = data.find(c => c.code == citySelect.options[citySelect.selectedIndex].getAttribute('data-code'));
                     if (selectedCity && selectedCity.districts) {
                         selectedCity.districts.forEach(d => {
@@ -386,31 +388,31 @@
         let city = document.getElementById('city') ? document.getElementById('city').value : '';
         let ward = document.getElementById('ward') ? document.getElementById('ward').value : '';
         let detail = document.getElementById('addressDetail') ? document.getElementById('addressDetail').value : '';
-        
+
         let fullAddress = [];
         if (detail) fullAddress.push(detail);
         if (ward) fullAddress.push(ward);
         if (city) fullAddress.push(city);
-        
+
         if(document.getElementById('diaChiHidden')) {
             document.getElementById('diaChiHidden').value = fullAddress.join(', ');
         }
     }
 </script>
 
-<% if (successMsg != null && !successMsg.isEmpty()) { %>
+<c:if test="${not empty success}">
 <script>
     window.addEventListener('DOMContentLoaded', function () {
         Swal.fire({
             icon: 'success',
             title: 'Thành công',
-            text: '<%= successMsg %>',
+            text: '${success}',
             confirmButtonColor: '#00897b',
             confirmButtonText: 'OK'
         });
     });
 </script>
-<% } %>
+</c:if>
 
 </body>
 </html>

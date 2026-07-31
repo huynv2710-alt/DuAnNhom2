@@ -52,21 +52,31 @@
         <form action="doimatkhau" method="post" onsubmit="return validateForm()">
             <div class="form-group">
                 <label>Mật Khẩu Cũ</label>
-                <input type="password" name="oldPass" required placeholder="Nhập mật khẩu hiện tại">
+                <div class="password-wrapper">
+                    <input type="password" id="oldPass" name="oldPass" required placeholder="Nhập mật khẩu hiện tại">
+                    <i class="fa-solid fa-eye toggle-eye" onclick="togglePassword('oldPass', this)"></i>
+                </div>
             </div>
             <div class="form-group">
                 <label>Mật Khẩu Mới</label>
-                <input type="password" name="newPass" id="newPass" required placeholder="Nhập mật khẩu mới">
+                <div class="password-wrapper">
+                    <input type="password" name="newPass" id="newPass" required placeholder="Nhập mật khẩu mới">
+                    <i class="fa-solid fa-eye toggle-eye" onclick="togglePassword('newPass', this)"></i>
+                </div>
             </div>
             <div class="form-group">
                 <label>Xác Nhận Mật Khẩu Mới</label>
-                <input type="password" name="confirmPass" id="confirmPass" required placeholder="Nhập lại mật khẩu mới">
+                <div class="password-wrapper">
+                    <input type="password" name="confirmPass" id="confirmPass" required placeholder="Nhập lại mật khẩu mới">
+                    <i class="fa-solid fa-eye toggle-eye" onclick="togglePassword('confirmPass', this)"></i>
+                </div>
             </div>
             <button type="submit" class="btn-primary">Lưu Thay Đổi</button>
         </form>
     </div>
 </main>
 
+<script src="js/togglePassword.js"></script>
 <script>
     function validateForm() {
         var newPass = document.getElementById("newPass").value;

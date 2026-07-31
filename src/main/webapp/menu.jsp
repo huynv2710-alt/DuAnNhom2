@@ -21,9 +21,10 @@
             <li><a href="quanlytaikhoan"> Quản lý tài khoản</a></li>
         </c:if>
 
-        <li class="menu-heading">SÁCH & DANH MỤC</li>
-        <li><a href="quanlysach"> Quản lý sách</a></li>
+
         <c:if test="${sessionScope.quyen == 'admin'}">
+            <li class="menu-heading">SÁCH & DANH MỤC</li>
+            <li><a href="quanlysach"> Quản lý sách</a></li>
             <li><a href="quanlytheloai"> Thể loại</a></li>
             <li><a href="quanlynxb"> Nhà xuất bản</a></li>
         </c:if>

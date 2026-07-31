@@ -49,7 +49,6 @@
             gap: 16px 24px;
         }
 
-        /* Tên sách chiếm full width */
         .form-group.full { grid-column: 1 / -1; }
 
         .form-group { display: flex; flex-direction: column; }
@@ -78,7 +77,6 @@
             box-shadow: 0 0 0 3px rgba(0,150,136,.1);
         }
 
-        /* Readonly mã sách khi sửa */
         .form-group input[readonly] {
             background: #f5f5f5;
             color: #888;
@@ -112,7 +110,6 @@
             justify-content: center;
             transition: .25s;
         }
-
         .btn-save { background: #00897b; color: #fff; }
         .btn-save:hover { background: #004d40; }
 
@@ -121,11 +118,9 @@
     </style>
 </head>
 <body>
-
 <jsp:include page="menu2.jsp"/>
 
 <main class="content">
-
     <h1 class="title">
         <c:choose>
             <c:when test="${not empty sach}">✏ SỬA SÁCH</c:when>
@@ -207,7 +202,6 @@
                            value="${sach.tonKho}" placeholder="VD: 50">
                     <span class="error-msg" id="errTonKho">Vui lòng nhập tồn kho hợp lệ</span>
                 </div>
-
             </div>
 
             <div class="button-group">
@@ -219,10 +213,8 @@
                 </button>
                 <a href="quanlysach" class="btn-back">← Quay lại</a>
             </div>
-
         </form>
     </div>
-
 </main>
 
 <script>

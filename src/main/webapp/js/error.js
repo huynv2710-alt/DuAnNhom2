@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Hiệu ứng chuyển cảnh khi submit form đăng nhập
     const loginForm = document.querySelector("form");
     const container = document.querySelector(".container");
 

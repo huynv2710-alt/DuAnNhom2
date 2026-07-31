@@ -54,10 +54,15 @@
                 </tr>
             </thead>
             <tbody>
-                <c:forEach var="tk" items="${listTK}">
+                <c:forEach var="tk" items="${listTK}" varStatus="status">
                     <tr>
                         <td><b>${tk.username}</b></td>
-                        <td style="color: #ef4444; font-weight: bold; font-family: monospace;">${tk.pass}</td>
+                        <td style="color: #ef4444; font-weight: bold; font-family: monospace;">
+                            <span id="passMask${status.index}">••••••</span>
+                            <span id="passReal${status.index}" style="display:none;">${tk.pass}</span>
+                            <i class="fa-solid fa-eye toggle-eye" style="position:static; margin-left:6px;"
+                               onclick="toggleRowPassword(${status.index})"></i>
+                        </td>
                         <td>${tk.hoTen}</td>
                         <td>${tk.tenQuyen}</td>
                         <td class="
@@ -96,7 +101,10 @@
             </div>
             <div class="form-group">
                 <label>Mật Khẩu</label>
-                <input type="text" id="editPassword" name="password" required>
+                <div class="password-wrapper">
+                    <input type="password" id="editPassword" name="password" required>
+                    <i class="fa-solid fa-eye toggle-eye" onclick="togglePassword('editPassword', this)"></i>
+                </div>
             </div>
             <div class="form-group">
                 <label>Vai trò</label>
@@ -113,6 +121,7 @@
     </div>
 </div>
 
+<script src="js/togglePassword.js"></script>
 <script>
     function openModal(id) {
         document.getElementById(id).style.display = 'block';
