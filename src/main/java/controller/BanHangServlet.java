@@ -21,6 +21,16 @@ import java.util.List;
 
 @WebServlet(name = "BanHangServlet", urlPatterns = {"/banhang"})
 public class BanHangServlet extends HttpServlet {
+    
+    private int parseIntSafely(String str, int defaultVal) {
+        if (str == null || str.trim().isEmpty()) return defaultVal;
+        try {
+            return Integer.parseInt(str.trim());
+        } catch (Exception e) {
+            return defaultVal;
+        }
+    }
+
     private SachService sachService = new SachService();
     private KhachHangService khService = new KhachHangService();
     private HoaDonService hoaDonService = new HoaDonService();
@@ -45,7 +55,7 @@ public class BanHangServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         if ("addCart".equals(action)) {
-            int maSach = Integer.parseInt(request.getParameter("maSach"));
+            int maSach = parseIntSafely(request.getParameter("maSach"), 0);
             Sach sach = sachService.getSachById(maSach);
             if (sach != null && sach.getSoLuongTon() > 0) {
                 List<HoaDonChiTiet> cart = (List<HoaDonChiTiet>) session.getAttribute("cart");
@@ -68,8 +78,8 @@ public class BanHangServlet extends HttpServlet {
             response.sendRedirect("banhang");
             return;
         } else if ("addCartMulti".equals(action)) {
-            int maSach = Integer.parseInt(request.getParameter("maSach"));
-            int soLuong = Integer.parseInt(request.getParameter("soLuong"));
+            int maSach = parseIntSafely(request.getParameter("maSach"), 0);
+            int soLuong = parseIntSafely(request.getParameter("soLuong"), 1);
             Sach sach = sachService.getSachById(maSach);
             if (sach != null && sach.getSoLuongTon() > 0 && soLuong > 0) {
                 List<HoaDonChiTiet> cart = (List<HoaDonChiTiet>) session.getAttribute("cart");
@@ -93,7 +103,7 @@ public class BanHangServlet extends HttpServlet {
             response.sendRedirect("banhang");
             return;
         } else if ("updateCart".equals(action)) {
-            int maSach = Integer.parseInt(request.getParameter("maSach"));
+            int maSach = parseIntSafely(request.getParameter("maSach"), 0);
             String soLuongStr = request.getParameter("soLuong");
             int soLuong = 0;
             if (soLuongStr != null && !soLuongStr.trim().isEmpty()) {
@@ -124,7 +134,7 @@ public class BanHangServlet extends HttpServlet {
             response.sendRedirect("banhang");
             return;
         } else if ("removeCart".equals(action)) {
-            int maSach = Integer.parseInt(request.getParameter("maSach"));
+            int maSach = parseIntSafely(request.getParameter("maSach"), 0);
             List<HoaDonChiTiet> cart = (List<HoaDonChiTiet>) session.getAttribute("cart");
             cart.removeIf(item -> item.getMaSach() == maSach);
             response.sendRedirect("banhang");
@@ -132,6 +142,31 @@ public class BanHangServlet extends HttpServlet {
         } else if ("clearCart".equals(action)) {
             session.setAttribute("cart", new ArrayList<HoaDonChiTiet>());
             response.sendRedirect("banhang");
+            return;
+        } else if ("addCartByBarcode".equals(action)) {
+            String barcode = request.getParameter("barcode");
+            Sach sach = sachService.getSachByBarcode(barcode);
+            if (sach != null && sach.getSoLuongTon() > 0) {
+                List<HoaDonChiTiet> cart = (List<HoaDonChiTiet>) session.getAttribute("cart");
+                boolean exists = false;
+                for (HoaDonChiTiet item : cart) {
+                    if (item.getMaSach() == sach.getMaSach()) {
+                        if (item.getSoLuong() < sach.getSoLuongTon()) {
+                            item.setSoLuong(item.getSoLuong() + 1);
+                        }
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    HoaDonChiTiet item = new HoaDonChiTiet(0, sach.getMaSach(), 1, sach.getGiaBan());
+                    item.setTenSach(sach.getTenSach());
+                    cart.add(item);
+                }
+                response.sendRedirect("banhang?successScanner=1");
+            } else {
+                response.sendRedirect("banhang?error=barcode_not_found");
+            }
             return;
         }
 
@@ -152,7 +187,7 @@ public class BanHangServlet extends HttpServlet {
         request.setAttribute("maTheLoai", maTheLoai);
         request.setAttribute("dsKhachHang", dsKhachHang);
         request.setAttribute("dsTheLoai", thuocTinhSachService.getAllTheLoai());
-        request.setAttribute("dsKhuyenMai", khuyenMaiService.getActiveKhuyenMai()); // Thêm khuyến mãi
+        request.setAttribute("dsKhuyenMai", khuyenMaiService.getAllKhuyenMai()); // Thêm khuyến mãi (All)
         
         // Calculate Total
         List<HoaDonChiTiet> cart = (List<HoaDonChiTiet>) session.getAttribute("cart");
@@ -180,7 +215,7 @@ public class BanHangServlet extends HttpServlet {
                 return;
             }
             
-            int maKH = Integer.parseInt(request.getParameter("maKH"));
+            int maKH = parseIntSafely(request.getParameter("maKH"), 0);
             int maNV = session.getAttribute("maNV") != null ? (Integer) session.getAttribute("maNV") : 1; 
 
             double tongTien = 0;
@@ -194,7 +229,7 @@ public class BanHangServlet extends HttpServlet {
             }
 
             String phuongThucTT = request.getParameter("phuongThucTT");
-            int trangThai = "ChuyenKhoan".equals(phuongThucTT) ? 0 : 1;
+            int trangThai = ("ChuyenKhoan".equals(phuongThucTT) || "TheNganHang".equals(phuongThucTT)) ? 0 : 1;
 
             double giamGia = 0;
             Integer maKM = null;
@@ -207,8 +242,18 @@ public class BanHangServlet extends HttpServlet {
                     for (KhuyenMai km : activeKM) {
                         if (km.getMaKM() == maKM) {
                             giamGia = tongTien * (km.getPhanTramGiam() / 100.0);
+                            if (km.getGiamToiDa() > 0 && giamGia > km.getGiamToiDa()) {
+                                giamGia = km.getGiamToiDa();
+                            }
                             break;
                         }
+                    }
+                } else {
+                    String directDiscountStr = request.getParameter("giamGiaTrucTiep");
+                    if (directDiscountStr != null && !directDiscountStr.isEmpty()) {
+                        giamGia = Double.parseDouble(directDiscountStr);
+                        if(giamGia > tongTien) giamGia = tongTien;
+                        if(giamGia < 0) giamGia = 0;
                     }
                 }
             } catch (Exception e) {}
@@ -216,7 +261,10 @@ public class BanHangServlet extends HttpServlet {
             HoaDon hd = new HoaDon(0, maNV, maKH, new java.sql.Timestamp(System.currentTimeMillis()), tongTien, trangThai);
             hd.setGiamGia(giamGia);
             hd.setMaKM(maKM);
-            hd.setPhuongThucTT("ChuyenKhoan".equals(phuongThucTT) ? "Chuyển khoản QR" : "Tiền mặt");
+            String phuongThucThucTe = "Tiền mặt";
+            if ("ChuyenKhoan".equals(phuongThucTT)) phuongThucThucTe = "Chuyển khoản QR";
+            else if ("TheNganHang".equals(phuongThucTT)) phuongThucThucTe = "Thẻ ngân hàng (POS)";
+            hd.setPhuongThucTT(phuongThucThucTe);
             int newMaHD = hoaDonService.createHoaDon(hd);
             
             if (newMaHD > 0) {
@@ -240,7 +288,11 @@ public class BanHangServlet extends HttpServlet {
                 } else {
                     double finalAmount = tongTien - giamGia;
                     if (finalAmount < 0) finalAmount = 0;
-                    response.sendRedirect("checkout_qr.jsp?id=" + newMaHD + "&amount=" + (int)finalAmount);
+                    if ("ChuyenKhoan".equals(phuongThucTT)) {
+                        response.sendRedirect("checkout_qr.jsp?id=" + newMaHD + "&amount=" + (long)finalAmount);
+                    } else if ("TheNganHang".equals(phuongThucTT)) {
+                        response.sendRedirect("checkout_card.jsp?id=" + newMaHD + "&amount=" + (long)finalAmount);
+                    }
                 }
             } else {
                 response.sendRedirect("banhang?error=db_error");

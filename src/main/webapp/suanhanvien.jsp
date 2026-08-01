@@ -50,9 +50,18 @@
                     <label>Email</label>
                     <input type="email" name="email" class="form-input" value="${sessionScope.email}">
                 </div>
-                <div class="info-item">
+                <div class="info-item" style="grid-column: 1 / -1;">
                     <label>Địa chỉ</label>
-                    <input type="text" name="diaChi" class="form-input" value="${sessionScope.diaChi}">
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <select id="citySV" style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                            <option value="">-- Chọn tỉnh/thành phố --</option>
+                        </select>
+                        <select id="wardSV" style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                            <option value="">-- Chọn xã/phường --</option>
+                        </select>
+                    </div>
+                    <input type="text" id="addressDetailSV" placeholder="Nhập bổ sung: Số nhà, Thôn xóm..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                    <input type="hidden" name="diaChi" id="diaChiHiddenSV" value="${sessionScope.diaChi}">
                 </div>
                 <div class="info-item">
                     <label>CCCD (Không được sửa)</label>
@@ -68,6 +77,13 @@
         </form>
     </div>
 </main>
+
+<script src="js/address-data.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        init34TinhThanhAddress('citySV', 'wardSV', 'addressDetailSV', 'diaChiHiddenSV');
+    });
+</script>
 
 </body>
 </html>

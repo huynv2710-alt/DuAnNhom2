@@ -6,16 +6,18 @@ public class KhuyenMai {
     private int maKM;
     private String tenKM;
     private double phanTramGiam;
+    private double giamToiDa;
     private Timestamp ngayBatDau;
     private Timestamp ngayKetThuc;
     private int trangThai;
 
     public KhuyenMai() {}
 
-    public KhuyenMai(int maKM, String tenKM, double phanTramGiam, Timestamp ngayBatDau, Timestamp ngayKetThuc, int trangThai) {
+    public KhuyenMai(int maKM, String tenKM, double phanTramGiam, double giamToiDa, Timestamp ngayBatDau, Timestamp ngayKetThuc, int trangThai) {
         this.maKM = maKM;
         this.tenKM = tenKM;
         this.phanTramGiam = phanTramGiam;
+        this.giamToiDa = giamToiDa;
         this.ngayBatDau = ngayBatDau;
         this.ngayKetThuc = ngayKetThuc;
         this.trangThai = trangThai;
@@ -29,6 +31,9 @@ public class KhuyenMai {
 
     public double getPhanTramGiam() { return phanTramGiam; }
     public void setPhanTramGiam(double phanTramGiam) { this.phanTramGiam = phanTramGiam; }
+
+    public double getGiamToiDa() { return giamToiDa; }
+    public void setGiamToiDa(double giamToiDa) { this.giamToiDa = giamToiDa; }
 
     public Timestamp getNgayBatDau() { return ngayBatDau; }
     public void setNgayBatDau(Timestamp ngayBatDau) { this.ngayBatDau = ngayBatDau; }

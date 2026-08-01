@@ -165,21 +165,35 @@
             </c:if>
         </div>
         
-        <div class="print-hide" style="text-align: center; margin-top: 40px;">
+        <div class="print-hide" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px; margin-top: 40px;">
             <c:choose>
                 <c:when test="${hd.trangThai == 1}">
                     <span style="background: #dcfce7; color: #166534; padding: 5px 15px; border-radius: 20px; font-weight: 700; font-size: 14px;"><i class="fas fa-check-circle"></i> Đã Thanh Toán</span>
-                    <button onclick="window.print()" style="background: #2d6652; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 4px 10px rgba(45,102,82,0.2); transition: 0.2s; margin-left: 15px;"><i class="fas fa-print"></i> IN HÓA ĐƠN</button>
+                    <button onclick="window.print()" style="background: #2d6652; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 4px 10px rgba(45,102,82,0.2); transition: 0.2s;"><i class="fas fa-print"></i> IN HÓA ĐƠN</button>
                 </c:when>
                 <c:when test="${hd.trangThai == 0}">
                     <span style="background: #fef9c3; color: #854d0e; padding: 5px 15px; border-radius: 20px; font-weight: 700; font-size: 14px;"><i class="fas fa-clock"></i> Chờ Thanh Toán</span>
-                    <a href="quanlyhoadon?action=cancel&id=${hd.maHD}" onclick="return confirm('Bạn có chắc chắn muốn hủy hóa đơn này không?');" style="background: #ef4444; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; box-shadow: 0 4px 10px rgba(239,68,68,0.2); display: inline-block; transition: 0.2s; margin-left: 15px;"><i class="fas fa-times-circle"></i> HỦY HÓA ĐƠN</a>
+                    
+                    <fmt:formatNumber value="${total - hd.giamGia}" pattern="0" groupingUsed="false" var="finalAmountStr" />
+                    <c:choose>
+                        <c:when test="${hd.phuongThucTT eq 'Chuyển khoản QR'}">
+                            <a href="checkout_qr.jsp?id=${hd.maHD}&amount=${finalAmountStr}" style="background: #3b82f6; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; box-shadow: 0 4px 10px rgba(59,130,246,0.2); display: inline-block; transition: 0.2s;"><i class="fas fa-qrcode"></i> THANH TOÁN LẠI</a>
+                        </c:when>
+                        <c:when test="${hd.phuongThucTT eq 'Thẻ ngân hàng (POS)'}">
+                            <a href="checkout_card.jsp?id=${hd.maHD}&amount=${finalAmountStr}" style="background: #3b82f6; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; box-shadow: 0 4px 10px rgba(59,130,246,0.2); display: inline-block; transition: 0.2s;"><i class="fas fa-credit-card"></i> THANH TOÁN LẠI</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="api/simulate-payment?maHD=${hd.maHD}" onclick="return confirm('Xác nhận đã nhận đủ tiền mặt?');" style="background: #3b82f6; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; box-shadow: 0 4px 10px rgba(59,130,246,0.2); display: inline-block; transition: 0.2s;"><i class="fas fa-money-bill-wave"></i> XÁC NHẬN ĐÃ NHẬN TIỀN</a>
+                        </c:otherwise>
+                    </c:choose>
+
+                    <a href="quanlyhoadon?action=cancel&id=${hd.maHD}" onclick="return confirm('Bạn có chắc chắn muốn hủy hóa đơn này không?');" style="background: #ef4444; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; box-shadow: 0 4px 10px rgba(239,68,68,0.2); display: inline-block; transition: 0.2s;"><i class="fas fa-times-circle"></i> HỦY HÓA ĐƠN</a>
                 </c:when>
                 <c:otherwise>
                     <span style="background: #fee2e2; color: #991b1b; padding: 5px 15px; border-radius: 20px; font-weight: 700; font-size: 14px;"><i class="fas fa-times-circle"></i> Đã Hủy</span>
                 </c:otherwise>
             </c:choose>
-            <a href="banhang" style="display:inline-block; margin-left: 15px; background: #e2e8f0; color: #1e293b; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;"><i class="fas fa-shopping-cart"></i> BÁN ĐƠN MỚI</a>
+            <a href="banhang" style="display:inline-block; background: #e2e8f0; color: #1e293b; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;"><i class="fas fa-shopping-cart"></i> BÁN ĐƠN MỚI</a>
         </div>
     </div>
 

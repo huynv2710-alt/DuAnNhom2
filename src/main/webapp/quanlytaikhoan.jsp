@@ -65,15 +65,8 @@
                         </td>
                         <td>${tk.hoTen}</td>
                         <td>${tk.tenQuyen}</td>
-                        <td class="
-                            ${tk.trangThai == 1 ? 'status-active' :
-                              tk.trangThai == 2 ? 'status-trial' :
-                              'status-leave'}">
-                            <c:choose>
-                                <c:when test="${tk.trangThai == 1}">Hoạt động</c:when>
-                                <c:when test="${tk.trangThai == 2}">Thử việc</c:when>
-                                <c:otherwise>Nghỉ việc</c:otherwise>
-                            </c:choose>
+                        <td class="${tk.trangThai == 1 ? 'status-active' : 'status-leave'}">
+                            ${tk.trangThai == 1 ? 'Hoạt động' : 'Ngừng hoạt động'}
                         </td>
                         <td>
                             <button class="btn-edit" style="border:none; cursor:pointer;" onclick="openEditModal('${tk.username}', '${tk.pass}', ${tk.maQuyen})">

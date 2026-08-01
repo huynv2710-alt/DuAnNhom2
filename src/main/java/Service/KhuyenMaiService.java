@@ -20,6 +20,7 @@ public class KhuyenMaiService {
                         rs.getInt("MaKM"),
                         rs.getString("TenKM"),
                         rs.getDouble("PhanTramGiam"),
+                        rs.getDouble("GiamToiDa"),
                         rs.getTimestamp("NgayBatDau"),
                         rs.getTimestamp("NgayKetThuc"),
                         rs.getInt("TrangThai")
@@ -42,6 +43,7 @@ public class KhuyenMaiService {
                         rs.getInt("MaKM"),
                         rs.getString("TenKM"),
                         rs.getDouble("PhanTramGiam"),
+                        rs.getDouble("GiamToiDa"),
                         rs.getTimestamp("NgayBatDau"),
                         rs.getTimestamp("NgayKetThuc"),
                         rs.getInt("TrangThai")
@@ -64,6 +66,7 @@ public class KhuyenMaiService {
                         rs.getInt("MaKM"),
                         rs.getString("TenKM"),
                         rs.getDouble("PhanTramGiam"),
+                        rs.getDouble("GiamToiDa"),
                         rs.getTimestamp("NgayBatDau"),
                         rs.getTimestamp("NgayKetThuc"),
                         rs.getInt("TrangThai")
@@ -76,14 +79,15 @@ public class KhuyenMaiService {
     }
 
     public boolean addKhuyenMai(KhuyenMai km) {
-        String sql = "INSERT INTO KhuyenMai (TenKM, PhanTramGiam, NgayBatDau, NgayKetThuc, TrangThai) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO KhuyenMai (TenKM, PhanTramGiam, GiamToiDa, NgayBatDau, NgayKetThuc, TrangThai) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection con = new connectService().myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, km.getTenKM());
             ps.setDouble(2, km.getPhanTramGiam());
-            ps.setTimestamp(3, new java.sql.Timestamp(km.getNgayBatDau().getTime()));
-            ps.setTimestamp(4, new java.sql.Timestamp(km.getNgayKetThuc().getTime()));
-            ps.setInt(5, km.getTrangThai());
+            ps.setDouble(3, km.getGiamToiDa());
+            ps.setTimestamp(4, new java.sql.Timestamp(km.getNgayBatDau().getTime()));
+            ps.setTimestamp(5, new java.sql.Timestamp(km.getNgayKetThuc().getTime()));
+            ps.setInt(6, km.getTrangThai());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,15 +96,16 @@ public class KhuyenMaiService {
     }
 
     public boolean updateKhuyenMai(KhuyenMai km) {
-        String sql = "UPDATE KhuyenMai SET TenKM = ?, PhanTramGiam = ?, NgayBatDau = ?, NgayKetThuc = ?, TrangThai = ? WHERE MaKM = ?";
+        String sql = "UPDATE KhuyenMai SET TenKM = ?, PhanTramGiam = ?, GiamToiDa = ?, NgayBatDau = ?, NgayKetThuc = ?, TrangThai = ? WHERE MaKM = ?";
         try (Connection con = new connectService().myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, km.getTenKM());
             ps.setDouble(2, km.getPhanTramGiam());
-            ps.setTimestamp(3, new java.sql.Timestamp(km.getNgayBatDau().getTime()));
-            ps.setTimestamp(4, new java.sql.Timestamp(km.getNgayKetThuc().getTime()));
-            ps.setInt(5, km.getTrangThai());
-            ps.setInt(6, km.getMaKM());
+            ps.setDouble(3, km.getGiamToiDa());
+            ps.setTimestamp(4, new java.sql.Timestamp(km.getNgayBatDau().getTime()));
+            ps.setTimestamp(5, new java.sql.Timestamp(km.getNgayKetThuc().getTime()));
+            ps.setInt(6, km.getTrangThai());
+            ps.setInt(7, km.getMaKM());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();

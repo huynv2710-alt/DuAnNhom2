@@ -25,6 +25,11 @@ public class ThemnhanvienServlet extends HttpServlet {
         request.setAttribute("error", message);
         request.getRequestDispatcher("themnhanvien.jsp").forward(request, response);
     }
+    
+    private int parseIntSafely(String str, int defaultVal) {
+        if (str == null || str.trim().isEmpty()) return defaultVal;
+        try { return Integer.parseInt(str.trim()); } catch (Exception e) { return defaultVal; }
+    }
 
     @Override
     protected void doGet(HttpServletRequest req,
@@ -173,13 +178,13 @@ public class ThemnhanvienServlet extends HttpServlet {
         nv.setDacDiemNhanDang(dacDiem);
         nv.setNoiCapCCCD(noiCapCCCD);
         nv.setNgayHetHanCCCD(ngayHetHanCCCD);
-        nv.setMaTrangThai(Integer.parseInt(request.getParameter("maTrangThai")));
+        nv.setMaTrangThai(parseIntSafely(request.getParameter("maTrangThai"), 1));
         // ======= Thêm nhân viên =======
 
         try {
             if (s.addNhanVien(nv)) {
                 String pass = request.getParameter("password");
-                int maQuyen = Integer.parseInt(request.getParameter("maQuyen"));
+                int maQuyen = parseIntSafely(request.getParameter("maQuyen"), 1);
                 try {
                     tkService.addTaiKhoan(username, pass, maNV, maQuyen);
                     request.getSession().setAttribute("success", "Thêm nhân viên thành công!");

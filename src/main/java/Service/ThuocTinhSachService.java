@@ -29,9 +29,16 @@ public class ThuocTinhSachService {
 
     public boolean addTheLoai(String ten, String moTa, Integer maTheLoaiCha) {
         try (Connection con = new connectService().myConnection()) {
-            // Check unique
-            PreparedStatement checkPs = con.prepareStatement("SELECT COUNT(*) FROM TheLoai WHERE TenTheLoai = ?");
-            checkPs.setString(1, ten);
+            // Check unique within the same parent
+            PreparedStatement checkPs;
+            if (maTheLoaiCha != null) {
+                checkPs = con.prepareStatement("SELECT COUNT(*) FROM TheLoai WHERE TenTheLoai = ? AND MaTheLoaiCha = ?");
+                checkPs.setString(1, ten);
+                checkPs.setInt(2, maTheLoaiCha);
+            } else {
+                checkPs = con.prepareStatement("SELECT COUNT(*) FROM TheLoai WHERE TenTheLoai = ? AND MaTheLoaiCha IS NULL");
+                checkPs.setString(1, ten);
+            }
             ResultSet rs = checkPs.executeQuery();
             if (rs.next() && rs.getInt(1) > 0) {
                 throw new RuntimeException("Tên thể loại đã tồn tại!");
@@ -52,10 +59,18 @@ public class ThuocTinhSachService {
 
     public boolean updateTheLoai(int id, String ten, String moTa, Integer maTheLoaiCha) {
         try (Connection con = new connectService().myConnection()) {
-            // Check unique
-            PreparedStatement checkPs = con.prepareStatement("SELECT COUNT(*) FROM TheLoai WHERE TenTheLoai = ? AND MaTheLoai != ?");
-            checkPs.setString(1, ten);
-            checkPs.setInt(2, id);
+            // Check unique within the same parent
+            PreparedStatement checkPs;
+            if (maTheLoaiCha != null) {
+                checkPs = con.prepareStatement("SELECT COUNT(*) FROM TheLoai WHERE TenTheLoai = ? AND MaTheLoai != ? AND MaTheLoaiCha = ?");
+                checkPs.setString(1, ten);
+                checkPs.setInt(2, id);
+                checkPs.setInt(3, maTheLoaiCha);
+            } else {
+                checkPs = con.prepareStatement("SELECT COUNT(*) FROM TheLoai WHERE TenTheLoai = ? AND MaTheLoai != ? AND MaTheLoaiCha IS NULL");
+                checkPs.setString(1, ten);
+                checkPs.setInt(2, id);
+            }
             ResultSet rs = checkPs.executeQuery();
             if (rs.next() && rs.getInt(1) > 0) {
                 throw new RuntimeException("Tên thể loại đã tồn tại!");

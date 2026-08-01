@@ -16,6 +16,10 @@ public class SachService {
     }
 
     public List<Sach> getAllSach(String search, int maTheLoai) {
+        return getAllSach(search, maTheLoai, 0);
+    }
+
+    public List<Sach> getAllSach(String search, int maTheLoai, int maNXB) {
         List<Sach> list = new ArrayList<>();
         // Removed s.TacGia LIKE ? since TacGia is in another table, we'll simplify search for now
         String sql = "SELECT s.*, c.SoTrang, c.KichThuoc, c.TrongLuong, c.NgonNgu, c.MoTa, t.TenTheLoai, n.TenNXB " +
@@ -25,12 +29,15 @@ public class SachService {
                      "LEFT JOIN NhaXuatBan n ON s.MaNXB = n.MaNXB " +
                      "WHERE s.TenSach LIKE ? ";
         if (maTheLoai > 0) sql += " AND s.MaTheLoai = ?";
+        if (maNXB > 0) sql += " AND s.MaNXB = ?";
         
         try (Connection con = new connectService().myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             String query = "%" + (search != null ? search : "") + "%";
             ps.setString(1, query);
-            if (maTheLoai > 0) ps.setInt(2, maTheLoai);
+            int pIndex = 2;
+            if (maTheLoai > 0) ps.setInt(pIndex++, maTheLoai);
+            if (maNXB > 0) ps.setInt(pIndex++, maNXB);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Sach s = new Sach();
@@ -74,6 +81,50 @@ public class SachService {
         try (Connection con = new connectService().myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Sach s = new Sach();
+                s.setMaSach(rs.getInt("MaSach"));
+                s.setTenSach(rs.getString("TenSach"));
+                s.setIsbn(rs.getString("MaISBN"));
+                s.setMaTheLoai(rs.getInt("MaTheLoai"));
+                s.setMaNXB(rs.getInt("MaNXB"));
+                s.setGiaNhap(rs.getDouble("GiaNhap"));
+                s.setGiaBan(rs.getDouble("GiaBan"));
+                s.setSoLuongTon(rs.getInt("SoLuongTon"));
+                s.setHinhAnh(rs.getString("HinhAnh"));
+                s.setTrangThai(rs.getInt("TrangThai"));
+                
+                s.setSoTrang(rs.getInt("SoTrang"));
+                s.setKichThuoc(rs.getString("KichThuoc"));
+                s.setTrongLuong(rs.getInt("TrongLuong"));
+                s.setNgonNgu(rs.getString("NgonNgu"));
+                s.setMoTa(rs.getString("MoTa"));
+                
+                s.setTenTheLoai(rs.getString("TenTheLoai"));
+                s.setTenNXB(rs.getString("TenNXB"));
+                
+                s.setTacGias(getTacGiasOfSach(s.getMaSach(), con));
+                return s;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Sach getSachByBarcode(String barcode) {
+        if (barcode == null || barcode.trim().isEmpty()) return null;
+        String sql = "SELECT s.*, c.SoTrang, c.KichThuoc, c.TrongLuong, c.NgonNgu, c.MoTa, t.TenTheLoai, n.TenNXB " +
+                     "FROM Sach s " +
+                     "LEFT JOIN SachChiTiet c ON s.MaSach = c.MaSach " +
+                     "LEFT JOIN TheLoai t ON s.MaTheLoai = t.MaTheLoai " +
+                     "LEFT JOIN NhaXuatBan n ON s.MaNXB = n.MaNXB " +
+                     "WHERE s.MaISBN = ? OR CAST(s.MaSach AS VARCHAR) = ?";
+        try (Connection con = new connectService().myConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, barcode.trim());
+            ps.setString(2, barcode.trim());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 Sach s = new Sach();

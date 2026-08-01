@@ -72,7 +72,7 @@ CREATE TABLE TaiKhoan (
 -- ==========================
 CREATE TABLE TheLoai (
     MaTheLoai INT IDENTITY(1,1) PRIMARY KEY,
-    TenTheLoai NVARCHAR(100) UNIQUE,
+    TenTheLoai NVARCHAR(100),
     MoTa NVARCHAR(255),
     MaTheLoaiCha INT NULL,
     CONSTRAINT FK_TheLoai_TheLoaiCha FOREIGN KEY (MaTheLoaiCha) REFERENCES TheLoai(MaTheLoai)

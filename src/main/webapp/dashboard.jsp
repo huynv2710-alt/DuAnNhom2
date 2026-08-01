@@ -303,20 +303,44 @@
     <div class="spinner"></div>
     <h3 style="color: #2d6652; margin-top: 20px;">Đang tải dữ liệu...</h3>
 </div>
-
 <jsp:include page="menu.jsp"/>
 
 <main class="content" style="opacity: 0; transition: opacity 0.5s ease;" id="mainContent">
 
-    <div class="dashboard-header">
-        <div>
-            <h1 class="dashboard-title">Tổng quan Thống kê</h1>
-            <p class="dashboard-subtitle" id="currentDate"><i class="far fa-calendar-alt"></i> Đang cập nhật...</p>
-        </div>
-        <div class="clock-container">
-            <i class="far fa-clock"></i> <span id="clock">00:00:00</span>
-        </div>
-    </div>
+        <div class="dashboard-header" style="margin-bottom: 20px;">
+            <div>
+                <h1 class="dashboard-title">Thống Kê Doanh Thu</h1>
+                <p class="dashboard-subtitle">
+                    <i class="fas fa-calendar-alt"></i> Dữ liệu thống kê theo thời gian thực
+                </p>
+                <div class="clock-container" style="display:inline-flex; margin-top:10px; font-size:14px; padding: 5px 12px; background: white; border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <i class="far fa-clock" style="color: #2d6652;"></i> <span id="clock" style="color: #2d6652; font-weight: bold;">00:00:00</span>
+                </div>
+            </div>
+            
+            <form id="filterForm" action="dashboard" method="get" style="display:flex; gap:10px; align-items:flex-end;">
+                <div>
+                    <label style="font-size:12px; font-weight:bold; color:#64748b; margin-bottom:4px; display:block;">Từ ngày</label>
+                    <input type="date" name="fromDate" value="${param.fromDate}" style="padding:8px 12px; border:1px solid #cbd5e1; border-radius:6px; outline:none; font-family: inherit;">
+                </div>
+                <div>
+                    <label style="font-size:12px; font-weight:bold; color:#64748b; margin-bottom:4px; display:block;">Đến ngày</label>
+                    <input type="date" name="toDate" value="${param.toDate}" style="padding:8px 12px; border:1px solid #cbd5e1; border-radius:6px; outline:none; font-family: inherit;">
+                </div>
+                <button type="submit" style="padding:8px 16px; background:#2d6652; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; height:36px; transition: 0.3s;"><i class="fas fa-filter"></i> Xem thống kê</button>
+                <button type="button" onclick="submitExport()" style="padding:8px 16px; background:#10b981; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; height:36px; transition: 0.3s;"><i class="fas fa-file-excel"></i> Xuất Excel</button>
+            </form>
+            <script>
+                function submitExport() {
+                    let form = document.getElementById('filterForm');
+                    let oldAction = form.action;
+                    form.action = 'exportExcel';
+                    form.submit();
+                    // Revert back so normal submit still works
+                    setTimeout(() => form.action = oldAction, 100);
+                }
+            </script>
+        </div> 
 
     <c:if test="${sessionScope.quyen == 'admin'}">
         <!-- TỔNG QUAN HỆ THỐNG -->

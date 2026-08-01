@@ -6,13 +6,24 @@ import Service.ThuocTinhSachService;
 import Service.TacGiaService;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 
 @WebServlet(name = "QuanLySachServlet", urlPatterns = {"/quanlysach"})
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+                 maxFileSize = 1024 * 1024 * 10,      // 10MB
+                 maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class QuanLySachServlet extends HttpServlet {
+    private int parseIntSafely(String str, int defaultVal) {
+        if (str == null || str.trim().isEmpty()) return defaultVal;
+        try { return Integer.parseInt(str.trim()); } catch (Exception e) { return defaultVal; }
+    }
+
     private SachService sachService = new SachService();
     private ThuocTinhSachService thuocTinhService = new ThuocTinhSachService();
     private TacGiaService tacGiaService = new TacGiaService();
@@ -30,17 +41,24 @@ public class QuanLySachServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         if ("delete".equals(action)) {
-            int maSach = Integer.parseInt(request.getParameter("id"));
-            sachService.deleteSach(maSach);
+            int maSach = parseIntSafely(request.getParameter("id"), 0);
+            if (maSach > 0) sachService.deleteSach(maSach);
             response.sendRedirect("quanlysach");
             return;
         }
 
         String search = request.getParameter("search");
-        List<Sach> list = sachService.getAllSach(search);
+        int maTheLoai = parseIntSafely(request.getParameter("maTheLoai"), 0);
+        int maNXB = parseIntSafely(request.getParameter("maNXB"), 0);
+        
+        List<Sach> list = sachService.getAllSach(search, maTheLoai, maNXB);
+        
+        // Removed TacGia filtering for now as it requires complex joining or post-filtering
         
         request.setAttribute("listSach", list);
         request.setAttribute("search", search);
+        request.setAttribute("maTheLoai", maTheLoai);
+        request.setAttribute("maNXB", maNXB);
         
         // Load dropdown lists
         request.setAttribute("listTL", thuocTinhService.getAllTheLoai());
@@ -60,8 +78,8 @@ public class QuanLySachServlet extends HttpServlet {
         String tacGiasStr = request.getParameter("tacGias"); // Nhận chuỗi tác giả
         
         String isbn = request.getParameter("isbn");
-        int maTheLoai = Integer.parseInt(request.getParameter("maTheLoai"));
-        int maNXB = Integer.parseInt(request.getParameter("maNXB"));
+        int maTheLoai = parseIntSafely(request.getParameter("maTheLoai"), 0);
+        int maNXB = parseIntSafely(request.getParameter("maNXB"), 0);
         double giaNhap = 0;
         double giaBan = 0;
         int soLuongTon = 0;
@@ -70,6 +88,39 @@ public class QuanLySachServlet extends HttpServlet {
         try { soLuongTon = Integer.parseInt(request.getParameter("soLuongTon")); } catch(Exception e){}
         
         String hinhAnh = request.getParameter("hinhAnh");
+        
+        // Xử lý upload file ảnh
+        try {
+            Part filePart = request.getPart("hinhAnhFile");
+            if (filePart != null && filePart.getSize() > 0) {
+                // Compatible with Servlet 3.0 (Tomcat 7)
+                String fileName = "";
+                String contentDisp = filePart.getHeader("content-disposition");
+                if (contentDisp != null) {
+                    for (String token : contentDisp.split(";")) {
+                        if (token.trim().startsWith("filename")) {
+                            fileName = token.substring(token.indexOf("=") + 2, token.length() - 1);
+                            // Extract just the file name to avoid IE path issues
+                            fileName = Paths.get(fileName).getFileName().toString();
+                            break;
+                        }
+                    }
+                }
+                
+                if (!fileName.isEmpty()) {
+                    String uploadPath = request.getServletContext().getRealPath("") + File.separator + "uploads";
+                    File uploadDir = new File(uploadPath);
+                    if (!uploadDir.exists()) uploadDir.mkdir();
+                    
+                    String filePath = uploadPath + File.separator + fileName;
+                    filePart.write(filePath);
+                    hinhAnh = "uploads/" + fileName; // Update hinhAnh to local path
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         int trangThai = 1;
         try { trangThai = Integer.parseInt(request.getParameter("trangThai")); } catch(Exception e){}
 
@@ -99,11 +150,15 @@ public class QuanLySachServlet extends HttpServlet {
         s.setMoTa(moTa);
 
         if ("add".equals(action)) {
-            sachService.addSach(s, tacGiasStr);
+            boolean ok = sachService.addSach(s, tacGiasStr);
+            response.sendRedirect("quanlysach?" + (ok ? "success=add" : "error=add"));
+            return;
         } else if ("edit".equals(action)) {
-            int maSach = Integer.parseInt(request.getParameter("maSach"));
+            int maSach = parseIntSafely(request.getParameter("maSach"), 0);
             s.setMaSach(maSach);
-            sachService.updateSach(s, tacGiasStr);
+            boolean ok = sachService.updateSach(s, tacGiasStr);
+            response.sendRedirect("quanlysach?" + (ok ? "success=edit" : "error=edit"));
+            return;
         }
         
         response.sendRedirect("quanlysach");

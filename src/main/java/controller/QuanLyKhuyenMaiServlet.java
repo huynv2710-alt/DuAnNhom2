@@ -50,6 +50,7 @@ public class QuanLyKhuyenMaiServlet extends HttpServlet {
             if ("add".equals(action)) {
                 String tenKM = request.getParameter("tenKM");
                 double phanTram = Double.parseDouble(request.getParameter("phanTramGiam"));
+                double giamToiDa = Double.parseDouble(request.getParameter("giamToiDa"));
                 Date ngayBatDau = sdf.parse(request.getParameter("ngayBatDau"));
                 Date ngayKetThuc = sdf.parse(request.getParameter("ngayKetThuc"));
                 int trangThai = Integer.parseInt(request.getParameter("trangThai"));
@@ -57,7 +58,7 @@ public class QuanLyKhuyenMaiServlet extends HttpServlet {
                 if (ngayKetThuc.before(ngayBatDau)) {
                     request.getSession().setAttribute("error", "Ngày kết thúc phải lớn hơn ngày bắt đầu!");
                 } else {
-                    KhuyenMai km = new KhuyenMai(0, tenKM, phanTram, new java.sql.Timestamp(ngayBatDau.getTime()), new java.sql.Timestamp(ngayKetThuc.getTime()), trangThai);
+                    KhuyenMai km = new KhuyenMai(0, tenKM, phanTram, giamToiDa, new java.sql.Timestamp(ngayBatDau.getTime()), new java.sql.Timestamp(ngayKetThuc.getTime()), trangThai);
                     if (kmService.addKhuyenMai(km)) {
                         request.getSession().setAttribute("success", "Thêm khuyến mãi thành công!");
                     } else {
@@ -68,6 +69,7 @@ public class QuanLyKhuyenMaiServlet extends HttpServlet {
                 int maKM = Integer.parseInt(request.getParameter("maKM"));
                 String tenKM = request.getParameter("tenKM");
                 double phanTram = Double.parseDouble(request.getParameter("phanTramGiam"));
+                double giamToiDa = Double.parseDouble(request.getParameter("giamToiDa"));
                 Date ngayBatDau = sdf.parse(request.getParameter("ngayBatDau"));
                 Date ngayKetThuc = sdf.parse(request.getParameter("ngayKetThuc"));
                 int trangThai = Integer.parseInt(request.getParameter("trangThai"));
@@ -75,7 +77,7 @@ public class QuanLyKhuyenMaiServlet extends HttpServlet {
                 if (ngayKetThuc.before(ngayBatDau)) {
                     request.getSession().setAttribute("error", "Ngày kết thúc phải lớn hơn ngày bắt đầu!");
                 } else {
-                    KhuyenMai km = new KhuyenMai(maKM, tenKM, phanTram, new java.sql.Timestamp(ngayBatDau.getTime()), new java.sql.Timestamp(ngayKetThuc.getTime()), trangThai);
+                    KhuyenMai km = new KhuyenMai(maKM, tenKM, phanTram, giamToiDa, new java.sql.Timestamp(ngayBatDau.getTime()), new java.sql.Timestamp(ngayKetThuc.getTime()), trangThai);
                     if (kmService.updateKhuyenMai(km)) {
                         request.getSession().setAttribute("success", "Cập nhật khuyến mãi thành công!");
                     } else {

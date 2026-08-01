@@ -90,8 +90,9 @@
             <input type="hidden" name="maKH" id="maKH" value="0">
             
             <div class="form-group">
-                <label>Họ Tên Khách Hàng <span style="color:red">*</span></label>
-                <input type="text" id="hoTen" name="hoTen" required>
+                <label>Tên Khách Hàng</label>
+                <input type="text" name="hoTen" id="hoTen" required oninput="validateKH()">
+                <div id="errHoTen" style="color:red; font-size:12px; display:none; margin-top:5px;"></div>
             </div>
             <div class="form-group">
                 <label>Số Điện Thoại <span style="color:red">*</span></label>
@@ -99,17 +100,17 @@
                 <span id="errSdtKH" style="color:red; font-size:12px; display:none; margin-top:4px;"></span>
             </div>
             <div class="form-group">
-                <label>Địa Chỉ</label>
+                <label>Địa chỉ</label>
                 <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                    <select id="cityKH" style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                        <option value="" selected>Chọn Tỉnh Thành</option>
+                    <select id="city" required style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                        <option value="" selected>-- Chọn tỉnh/thành phố --</option>
                     </select>
-                    <select id="wardKH" style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                        <option value="" selected>Chọn Phường Xã</option>
+                    <select id="ward" required style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                        <option value="" selected>-- Chọn xã/phường --</option>
                     </select>
                 </div>
-                <input type="text" id="addressDetailKH" placeholder="Nhập bổ sung: Số nhà, Thôn xóm..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                <input type="hidden" name="diaChi" id="diaChiKH">
+                <input type="text" id="addressDetailKH" placeholder="Nhập bổ sung: Số nhà, Thôn xóm, Tên đường..." required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <input type="hidden" name="diaChi" id="diaChiHiddenKH">
             </div>
             <div class="form-group">
                 <label>Email</label>
@@ -125,21 +126,20 @@
     </div>
 </div>
 
+<script src="js/address-data.js"></script>
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        init34TinhThanhAddress('city', 'ward', 'addressDetailKH', 'diaChiHiddenKH');
+    });
+
     function openAddModal() {
         document.getElementById('modalTitle').innerText = 'Thêm Khách Hàng Mới';
         document.getElementById('formAction').value = 'add';
         document.getElementById('maKH').value = '0';
         document.getElementById('hoTen').value = '';
         document.getElementById('sdt').value = '';
-        document.getElementById('diaChiKH').value = '';
+        document.getElementById('diaChiHiddenKH').value = '';
         document.getElementById('email').value = '';
-        
-        if(document.getElementById('errSdtKH')) document.getElementById('errSdtKH').style.display = 'none';
-        if(document.getElementById('errEmailKH')) document.getElementById('errEmailKH').style.display = 'none';
-        let btnSubmit = document.querySelector(".btn-save");
-        if(btnSubmit) btnSubmit.disabled = false;
-
         document.getElementById('khModal').style.display = 'block';
     }
 
@@ -149,8 +149,13 @@
         document.getElementById('maKH').value = maKH;
         document.getElementById('hoTen').value = hoTen;
         document.getElementById('sdt').value = sdt;
-        document.getElementById('diaChiKH').value = diaChi;
+        document.getElementById('diaChiHiddenKH').value = diaChi;
         document.getElementById('email').value = email;
+        
+        if (window.fillAddressData) {
+            window.fillAddressData('city', 'ward', 'addressDetailKH', 'diaChiHiddenKH', diaChi);
+        }
+        
         document.getElementById('khModal').style.display = 'block';
     }
 
@@ -160,6 +165,19 @@
 
     function validateKH() {
         let isValid = true;
+        
+        let hoTen = document.getElementById('hoTen').value.trim();
+        let nameRegex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
+        if(hoTen.length > 0 && !nameRegex.test(hoTen)) {
+            if(document.getElementById('errHoTen')) {
+                document.getElementById('errHoTen').innerText = "Tên khách hàng không được chứa số hoặc ký tự đặc biệt!";
+                document.getElementById('errHoTen').style.display = 'block';
+            }
+            isValid = false;
+        } else {
+            if(document.getElementById('errHoTen')) document.getElementById('errHoTen').style.display = 'none';
+        }
+
         let sdt = document.getElementById('sdt').value.trim();
         let phoneRegex = /^(0|\+84)[0-9]{9}$/;
         if(sdt.length > 0 && !phoneRegex.test(sdt)) {
@@ -188,60 +206,6 @@
         if(btnSubmit) btnSubmit.disabled = !isValid;
         
         return isValid;
-    }
-
-    // Load API Tỉnh/Thành
-    document.addEventListener("DOMContentLoaded", function() {
-        fetch('https://provinces.open-api.vn/api/?depth=2')
-            .then(response => response.json())
-            .then(data => {
-                let citySelect = document.getElementById('cityKH');
-                let wardSelect = document.getElementById('wardKH');
-                
-                if(!citySelect) return;
-
-                data.forEach(city => {
-                    let opt = document.createElement('option');
-                    opt.value = city.name;
-                    opt.setAttribute('data-code', city.code);
-                    opt.textContent = city.name;
-                    citySelect.appendChild(opt);
-                });
-
-                citySelect.addEventListener('change', function() {
-                    wardSelect.innerHTML = '<option value="">Chọn Phường Xã</option>';
-                    let selectedCity = data.find(c => c.code == citySelect.options[citySelect.selectedIndex].getAttribute('data-code'));
-                    if (selectedCity && selectedCity.districts) {
-                        selectedCity.districts.forEach(d => {
-                            let opt = document.createElement('option');
-                            opt.value = d.name;
-                            opt.setAttribute('data-code', d.code);
-                            opt.textContent = d.name;
-                            wardSelect.appendChild(opt);
-                        });
-                    }
-                    updateAddressKH();
-                });
-
-                wardSelect.addEventListener('change', updateAddressKH);
-                document.getElementById('addressDetailKH').addEventListener('input', updateAddressKH);
-            })
-            .catch(error => {
-                console.error("Lỗi tải API: ", error);
-            });
-    });
-
-    function updateAddressKH() {
-        let city = document.getElementById('cityKH').value;
-        let ward = document.getElementById('wardKH').value;
-        let detail = document.getElementById('addressDetailKH').value;
-        
-        let fullAddress = [];
-        if (detail) fullAddress.push(detail);
-        if (ward) fullAddress.push(ward);
-        if (city) fullAddress.push(city);
-        
-        document.getElementById('diaChiKH').value = fullAddress.join(', ');
     }
 </script>
 

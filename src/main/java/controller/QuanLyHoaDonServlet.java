@@ -13,6 +13,11 @@ import java.util.List;
 @WebServlet(name = "QuanLyHoaDonServlet", urlPatterns = {"/quanlyhoadon"})
 public class QuanLyHoaDonServlet extends HttpServlet {
     private HoaDonService hoaDonService = new HoaDonService();
+    
+    private int parseIntSafely(String str, int defaultVal) {
+        if (str == null || str.trim().isEmpty()) return defaultVal;
+        try { return Integer.parseInt(str.trim()); } catch (Exception e) { return defaultVal; }
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,7 +32,7 @@ public class QuanLyHoaDonServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         if ("viewDetail".equals(action)) {
-            int maHD = Integer.parseInt(request.getParameter("id"));
+            int maHD = parseIntSafely(request.getParameter("id"), 0);
             HoaDon hd = hoaDonService.getHoaDonById(maHD);
             List<HoaDonChiTiet> details = hoaDonService.getChiTietByHoaDonId(maHD);
             request.setAttribute("hd", hd);
@@ -35,7 +40,7 @@ public class QuanLyHoaDonServlet extends HttpServlet {
             request.getRequestDispatcher("hoadon_chitiet.jsp").forward(request, response);
             return;
         } else if ("cancel".equals(action)) {
-            int maHD = Integer.parseInt(request.getParameter("id"));
+            int maHD = parseIntSafely(request.getParameter("id"), 0);
             HoaDon hd = hoaDonService.getHoaDonById(maHD);
             
             // LỖI LOGIC ĐÃ FIX: Chỉ thực hiện hủy và hoàn kho nếu hóa đơn chưa bị hủy

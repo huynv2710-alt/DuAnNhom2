@@ -291,103 +291,22 @@ Quay lại
         return isValid;
     }
 
+    // Set max date for ngaySinh (16 years ago)
     document.addEventListener("DOMContentLoaded", function() {
         let today = new Date();
         let maxDate = new Date(today.getFullYear() - 16, today.getMonth(), today.getDate());
-        document.getElementById("ngaySinh").max = maxDate.toISOString().split("T")[0];
+        if(document.getElementById("ngaySinh")) {
+            document.getElementById("ngaySinh").max = maxDate.toISOString().split("T")[0];
+        }
         if(document.getElementById("ngayCapCCCD")) {
             document.getElementById("ngayCapCCCD").max = today.toISOString().split("T")[0];
         }
-
-        let oldAddress = document.getElementById('diaChiHidden').value;
-
-        fetch('https://provinces.open-api.vn/api/?depth=2')
-            .then(response => response.json())
-            .then(data => {
-                let citySelect = document.getElementById('city');
-                let wardSelect = document.getElementById('ward');
-                
-                data.forEach(city => {
-                    let opt = document.createElement('option');
-                    opt.value = city.name;
-                    opt.setAttribute('data-code', city.code);
-                    opt.textContent = city.name;
-                    citySelect.appendChild(opt);
-                });
-
-                if (oldAddress) {
-                    let parts = oldAddress.split(',');
-                    if (parts.length >= 2) {
-                        let cName = parts[parts.length - 1].trim();
-                        let wName = parts[parts.length - 2].trim();
-                        
-                        let matchedCity = data.find(c => c.name === cName);
-                        if(matchedCity) {
-                            citySelect.value = cName;
-                            if (matchedCity.districts) {
-                                matchedCity.districts.forEach(d => {
-                                    let opt = document.createElement('option');
-                                    opt.value = d.name;
-                                    opt.setAttribute('data-code', d.code);
-                                    opt.textContent = d.name;
-                                    wardSelect.appendChild(opt);
-                                });
-                                let matchedWard = matchedCity.districts.find(d => d.name === wName);
-                                if (matchedWard) {
-                                    wardSelect.value = wName;
-                                    document.getElementById('addressDetail').value = parts.slice(0, parts.length - 2).join(',').trim();
-                                } else {
-                                    document.getElementById('addressDetail').value = parts.slice(0, parts.length - 1).join(',').trim();
-                                }
-                            }
-                        } else {
-                            document.getElementById('addressDetail').value = oldAddress;
-                        }
-                    } else {
-                        document.getElementById('addressDetail').value = oldAddress;
-                    }
-                }
-
-                citySelect.addEventListener('change', function() {
-                    wardSelect.innerHTML = '<option value="">Chọn Phường Xã</option>';
-                    let selectedCity = data.find(c => c.code == citySelect.options[citySelect.selectedIndex].getAttribute('data-code'));
-                    if (selectedCity && selectedCity.districts) {
-                        selectedCity.districts.forEach(d => {
-                            let opt = document.createElement('option');
-                            opt.value = d.name;
-                            opt.setAttribute('data-code', d.code);
-                            opt.textContent = d.name;
-                            wardSelect.appendChild(opt);
-                        });
-                    }
-                    updateAddress();
-                });
-
-                wardSelect.addEventListener('change', updateAddress);
-                if(document.getElementById('addressDetail')) {
-                    document.getElementById('addressDetail').addEventListener('input', updateAddress);
-                }
-            })
-            .catch(error => {
-                console.error("Lỗi tải API: ", error);
-            });
+        
+        // Tích hợp API 34 Tỉnh thành
+        init34TinhThanhAddress('city', 'ward', 'addressDetail', 'diaChiHidden');
     });
-
-    function updateAddress() {
-        let city = document.getElementById('city') ? document.getElementById('city').value : '';
-        let ward = document.getElementById('ward') ? document.getElementById('ward').value : '';
-        let detail = document.getElementById('addressDetail') ? document.getElementById('addressDetail').value : '';
-        
-        let fullAddress = [];
-        if (detail) fullAddress.push(detail);
-        if (ward) fullAddress.push(ward);
-        if (city) fullAddress.push(city);
-        
-        if(document.getElementById('diaChiHidden')) {
-            document.getElementById('diaChiHidden').value = fullAddress.join(', ');
-        }
-    }
 </script>
+<script src="js/address-data.js"></script>
 
 </body>
 </html>

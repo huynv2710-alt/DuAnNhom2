@@ -19,6 +19,11 @@ public class suanhanvienServlet extends HttpServlet {
 
     private TaiKhoanService tkService = new TaiKhoanService();
     private NhanVienService nvService = new NhanVienService();
+    
+    private int parseIntSafely(String str, int defaultVal) {
+        if (str == null || str.trim().isEmpty()) return defaultVal;
+        try { return Integer.parseInt(str.trim()); } catch (Exception e) { return defaultVal; }
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -35,7 +40,7 @@ public class suanhanvienServlet extends HttpServlet {
         } else if ("adminUpdate".equals(action)) {
             quanlinhanvienservlet qlService = new quanlinhanvienservlet();
             NhanVien nv = new NhanVien();
-            nv.setMaNV(Integer.parseInt(request.getParameter("maNV")));
+            nv.setMaNV(parseIntSafely(request.getParameter("maNV"), 0));
             nv.setHoTen(request.getParameter("hoTen"));
             nv.setNgaySinh(java.sql.Date.valueOf(request.getParameter("ngaySinh")));
             nv.setGioiTinh(request.getParameter("gioiTinh"));
@@ -59,8 +64,7 @@ public class suanhanvienServlet extends HttpServlet {
                 }
                 nv.setNgayHetHanCCCD(expDate);
             }
-            
-            nv.setMaTrangThai(Integer.parseInt(request.getParameter("maTrangThai")));
+            nv.setMaTrangThai(parseIntSafely(request.getParameter("maTrangThai"), 1));
             
             try {
                 qlService.update(nv);
@@ -153,7 +157,7 @@ public class suanhanvienServlet extends HttpServlet {
         if ("edit".equals(action)) {
             String idStr = request.getParameter("id");
             if (idStr != null) {
-                int maNV = Integer.parseInt(idStr);
+                int maNV = parseIntSafely(idStr, 0);
                 quanlinhanvienservlet qlService = new quanlinhanvienservlet();
                 NhanVien nv = qlService.getById(maNV);
                 request.setAttribute("nv", nv);

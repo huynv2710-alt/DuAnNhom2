@@ -82,10 +82,10 @@
                 <label>Địa Chỉ</label>
                 <div style="display: flex; gap: 10px; margin-bottom: 10px;">
                     <select id="cityNXB" style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                        <option value="" selected>Chọn Tỉnh Thành</option>
+                        <option value="" selected>-- Chọn tỉnh/thành phố --</option>
                     </select>
                     <select id="wardNXB" style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                        <option value="" selected>Chọn Phường Xã</option>
+                        <option value="" selected>-- Chọn xã/phường --</option>
                     </select>
                 </div>
                 <input type="text" id="addressDetailNXB" placeholder="Nhập bổ sung: Số nhà, Thôn xóm..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
@@ -99,7 +99,12 @@
     </div>
 </div>
 
+<script src="js/address-data.js"></script>
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        init34TinhThanhAddress('cityNXB', 'wardNXB', 'addressDetailNXB', 'diaChiNXB');
+    });
+
     function openModal(id, name, address, phone) {
         document.getElementById('modalTitle').innerText = id == 0 ? 'Thêm NXB' : 'Sửa NXB';
         document.getElementById('action').value = id == 0 ? 'add' : 'edit';
@@ -111,7 +116,12 @@
         if (id == 0) {
             document.getElementById('addressDetailNXB').value = '';
             document.getElementById('cityNXB').value = '';
-            document.getElementById('wardNXB').innerHTML = '<option value="">Chọn Phường Xã</option>';
+            document.getElementById('wardNXB').innerHTML = '<option value="">-- Chọn xã/phường --</option>';
+        } else {
+            // Trigger auto-select manually if window.fillAddressData exists
+            if (window.fillAddressData) {
+                window.fillAddressData('cityNXB', 'wardNXB', 'addressDetailNXB', 'diaChiNXB', address);
+            }
         }
         
         if(document.getElementById('errSdtNXB')) document.getElementById('errSdtNXB').style.display = 'none';
@@ -143,60 +153,6 @@
         if(btnSubmit) btnSubmit.disabled = !isValid;
         
         return isValid;
-    }
-
-    // Load API Tỉnh/Thành
-    document.addEventListener("DOMContentLoaded", function() {
-        fetch('https://provinces.open-api.vn/api/?depth=2')
-            .then(response => response.json())
-            .then(data => {
-                let citySelect = document.getElementById('cityNXB');
-                let wardSelect = document.getElementById('wardNXB');
-                
-                if(!citySelect) return;
-
-                data.forEach(city => {
-                    let opt = document.createElement('option');
-                    opt.value = city.name;
-                    opt.setAttribute('data-code', city.code);
-                    opt.textContent = city.name;
-                    citySelect.appendChild(opt);
-                });
-
-                citySelect.addEventListener('change', function() {
-                    wardSelect.innerHTML = '<option value="">Chọn Phường Xã</option>';
-                    let selectedCity = data.find(c => c.code == citySelect.options[citySelect.selectedIndex].getAttribute('data-code'));
-                    if (selectedCity && selectedCity.districts) {
-                        selectedCity.districts.forEach(d => {
-                            let opt = document.createElement('option');
-                            opt.value = d.name;
-                            opt.setAttribute('data-code', d.code);
-                            opt.textContent = d.name;
-                            wardSelect.appendChild(opt);
-                        });
-                    }
-                    updateAddressNXB();
-                });
-
-                wardSelect.addEventListener('change', updateAddressNXB);
-                document.getElementById('addressDetailNXB').addEventListener('input', updateAddressNXB);
-            })
-            .catch(error => {
-                console.error("Lỗi tải API: ", error);
-            });
-    });
-
-    function updateAddressNXB() {
-        let city = document.getElementById('cityNXB').value;
-        let ward = document.getElementById('wardNXB').value;
-        let detail = document.getElementById('addressDetailNXB').value;
-        
-        let fullAddress = [];
-        if (detail) fullAddress.push(detail);
-        if (ward) fullAddress.push(ward);
-        if (city) fullAddress.push(city);
-        
-        document.getElementById('diaChiNXB').value = fullAddress.join(', ');
     }
 </script>
 

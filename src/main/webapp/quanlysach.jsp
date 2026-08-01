@@ -13,7 +13,7 @@
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; overflow-y: auto; }
         .modal-content { background: white; width: 500px; margin: 50px auto; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .modal-header { font-size: 22px; font-weight: bold; margin-bottom: 20px; color: #0f2820; border-bottom: 2px solid #2d6652; padding-bottom: 10px; }
-        .form-group { margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; min-width: 0; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
         .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; outline: none; box-sizing: border-box; }
         .modal-footer { text-align: right; margin-top: 25px; }
@@ -21,12 +21,43 @@
         .btn-save { padding: 10px 15px; background: #2d6652; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
         .product-thumb { width: 45px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #e2e8f0; }
         .product-thumb-placeholder { width: 45px; height: 60px; background: #f1f5f9; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #94a3b8; border: 1px solid #e2e8f0; }
+        .product-thumb-placeholder { width: 45px; height: 60px; background: #f1f5f9; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #94a3b8; border: 1px solid #e2e8f0; }
+        
+        .toast { position: fixed; top: 20px; right: 20px; padding: 15px 25px; border-radius: 6px; color: white; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999; opacity: 0; transform: translateY(-20px); transition: all 0.3s ease; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast-success { background-color: #10b981; border-left: 5px solid #059669; }
+        .toast-error { background-color: #ef4444; border-left: 5px solid #b91c1c; }
     </style>
 </head>
 
 <body>
 
 <jsp:include page="menu.jsp"/>
+
+<c:if test="${not empty param.success}">
+    <div id="toast" class="toast toast-success">
+        <i class="fas fa-check-circle"></i> 
+        <c:choose>
+            <c:when test="${param.success == 'add'}">Thêm sách thành công!</c:when>
+            <c:when test="${param.success == 'edit'}">Cập nhật sách thành công!</c:when>
+            <c:otherwise>Thao tác thành công!</c:otherwise>
+        </c:choose>
+    </div>
+</c:if>
+<c:if test="${not empty param.error}">
+    <div id="toast" class="toast toast-error">
+        <i class="fas fa-exclamation-circle"></i> Có lỗi xảy ra, vui lòng thử lại!
+    </div>
+</c:if>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var toast = document.getElementById("toast");
+        if (toast) {
+            setTimeout(function() { toast.classList.add("show"); }, 100);
+            setTimeout(function() { toast.classList.remove("show"); }, 4000);
+        }
+    });
+</script>
 
 <main class="content">
 
@@ -59,14 +90,14 @@
             </div>
             <div class="filter-group" style="flex: 1;">
                 <label>TÁC GIẢ</label>
-                <input type="text" placeholder="Tên tác giả...">
+                <input type="text" placeholder="Tên tác giả... (Đang bảo trì)" disabled>
             </div>
             <div class="filter-group" style="flex: 1;">
                 <label>NHÀ XUẤT BẢN</label>
-                <select>
-                    <option>-- Tất cả NXB --</option>
+                <select name="maNXB" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                    <option value="0">-- Tất cả NXB --</option>
                     <c:forEach var="nxb" items="${listNXB}">
-                        <option value="${nxb.maNXB}">${nxb.tenNXB}</option>
+                        <option value="${nxb.maNXB}" ${param.maNXB == nxb.maNXB ? 'selected' : ''}>${nxb.tenNXB}</option>
                     </c:forEach>
                 </select>
             </div>
@@ -185,18 +216,18 @@
 <div id="sachModal" class="modal">
     <div class="modal-content">
         <div class="modal-header" id="modalTitle">Thêm Sách Mới</div>
-        <form action="quanlysach" method="post">
+        <form action="quanlysach" method="post" id="bookForm" enctype="multipart/form-data" onsubmit="return validateSachForm()">
             <input type="hidden" name="action" id="formAction" value="add">
             <input type="hidden" name="maSach" id="maSach" value="0">
             
             <div style="display: flex; gap: 15px;">
                 <div class="form-group" style="flex: 2;">
                     <label>Tên Sách <span style="color:red">*</span></label>
-                    <input type="text" id="tenSach" name="tenSach" required>
+                    <input type="text" name="tenSach" id="tenSach" required>
                 </div>
                 <div class="form-group" style="flex: 1;">
                     <label>Mã ISBN</label>
-                    <input type="text" id="isbn" name="isbn">
+                    <input type="text" name="isbn" id="isbn" placeholder="VD: 978-604-1-12345-6">
                 </div>
             </div>
             <div class="form-group">
@@ -232,11 +263,11 @@
             <div style="display: flex; gap: 15px;">
                 <div class="form-group" style="flex: 1;">
                     <label>Giá Nhập (VNĐ) <span style="color:red">*</span></label>
-                    <input type="number" id="giaNhap" name="giaNhap" min="0" required>
+                    <input type="number" id="giaNhap" name="giaNhap" min="0" step="100" required>
                 </div>
                 <div class="form-group" style="flex: 1;">
                     <label>Giá Bán (VNĐ) <span style="color:red">*</span></label>
-                    <input type="number" id="giaBan" name="giaBan" min="0" required>
+                    <input type="number" id="giaBan" name="giaBan" min="0" step="100" required>
                 </div>
                 <div class="form-group" style="flex: 1;">
                     <label>Tồn Kho <span style="color:red">*</span></label>
@@ -265,9 +296,15 @@
                 <label>Mô Tả Nội Dung</label>
                 <textarea id="moTa" name="moTa" rows="3" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px; outline:none; resize:vertical;"></textarea>
             </div>
-            <div class="form-group">
-                <label>Link Ảnh Bìa (URL)</label>
-                <input type="text" id="hinhAnh" name="hinhAnh" placeholder="https://...">
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Link Ảnh Bìa (URL)</label>
+                    <input type="text" id="hinhAnh" name="hinhAnh" placeholder="https://...">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Hoặc Tải Tệp Lên</label>
+                    <input type="file" id="hinhAnhFile" name="hinhAnhFile" accept="image/*" style="width:100%; padding: 8px 10px; border:1px solid #ccc; border-radius:4px;">
+                </div>
             </div>
             <div class="form-group">
                 <label>Trạng Thái</label>
@@ -298,6 +335,7 @@
         document.getElementById('giaBan').value = '';
         document.getElementById('soLuongTon').value = '';
         document.getElementById('hinhAnh').value = '';
+        document.getElementById('hinhAnhFile').value = '';
         document.getElementById('soTrang').value = '';
         document.getElementById('kichThuoc').value = '';
         document.getElementById('trongLuong').value = '';
@@ -322,6 +360,7 @@
         document.getElementById('giaBan').value = giaBan;
         document.getElementById('soLuongTon').value = soLuong;
         document.getElementById('hinhAnh').value = (hinhAnh !== 'null' && hinhAnh) ? hinhAnh : '';
+        document.getElementById('hinhAnhFile').value = '';
         document.getElementById('soTrang').value = soTrang;
         document.getElementById('kichThuoc').value = (kichThuoc !== 'null' && kichThuoc) ? kichThuoc : '';
         document.getElementById('trongLuong').value = trongLuong;
@@ -365,6 +404,29 @@
         }
 
         document.getElementById('bookDetailsModal').style.display = 'block';
+    }
+
+    function validateSachForm() {
+        let giaNhap = parseFloat(document.getElementById('giaNhap').value);
+        let giaBan = parseFloat(document.getElementById('giaBan').value);
+        
+        if (isNaN(giaNhap) || giaNhap <= 0) {
+            alert("Lỗi: Giá nhập phải lớn hơn 0!");
+            return false;
+        }
+        if (isNaN(giaBan) || giaBan <= 0) {
+            alert("Lỗi: Giá bán phải lớn hơn 0!");
+            return false;
+        }
+        if (giaBan <= giaNhap) {
+            alert("Lỗi: Giá bán phải LỚN HƠN giá nhập!");
+            return false;
+        }
+        if (giaNhap % 100 !== 0 || giaBan % 100 !== 0) {
+            alert("Lỗi: Giá tiền phải làm tròn đến hàng trăm đồng (VD: 12000, 15500)!");
+            return false;
+        }
+        return true;
     }
 </script>
 
