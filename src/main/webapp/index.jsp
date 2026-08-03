@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Dang nhap - Book Store</title>
+    <title> Đăng Nhập - Book Store</title>
     <link rel="stylesheet" href="css/tk.css">
     <script src="${pageContext.request.contextPath}/js/error.js?v=2"></script>
 </head>
@@ -14,7 +14,7 @@
     <div class="container">
         <div class="login-box">
             <h1>BOOK STORE</h1>
-            <h3>DANG NHAP HE THONG</h3>
+            <h3>ĐĂNG NHẬP HỆ THỐNG</h3>
 
             <form action="LoginServlet" method="post">
                 <input type="text" name="username" placeholder="Ten dang nhap" required>
