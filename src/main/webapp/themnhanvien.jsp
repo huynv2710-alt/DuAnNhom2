@@ -147,11 +147,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Vai trò</label>
-                    <select name="maQuyen">
-                        <option value="2" <%= pQuyen.equals("2") ? "selected" : "" %>>Nhân viên</option>
-                        <option value="1" <%= pQuyen.equals("1") ? "selected" : "" %>>Admin</option>
+                    <label>Vai trò (Mặc định)</label>
+                    <select id="maQuyenDisplay" disabled style="background:#e9ecef;">
+                        <option value="2" selected>Nhân viên</option>
                     </select>
+                    <input type="hidden" name="maQuyen" value="2">
                 </div>
 
             </div>

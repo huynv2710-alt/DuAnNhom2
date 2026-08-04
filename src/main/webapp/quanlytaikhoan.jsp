@@ -100,8 +100,8 @@
                 </div>
             </div>
             <div class="form-group">
-                <label>Vai trò</label>
-                <select name="maQuyen" id="editMaQuyen">
+                <label>Vai trò (Không thể sửa)</label>
+                <select name="maQuyen" id="editMaQuyen" disabled style="background:#e9ecef;">
                     <option value="1">Admin</option>
                     <option value="2">Nhân Viên</option>
                 </select>

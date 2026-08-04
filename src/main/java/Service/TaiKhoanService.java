@@ -143,8 +143,8 @@ public class TaiKhoanService {
         }
     }
 
-    public boolean updateTaiKhoanFull(String oldUsername, String newUsername, String password, int maPhanQuyen) {
-        String sql = "UPDATE TaiKhoan SET Username = ?, MaPhanQuyen = ?";
+    public boolean updateTaiKhoanFull(String oldUsername, String newUsername, String password) {
+        String sql = "UPDATE TaiKhoan SET Username = ?";
         if (password != null && !password.isEmpty()) {
             sql += ", PASS = ?";
         }
@@ -152,12 +152,11 @@ public class TaiKhoanService {
         try (Connection con = connect.myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, newUsername);
-            ps.setInt(2, maPhanQuyen);
             if (password != null && !password.isEmpty()) {
-                ps.setString(3, password);
-                ps.setString(4, oldUsername);
-            } else {
+                ps.setString(2, password);
                 ps.setString(3, oldUsername);
+            } else {
+                ps.setString(2, oldUsername);
             }
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
