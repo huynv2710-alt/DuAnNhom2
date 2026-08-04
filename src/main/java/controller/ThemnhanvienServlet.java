@@ -35,6 +35,17 @@ public class ThemnhanvienServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req,
                          HttpServletResponse resp)
             throws ServletException, IOException {
+            
+        javax.servlet.http.HttpSession session = req.getSession();
+        if (session.getAttribute("username") == null) {
+            resp.sendRedirect("index.jsp");
+            return;
+        }
+        String quyen = (String) session.getAttribute("quyen");
+        if (!"admin".equals(quyen) && !"1".equals(quyen)) {
+            resp.sendRedirect("dashboard");
+            return;
+        }
 
         req.getRequestDispatcher("themnhanvien.jsp")
                 .forward(req, resp);
@@ -44,6 +55,17 @@ public class ThemnhanvienServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
             throws ServletException, IOException {
+            
+        javax.servlet.http.HttpSession session = request.getSession();
+        if (session.getAttribute("username") == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
+        String quyen = (String) session.getAttribute("quyen");
+        if (!"admin".equals(quyen) && !"1".equals(quyen)) {
+            response.sendRedirect("dashboard");
+            return;
+        }
 
         request.setCharacterEncoding("UTF-8");
 

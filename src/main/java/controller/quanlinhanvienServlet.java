@@ -21,9 +21,24 @@ public class quanlinhanvienServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
+        javax.servlet.http.HttpSession session = req.getSession();
+        if (session.getAttribute("username") == null) {
+            resp.sendRedirect("index.jsp");
+            return;
+        }
+        String quyen = (String) session.getAttribute("quyen");
+        if (!"admin".equals(quyen) && !"1".equals(quyen)) {
+            // Only admin can access this page
+            resp.sendRedirect("dashboard");
+            return;
+        }
+
         quanlinhanvienservlet dao = new quanlinhanvienservlet();
 
         String search = req.getParameter("search");
+        if (search != null) {
+            search = new String(search.getBytes("ISO-8859-1"), "UTF-8");
+        }
         ArrayList<NhanVien> list;
 
         if (search != null && !search.trim().isEmpty()) {
@@ -37,5 +52,11 @@ public class quanlinhanvienServlet extends HttpServlet {
 
         req.getRequestDispatcher("quanlinhanvien.jsp")
                 .forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        doGet(req, resp);
     }
 }

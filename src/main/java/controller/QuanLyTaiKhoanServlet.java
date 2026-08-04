@@ -23,6 +23,9 @@ public class QuanLyTaiKhoanServlet extends HttpServlet {
         }
 
         String search = request.getParameter("search");
+        if (search != null) {
+            search = new String(search.getBytes("ISO-8859-1"), "UTF-8");
+        }
         if (search == null) search = "";
         
         int page = 1;

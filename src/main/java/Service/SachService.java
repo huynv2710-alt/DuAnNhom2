@@ -20,16 +20,26 @@ public class SachService {
     }
 
     public List<Sach> getAllSach(String search, int maTheLoai, int maNXB) {
+        return getAllSach(search, maTheLoai, maNXB, 0);
+    }
+
+    public List<Sach> getAllSach(String search, int maTheLoai, int maNXB, int maTacGia) {
         List<Sach> list = new ArrayList<>();
-        // Removed s.TacGia LIKE ? since TacGia is in another table, we'll simplify search for now
-        String sql = "SELECT s.*, c.SoTrang, c.KichThuoc, c.TrongLuong, c.NgonNgu, c.MoTa, t.TenTheLoai, n.TenNXB " +
+        String sql = "SELECT DISTINCT s.*, c.SoTrang, c.KichThuoc, c.TrongLuong, c.NgonNgu, c.MoTa, t.TenTheLoai, n.TenNXB " +
                      "FROM Sach s " +
                      "LEFT JOIN SachChiTiet c ON s.MaSach = c.MaSach " +
                      "LEFT JOIN TheLoai t ON s.MaTheLoai = t.MaTheLoai " +
-                     "LEFT JOIN NhaXuatBan n ON s.MaNXB = n.MaNXB " +
-                     "WHERE s.TenSach LIKE ? ";
+                     "LEFT JOIN NhaXuatBan n ON s.MaNXB = n.MaNXB ";
+        
+        if (maTacGia > 0) {
+            sql += "JOIN Sach_TacGia st ON s.MaSach = st.MaSach ";
+        }
+        
+        sql += "WHERE s.TenSach LIKE ? ";
+        
         if (maTheLoai > 0) sql += " AND s.MaTheLoai = ?";
         if (maNXB > 0) sql += " AND s.MaNXB = ?";
+        if (maTacGia > 0) sql += " AND st.MaTacGia = ?";
         
         try (Connection con = new connectService().myConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -38,6 +48,7 @@ public class SachService {
             int pIndex = 2;
             if (maTheLoai > 0) ps.setInt(pIndex++, maTheLoai);
             if (maNXB > 0) ps.setInt(pIndex++, maNXB);
+            if (maTacGia > 0) ps.setInt(pIndex++, maTacGia);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Sach s = new Sach();

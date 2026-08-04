@@ -48,17 +48,20 @@ public class QuanLySachServlet extends HttpServlet {
         }
 
         String search = request.getParameter("search");
+        if (search != null) {
+            search = new String(search.getBytes("ISO-8859-1"), "UTF-8");
+        }
         int maTheLoai = parseIntSafely(request.getParameter("maTheLoai"), 0);
         int maNXB = parseIntSafely(request.getParameter("maNXB"), 0);
+        int maTacGia = parseIntSafely(request.getParameter("maTacGia"), 0);
         
-        List<Sach> list = sachService.getAllSach(search, maTheLoai, maNXB);
-        
-        // Removed TacGia filtering for now as it requires complex joining or post-filtering
+        List<Sach> list = sachService.getAllSach(search, maTheLoai, maNXB, maTacGia);
         
         request.setAttribute("listSach", list);
         request.setAttribute("search", search);
         request.setAttribute("maTheLoai", maTheLoai);
         request.setAttribute("maNXB", maNXB);
+        request.setAttribute("maTacGia", maTacGia);
         
         // Load dropdown lists
         request.setAttribute("listTL", thuocTinhService.getAllTheLoai());

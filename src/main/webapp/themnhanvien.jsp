@@ -85,18 +85,18 @@
                 </div>
 
 <div class="form-group" style="grid-column: span 2;">
-<label>Địa chỉ</label>
-<div style="display: flex; gap: 10px; margin-bottom: 10px;">
-    <select id="city" required style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-        <option value="" selected>Chọn Tỉnh Thành</option>
-    </select>
-    <select id="ward" required style="flex:1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-        <option value="" selected>Chọn Phường Xã</option>
-    </select>
+    <label>Tỉnh/Thành phố</label>
+    <select id="city" class="form-input" required><option value="">-- Chọn tỉnh/thành phố --</option></select>
 </div>
-<input type="text" id="addressDetail" placeholder="Nhập bổ sung: Số nhà, Thôn xóm, Tên đường..." required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-<input type="hidden" name="diaChi" id="diaChiHidden">
+<div class="form-group">
+    <label>Phường/Xã</label>
+    <select id="ward" class="form-input" required><option value="">-- Chọn xã/phường --</option></select>
 </div>
+<div class="form-group" style="grid-column: span 2;">
+    <label>Địa chỉ chi tiết (Số nhà, tên đường...)</label>
+    <input type="text" id="address-detail" class="form-input" placeholder="Nhập số nhà, tên đường..." required>
+</div>
+<input type="hidden" name="diaChi" id="full-address" value="<%= pDiaChi %>">
 
 <div class="form-group">
 <label>Ngày cấp CCCD</label>
@@ -340,65 +340,14 @@
         if(document.getElementById("ngayCapCCCD")) {
             document.getElementById("ngayCapCCCD").max = today.toISOString().split("T")[0];
         }
-
-        // Load API Tỉnh/Thành
-        fetch('https://provinces.open-api.vn/api/?depth=2')
-            .then(response => response.json())
-            .then(data => {
-                let citySelect = document.getElementById('city');
-                let wardSelect = document.getElementById('ward');
-
-                if(!citySelect) return;
-
-                data.forEach(city => {
-                    let opt = document.createElement('option');
-                    opt.value = city.name;
-                    opt.setAttribute('data-code', city.code);
-                    opt.textContent = city.name;
-                    citySelect.appendChild(opt);
-                });
-
-                citySelect.addEventListener('change', function() {
-                    wardSelect.innerHTML = '<option value="">Chọn Phường Xã</option>';
-
-                    let selectedCity = data.find(c => c.code == citySelect.options[citySelect.selectedIndex].getAttribute('data-code'));
-                    if (selectedCity && selectedCity.districts) {
-                        selectedCity.districts.forEach(d => {
-                            let opt = document.createElement('option');
-                            opt.value = d.name;
-                            opt.setAttribute('data-code', d.code);
-                            opt.textContent = d.name;
-                            wardSelect.appendChild(opt);
-                        });
-                    }
-                    updateAddress();
-                });
-
-                wardSelect.addEventListener('change', updateAddress);
-                if(document.getElementById('addressDetail')) {
-                    document.getElementById('addressDetail').addEventListener('input', updateAddress);
-                }
-            })
-            .catch(error => {
-                console.error("Lỗi tải API: ", error);
-            });
-    });
-
-    function updateAddress() {
-        let city = document.getElementById('city') ? document.getElementById('city').value : '';
-        let ward = document.getElementById('ward') ? document.getElementById('ward').value : '';
-        let detail = document.getElementById('addressDetail') ? document.getElementById('addressDetail').value : '';
-
-        let fullAddress = [];
-        if (detail) fullAddress.push(detail);
-        if (ward) fullAddress.push(ward);
-        if (city) fullAddress.push(city);
-
-        if(document.getElementById('diaChiHidden')) {
-            document.getElementById('diaChiHidden').value = fullAddress.join(', ');
+        
+        // Initialize address selects from address-data.js
+        if (typeof init34TinhThanhAddress === 'function') {
+            init34TinhThanhAddress('city', 'ward', 'address-detail', 'full-address');
         }
-    }
+    });
 </script>
+<script src="${pageContext.request.contextPath}/js/address-data.js?v=2.0"></script>
 
 <c:if test="${not empty success}">
 <script>

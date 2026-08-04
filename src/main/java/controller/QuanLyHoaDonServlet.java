@@ -61,6 +61,9 @@ public class QuanLyHoaDonServlet extends HttpServlet {
         }
 
         String keyword = request.getParameter("keyword");
+        if (keyword != null) {
+            keyword = new String(keyword.getBytes("ISO-8859-1"), "UTF-8");
+        }
         String fromDate = request.getParameter("fromDate");
         String toDate = request.getParameter("toDate");
 

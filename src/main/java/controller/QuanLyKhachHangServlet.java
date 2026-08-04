@@ -46,6 +46,9 @@ public class QuanLyKhachHangServlet extends HttpServlet {
         }
 
         String search = request.getParameter("search");
+        if (search != null) {
+            search = new String(search.getBytes("ISO-8859-1"), "UTF-8");
+        }
 
         List<KhachHang> list = khService.getAllKhachHang(search);
 

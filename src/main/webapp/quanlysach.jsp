@@ -90,7 +90,12 @@
             </div>
             <div class="filter-group" style="flex: 1;">
                 <label>TÁC GIẢ</label>
-                <input type="text" placeholder="Tên tác giả... (Đang bảo trì)" disabled>
+                <select name="maTacGia" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                    <option value="0">-- Tất cả tác giả --</option>
+                    <c:forEach var="tg" items="${listTG}">
+                        <option value="${tg.maTacGia}" ${param.maTacGia == tg.maTacGia ? 'selected' : ''}>${tg.tenTacGia}</option>
+                    </c:forEach>
+                </select>
             </div>
             <div class="filter-group" style="flex: 1;">
                 <label>NHÀ XUẤT BẢN</label>

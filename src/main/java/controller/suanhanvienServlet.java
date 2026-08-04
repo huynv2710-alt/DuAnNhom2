@@ -28,16 +28,25 @@ public class suanhanvienServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+            
+        HttpSession session = request.getSession();
+        if (session.getAttribute("username") == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
 
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
+        String quyen = (String) session.getAttribute("quyen");
 
-        if ("login".equals(action)) {
-            handleLogin(request, response);
-        } else if ("update".equals(action)) {
+        if ("update".equals(action)) {
             handleUpdate(request, response);
         } else if ("adminUpdate".equals(action)) {
+            if (!"admin".equals(quyen) && !"1".equals(quyen)) {
+                response.sendRedirect("dashboard");
+                return;
+            }
             quanlinhanvienservlet qlService = new quanlinhanvienservlet();
             NhanVien nv = new NhanVien();
             nv.setMaNV(parseIntSafely(request.getParameter("maNV"), 0));
@@ -78,55 +87,6 @@ public class suanhanvienServlet extends HttpServlet {
         }
     }
 
-    private void handleLogin(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-
-        boolean ok = tkService.loginCheck(username, password);
-
-        if (!ok) {
-            request.setAttribute("error", "Sai Mat Khau Moi Ban Nhap Lai!");
-            request.getRequestDispatcher("index.jsp").forward(request, response);
-            return;
-        }
-
-        TaiKhoan tk = tkService.getUser(username);
-        HttpSession session = request.getSession();
-
-        session.setAttribute("username", tk.getUsername());
-        session.setAttribute("quyen", tk.getTenQuyen());
-
-        NhanVien nv = nvService.getNhanVienTheoUsername(username);
-
-        if (nv != null) {
-            session.setAttribute("tenTK", nv.getHoTen());
-            session.setAttribute("sdt", nv.getSdt());
-            session.setAttribute("email", nv.getEmail());
-            session.setAttribute("diaChi", nv.getDiaChi());
-            session.setAttribute("cccd", nv.getCccd());
-            session.setAttribute("ngayCapCCCD", nv.getNgayCapCCCD());
-            session.setAttribute("dacDiemNhanDang", nv.getDacDiemNhanDang());
-            session.setAttribute("noiCapCCCD", nv.getNoiCapCCCD());
-            session.setAttribute("ngayHetHanCCCD", nv.getNgayHetHanCCCD());
-            session.setAttribute("tenTrangThai", nv.getTenTrangThai());
-            session.setAttribute("maNV", nv.getMaNV());
-        } else {
-            session.setAttribute("tenTK", "Chưa có dữ liệu");
-            session.setAttribute("sdt", "Chưa cập nhật");
-            session.setAttribute("email", "Chưa cập nhật");
-            session.setAttribute("diaChi", "Chưa cập nhật");
-            session.setAttribute("cccd", "Chưa cập nhật");
-            session.setAttribute("tenTrangThai", "Chưa có");
-        }
-
-        if (tk.getTenQuyen() != null && tk.getTenQuyen().equalsIgnoreCase("admin")) {
-            response.sendRedirect("quanlinhanvien");
-        } else {
-            response.sendRedirect("NhanVien2.jsp");
-        }
-    }
 
     private void handleUpdate(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -153,8 +113,20 @@ public class suanhanvienServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+            
+        HttpSession session = request.getSession();
+        if (session.getAttribute("username") == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
+            
         String action = request.getParameter("action");
         if ("edit".equals(action)) {
+            String quyen = (String) session.getAttribute("quyen");
+            if (!"admin".equals(quyen) && !"1".equals(quyen)) {
+                response.sendRedirect("dashboard");
+                return;
+            }
             String idStr = request.getParameter("id");
             if (idStr != null) {
                 int maNV = parseIntSafely(idStr, 0);

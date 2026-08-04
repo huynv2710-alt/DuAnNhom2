@@ -302,8 +302,10 @@ Quay lại
             document.getElementById("ngayCapCCCD").max = today.toISOString().split("T")[0];
         }
         
-        // Tích hợp API 34 Tỉnh thành
-        init34TinhThanhAddress('city', 'ward', 'addressDetail', 'diaChiHidden');
+        // Tích hợp API Tỉnh thành
+        if (typeof init34TinhThanhAddress === 'function') {
+            init34TinhThanhAddress('city', 'ward', 'addressDetail', 'diaChiHidden');
+        }
     });
 </script>
 <script src="js/address-data.js"></script>

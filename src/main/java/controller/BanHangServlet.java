@@ -172,6 +172,9 @@ public class BanHangServlet extends HttpServlet {
 
         // Load data for POS View
         String searchSach = request.getParameter("searchSach");
+        if (searchSach != null) {
+            searchSach = new String(searchSach.getBytes("ISO-8859-1"), "UTF-8");
+        }
         String theLoaiParam = request.getParameter("maTheLoai");
         int maTheLoai = 0;
         try { if(theLoaiParam != null) maTheLoai = Integer.parseInt(theLoaiParam); } catch(Exception e){}
