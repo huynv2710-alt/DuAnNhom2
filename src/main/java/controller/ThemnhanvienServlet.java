@@ -209,7 +209,7 @@ public class ThemnhanvienServlet extends HttpServlet {
                 int maQuyen = parseIntSafely(request.getParameter("maQuyen"), 1);
                 try {
                     tkService.addTaiKhoan(username, pass, maNV, maQuyen);
-                    request.getSession().setAttribute("success", "Thêm nhân viên thành công!");
+                    request.getSession().setAttribute("successMsg", "Thêm nhân viên thành công!");
                     response.sendRedirect("quanlinhanvien");
                 } catch (Exception e) {
                     e.printStackTrace();

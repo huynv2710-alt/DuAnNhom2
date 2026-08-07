@@ -349,19 +349,7 @@
 </script>
 <script src="${pageContext.request.contextPath}/js/address-data.js?v=2.0"></script>
 
-<c:if test="${not empty success}">
-<script>
-    window.addEventListener('DOMContentLoaded', function () {
-        Swal.fire({
-            icon: 'success',
-            title: 'Thành công',
-            text: '${success}',
-            confirmButtonColor: '#00897b',
-            confirmButtonText: 'OK'
-        });
-    });
-</script>
-</c:if>
+<% session.removeAttribute("success"); %>
 
 </body>
 </html>

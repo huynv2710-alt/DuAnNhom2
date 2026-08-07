@@ -15,12 +15,21 @@
 </head>
 
 <body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <%
     String successMsg = (String) session.getAttribute("successMsg");
     if (successMsg != null) {
 %>
     <script>
-        alert("<%= successMsg %>");
+        window.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công',
+                text: '<%= successMsg %>',
+                confirmButtonColor: '#00897b',
+                confirmButtonText: 'OK'
+            });
+        });
     </script>
 <%
         session.removeAttribute("successMsg");
